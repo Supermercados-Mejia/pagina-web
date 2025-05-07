@@ -1,0 +1,358 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+:root {
+    --background: #fff;
+    --background-card: #f6f6f7;
+    --border-color: #f9f9f9;
+
+    --hover: #191c1f8c;
+    --hover-input: #a9adfadd;
+    --hover-button: #646cff;
+    --hover-icon: #3c3c43;
+
+    --text-primary: #0f0f0f;
+    --text-secondary: #757576;
+
+    --border: #1f1e1e;
+    --shadow: #00000048;
+    /* switsh */
+    --switch-btn-bg: #fff;
+    --switch-border-color: #3c3c434a;
+    --switch-icon-color: #0f0f0f;
+    --switch-bg-color: #f6f6f7;
+    /* switsh */
+    --menu-border-bg: #e6e6e6;
+
+    --ion-color-tertiary: #6822a6;
+    --ion-color-tertiary-rgb: 104, 34, 166;
+    --ion-color-tertiary-contrast: #ffffff;
+    --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+    --ion-color-tertiary-shade: #5c1e92;
+    --ion-color-tertiary-tint: #7738af;
+    /* Animation timing variables */
+    --switch-animation-duration: 0.3s;
+    --switch-animation-easing: cubic-bezier(0.45, 0.05, 0.55, 0.95);
+}
+
+[data-theme="dark"] {
+    --background: #1e1e20;
+    --background-card: #252529;
+    --border-color: #202023;
+
+    --hover: #ddddddab;
+    --hover-input: #646cff;
+    --hover-button: #a9adfadd;
+    --hover-icon: #fffff5db;
+
+    --text-primary: #f2f2f2;
+    --text-secondary: #a7a4a4;
+
+    --border: #696969;
+    --shadow: #ffffff1b;
+    /* switsh */
+    --switch-btn-bg: #000;
+    --switch-border-color: #525259ad;
+    --switch-icon-color: #f2f2f2;
+    --switch-bg-color: #313136;
+
+    --ion-color-tertiary: #6822a6;
+    --ion-color-tertiary-rgb: 104, 34, 166;
+    --ion-color-tertiary-contrast: #ffffff;
+    --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+    --ion-color-tertiary-shade: #5c1e92;
+    --ion-color-tertiary-tint: #7738af;
+    /* switsh */
+    --menu-border-bg: #000;
+}
+.custom-tertiary {
+    /* Estado normal */
+    --background: linear-gradient(100deg, #5f05a8 0%, #9338e7 100%);
+    --color: #ffffff;
+    --button-color: #ffffff;
+    --border-color: #5c1e92;
+    --transition: all 0.2s ease-in-out;
+
+    /* Variables de estado hover */
+    --background-hover: linear-gradient(100deg, #4d0488 0%, #7a2fc4 100%);
+    --color-hover: #ffffff;
+    --border-color-hover: #4a1675;
+
+    /* Variables de estado active/pressed */
+    --background-activated: linear-gradient(100deg, #3d036d 0%, #64269f 100%);
+    --color-activated: #e0e0e0;
+    --border-color-activated: #3a125e;
+
+    /* Efecto de profundidad */
+    --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --box-shadow-hover: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+    /* Escala para efecto de presión */
+    transform: scale(1);
+    transition: var(--transition);
+}
+.custom-default {
+    /* Estado normal */
+    --background:#5f05a8;
+    --color: #ffffff;
+    color: #ffffff;
+    --border-color: #5c1e92;
+    --transition: all 0.2s ease-in-out;
+
+    /* Variables de estado hover */
+    --background-hover: linear-gradient(100deg, #4d0488 0%, #7a2fc4 100%);
+    --color-hover: #ffffff;
+    --border-color-hover: #4a1675;
+
+    /* Variables de estado active/pressed */
+    --background-activated: linear-gradient(100deg, #3d036d 0%, #64269f 100%);
+    --color-activated: #e0e0e0;
+    --border-color-activated: #3a125e;
+
+    /* Efecto de profundidad */
+    --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --box-shadow-hover: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+    /* Escala para efecto de presión */
+    transform: scale(1);
+    transition: var(--transition);
+}
+/* Efecto al pasar el mouse (hover) */
+.custom-tertiary:hover {
+    transform: scale(1.05);
+}
+
+/* Efecto al hacer click (active) */
+.custom-tertiary:active {
+    transform: scale(0.98);
+}
+
+/* Opcional: Efecto en icono interno */
+.custom-tertiary ion-icon {
+    transition: transform 0.2s ease-in-out;
+}
+
+.custom-tertiary:hover ion-icon {
+    transform: scale(1.1);
+}
+
+/* Agrega en tu archivo CSS */
+.custom-danger {
+    --background: #dc2626;
+    --background-hover: #b91c1c;
+    --color: white;
+}
+/* Estilos para WebKit */
+::-webkit-scrollbar {
+    background: var(--background-card);
+    width: 10px;
+    z-index: 9999;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--border-color);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Estilos para Firefox */
+html {
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f1f1f1;
+}
+
+ion-toolbar {
+    --background: var(--background);
+    --color: var(--text-primary);
+    --border-color: transparent;
+    z-index: 0;
+    position: relative;
+    --box-shadow: 0px 0px 0px 1px var(--border-color) inset;
+}
+
+ion-radio {
+    --border-radius: 4px;
+    --inner-border-radius: 4px;
+
+    --color: #ddd;
+    --color-checked: #6815ec;
+}
+
+ion-radio.ios::part(container) {
+    width: 20px;
+    height: 20px;
+
+    border: 2px solid #ddd;
+    border-radius: 4px;
+}
+ion-item {
+    --background: transparent;
+    --color: var(--text-primary);
+    --box-shadow: 0px 0px 0px 1px var(--border-color) inset;
+    --padding-start: 0;
+    --padding-end: 0;
+    --padding-top: 0;
+    --padding-bottom: 0;
+}
+.radio-checked.ios::part(container) {
+    border-color: #6815ec;
+}
+.container-switch {
+    display: flex;
+    margin: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+}
+
+.switch {
+    cursor: pointer;
+    position: relative;
+    border-radius: 25rem;
+    display: block;
+    width: 50px;
+    height: 28px;
+    margin: 15px;
+    flex-shrink: 0;
+    border: 1px solid var(--switch-border-color);
+    background: var(--switch-bg-color);
+    transition: border-color 0.25s, background-color 0.3s var(--switch-animation-easing);
+}
+
+.switch:hover {
+    border: 1px solid var(--hover);
+}
+
+.checkbox {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transition: 0.4s;
+}
+
+.sun {
+    width: 20px;
+    height: 20px;
+    left: 3px;
+    top: 3px;
+    position: absolute;
+    transition: var(--switch-animation-duration) var(--switch-animation-easing);
+}
+
+.sun-color {
+    fill: transparent;
+    stroke: var(--switch-icon-color);
+}
+
+.sun-color2 {
+    fill: var(--switch-icon-color);
+    stroke: transparent;
+}
+
+.moon {
+    width: 20px;
+    height: 20px;
+    right: 5px;
+    top: 3px;
+    position: absolute;
+    transition: var(--switch-animation-duration) var(--switch-animation-easing);
+    transform: translateX(1em);
+    opacity: 0;
+}
+
+.moon-color {
+    fill: transparent;
+    stroke: var(--switch-icon-color);
+}
+
+.slider:before {
+    content: "";
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    border-radius: 25rem;
+    background: var(--switch-btn-bg);
+    box-shadow: 0px 5px 10px #00000019;
+    transition: transform var(--switch-animation-duration) var(--switch-animation-easing);
+}
+
+.checkbox:checked+.slider:before {
+    transform: translateX(1.4em);
+}
+
+.checkbox:checked+.slider .sun {
+    animation: slideOutAndFade var(--switch-animation-duration) var(--switch-animation-easing) forwards;
+}
+
+.checkbox:checked+.slider .moon {
+    animation: slideInAndAppear var(--switch-animation-duration) var(--switch-animation-easing) forwards;
+}
+
+.checkbox:not(:checked)+.slider .sun {
+    animation: slideInAndAppear var(--switch-animation-duration) var(--switch-animation-easing) forwards;
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.checkbox:not(:checked)+.slider .moon {
+    animation: slideOutAndFade var(--switch-animation-duration) var(--switch-animation-easing) forwards;
+}
+
+@keyframes slideOutAndFade {
+    0% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    70% {
+        opacity: 0.3;
+        transform: translateX(-10px);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateX(-15px);
+    }
+}
+
+@keyframes slideInAndAppear {
+    0% {
+        opacity: 0;
+        transform: translateX(15px);
+    }
+
+    70% {
+        opacity: 0.7;
+        transform: translateX(-5px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
