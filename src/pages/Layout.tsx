@@ -4,7 +4,8 @@ import { setLocalStorageItem } from "@/utils/functions/local-storage";
 import { useAppDispatch } from "@/hooks/selector";
 import { useHistory } from "react-router";
 import { IonPage } from "@ionic/react";
-import HeaderCart from "@/template/header";
+import Header from "@/template/header";
+import Page from "./page";
 
 const Layout: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -12,7 +13,10 @@ const Layout: React.FC = () => {
 
   return (
     <IonPage>
-      <HeaderCart />
+      <Header
+        title="Home"
+        className="md:bg-violet-800 md:shadow-none" />
+      <Page />
     </IonPage>
   );
 };
