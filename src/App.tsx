@@ -7,13 +7,8 @@ import { getLocalStorageItem } from './utils/functions/local-storage';
 import { RootState } from './hooks/store';
 
 // Importa tus componentes
-import Process from './pages/@proces/layout';
 import Layout from './pages/Layout';
 import NotFound from './pages/NotFound';
-import ProductID from './pages/@landing/[id]/product-id';
-import CarritoPage from './pages/@carrito/page';
-import Page from './pages/@landing/page';
-import LoadingPage from "@/pages/@proces/@loading/page"
 // Estilos
 import './theme/variables.css';
 import '@ionic/react/css/core.css';
@@ -68,21 +63,12 @@ const App: React.FC = () => {
             {currentBranch ? <Redirect to="/products" /> : <Layout />}
           </Route>
           {/* Rutas protegidas */}
-          <Route exact path="/products">
+          {/*  <Route exact path="/products">
             {currentBranch ? <Page /> : <Redirect to="/layout" />}
-          </Route>
-          <Route exact path="/process">
-            {currentBranch ? <Process /> : <Redirect to="/layout" />}
-          </Route>
-          <Route exact path="/carrito">
-            {currentBranch ? <CarritoPage /> : <Redirect to="/layout" />}
-          </Route>
-          <Route exact path="/loading">
-            {currentBranch ? <LoadingPage /> : <Redirect to="/layout" />}
           </Route>
           <Route exact path="/products/:id">
             {currentBranch ? <ProductID /> : <Redirect to="/layout" />}
-          </Route>
+          </Route> */}
           <Route exact path="/">
             <Redirect to="/products" />
           </Route>
