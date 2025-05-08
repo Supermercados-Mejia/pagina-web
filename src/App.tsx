@@ -7,7 +7,7 @@ import { getLocalStorageItem } from './utils/functions/local-storage';
 import { RootState } from './hooks/store';
 
 // Importa tus componentes
-import Layout from './pages/Layout';
+import Layout from './pages/layout';
 import NotFound from './pages/NotFound';
 // Estilos
 import './theme/variables.css';
@@ -28,6 +28,7 @@ import Footer from './template/footer';
 setupIonicReact({
   mode: 'ios',
 });
+
 const App: React.FC = () => {
   // Usar useNavigate en lugar de useHistory para react-router v6 (si es posible)
   const history = useHistory();
