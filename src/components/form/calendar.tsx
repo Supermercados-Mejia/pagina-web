@@ -1,4 +1,4 @@
-import { InputFormProps } from "@/utils/constants/interfaces";
+import { InputFormProps } from "@/utils/types/interfaces";
 import { Calendar1 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { SearchableSelectProps } from "@/utils/constants/interfaces";
+import { SearchableSelectProps } from "@/utils/types/interfaces";
 import { ChevronDown, Star, X } from 'lucide-react';
 import Badge from "../badge";
 import { triggerFormSubmit } from "@/utils/functions/form-active";

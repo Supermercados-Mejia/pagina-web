@@ -1,4 +1,4 @@
-import { InputFormProps } from "@/utils/constants/interfaces";
+import { InputFormProps } from "@/utils/types/interfaces";
 import { Briefcase } from "lucide-react";
 
 export function TextAreaComponent(props: InputFormProps) {

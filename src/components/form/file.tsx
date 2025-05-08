@@ -1,4 +1,4 @@
-import { InputMediaProps } from "@/utils/constants/interfaces";
+import { InputMediaProps } from "@/utils/types/interfaces";
 import { Files, FileStack, Trash } from "lucide-react";
 import { useCallback, useState } from "react";
 

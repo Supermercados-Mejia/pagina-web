@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { InputFormProps } from "@/utils/constants/interfaces";
+import { InputFormProps } from "@/utils/types/interfaces";
 import { LockKeyhole, Eye, EyeOff } from "lucide-react";
 
 export function PasswordComponent(props: InputFormProps) {

@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { MainFormProps } from "@/utils/constants/interfaces";
+import { MainFormProps } from "@/utils/types/interfaces";
 
 import { InputComponent as Input } from "./input";
 import { NumberComponent as Number } from "./number";

@@ -1,4 +1,4 @@
-import { alertClasses } from "./colors";
+import { alertClasses } from "@/utils/constants/colors";
 
 export type FieldType =
   | "Flex"

@@ -1,5 +1,5 @@
 import { alertClasses } from "@/utils/constants/colors";
-import { ButtonProps } from "@/utils/constants/interfaces";
+import { ButtonProps } from "@/utils/types/interfaces";
 
 export function Button({
     type = "button",

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { InputFormProps } from "@/utils/constants/interfaces";
+import { InputFormProps } from "@/utils/types/interfaces";
 import { AtSign } from "lucide-react";
 
 export function MailComponent(props: InputFormProps) {

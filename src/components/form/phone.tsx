@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { InputFormProps } from "@/utils/constants/interfaces";
+import { InputFormProps } from "@/utils/types/interfaces";
 import { Phone } from "lucide-react";
 
 export function PhoneComponent(props: InputFormProps) {
