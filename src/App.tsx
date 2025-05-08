@@ -7,7 +7,7 @@ import { getLocalStorageItem } from './utils/functions/local-storage';
 import { RootState } from './hooks/store';
 
 // Importa tus componentes
-import Layout from './pages/layout';
+import Layout from './pages/Layout';
 import NotFound from './pages/NotFound';
 // Estilos
 import './theme/variables.css';

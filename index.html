@@ -1,30 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Liz PickUp</title>
+<html lang="es">
 
-    <base href="/" />
+<head>
+  <meta charset="utf-8" />
+  <title>Mercado Liz - Supermercado de Menudeo y Mayoreo | Mejores Precios y Ofertas</title>
+  <meta name="description"
+    content="Mercado Liz - Tu supermercado de confianza con los mejores precios en menudeo y mayoreo. Gran variedad de productos frescos, ofertas semanales y servicio a domicilio. ¡Visítanos hoy mismo!">
 
-    <meta name="color-scheme" content="light dark" />
-    <meta
-      name="viewport"
-      content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    />
-    <meta name="format-detection" content="telephone=no" />
-    <meta name="msapplication-tap-highlight" content="no" />
+  <base href="/" />
 
-    <link rel="manifest" href="/manifest.json" />
+  <!-- Viewport optimizado para accesibilidad -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 
-    <link rel="shortcut icon" type="image/png" href="/favicon.png" />
+  <!-- Metadatos Open Graph para redes sociales -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Mercado Liz - Supermercado de Menudeo y Mayoreo | Mejores Precios y Ofertas">
+  <meta property="og:description"
+    content="Tu supermercado de confianza con los mejores precios en menudeo y mayoreo. Productos frescos, ofertas semanales y servicio a domicilio.">
+  <meta property="og:url" content="https://mercadosliz.com">
+  <!-- <meta property="og:image" content="https://mercadosliz.com/images/og-image.jpg"> -->
+  <meta property="og:locale" content="es_MX">
 
-    <!-- add to homescreen for ios -->
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-title" content="Liz PickUp" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+  <!-- Favicon moderno multi-tamaño -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <!-- <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"> -->
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#7c3aed">
+
+  <!-- PWA Config -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Mercado Liz">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+  <!-- Schema Markup para SEO (puede ser añadido como JSON-LD en el body) -->
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+
+  <!-- Schema.org markup -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "GroceryStore",
+      "name": "Mercado Liz",
+      "image": "https://mercadosliz.com/logo.jpg",
+      "@id": "",
+      "url": "https://mercadosliz.com",
+      "telephone": "+52 646 155 2258",
+      "priceRange": "$",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Calle Principal 216, Francisco Zarco, 22750 Francisco Zarco, B.C.",
+        "addressLocality": "Ensenada",
+        "addressRegion": "Baja California",
+        "postalCode": "22750",
+        "addressCountry": "MX"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 32.0949366,
+        "longitude": -117.1833515
+      },
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+          "Sunday"
+        ],
+        "opens": "08:00",
+        "closes": "22:00"
+      }
+    }
+    </script>
+</body>
+
 </html>
