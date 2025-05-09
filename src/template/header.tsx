@@ -1,13 +1,13 @@
 // components/Header.tsx
+import { cn } from '@/utils/functions/cn';
 import {
     IonHeader,
     IonToolbar,
     IonTitle,
     IonButtons,
-    IonButton,
-    IonIcon
+    IonButton
 } from '@ionic/react';
-import { menuOutline, notificationsOutline } from 'ionicons/icons';
+import { Menu } from 'lucide-react';
 
 interface HeaderProps {
     title: string;
@@ -20,33 +20,35 @@ const Header: React.FC<HeaderProps> = ({
     showRightButton = true,
     className = ''
 }) => {
+
     return (
         <IonHeader
-            translucent
-            className={`backdrop-blur-sm ion-padding-horizontal safe-area-top ${className}`}
+            className={cn(
+                `bg-violet-700/90 backdrop-blur-sm ion-padding-horizontal safe-area-top
+                 duration-300`, // Condición para cambiar el color
+                className
+            )}
         >
-            <IonToolbar className="px-4">
-                {/* Title */}
+            <IonToolbar className="pr-4 pl-0">
+                {/* Título alineado a la izquierda */}
                 <IonTitle
-                    className="left-0 text-xl font-semibold tracking-tight">
+                    slot='start'
+                    className="text-left text-xl font-light tracking-tight pl-0 text-white"
+                >
                     {title}
                 </IonTitle>
 
-                {/* Right Side Buttons */}
+                {/* Botones derechos */}
                 {showRightButton && (
                     <IonButtons slot="end" className="space-x-2">
                         <IonButton
-                            className="text-white rounded-lg p-2"
+                            className="rounded-lg p-2"
                             style={{
                                 '--color-hover': 'white',
                                 '--background-hover': 'rgba(255,255,255,0.1)'
                             }}
                         >
-                            <IonIcon
-                                slot="icon-only"
-                                icon={menuOutline}
-                                className="w-6 h-6 text-inherit"
-                            />
+                            <Menu className='text-white' />
                         </IonButton>
                     </IonButtons>
                 )}

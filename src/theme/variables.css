@@ -182,7 +182,19 @@ ion-toolbar {
     --border-color: transparent;
     z-index: 0;
     position: relative;
+    font-family: 'Lobster';
     --box-shadow: 0px 0px 0px 1px var(--border-color) inset;
+}
+
+
+.custom-toolbar
+ion-toolbar {
+    --background: #6d28d9e6 !important;
+}
+
+.custom-toolbar .header-collapse-condense-inactive
+{
+    opacity: 0;
 }
 
 ion-radio {
