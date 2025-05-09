@@ -12,43 +12,45 @@ import { Menu } from 'lucide-react';
 interface HeaderProps {
     title: string;
     showRightButton?: boolean;
+    showSearchButton?: boolean;
     className?: string;
+    isScrolled?: boolean;
 }
 
 const Header: React.FC<HeaderProps> = ({
     title,
+    isScrolled = false,
     showRightButton = true,
+    showSearchButton = false,
     className = ''
 }) => {
 
     return (
         <IonHeader
             className={cn(
-                `bg-violet-700/90 backdrop-blur-sm ion-padding-horizontal safe-area-top
-                 duration-300`, // Condición para cambiar el color
+                `transition-all duration-300
+                ion-padding-horizontal safe-area-top`,
+                isScrolled ? 'bg-white/80 border backdrop-blur-sm' : 'bg-transparent',
                 className
             )}
         >
-            <IonToolbar className="pr-4 pl-0">
-                {/* Título alineado a la izquierda */}
+            <IonToolbar>
                 <IonTitle
-                    slot='start'
-                    className="text-left text-xl font-light tracking-tight pl-0 text-white"
+                    className={cn(
+                        "text-xl font-light tracking-tight pl-0", isScrolled ? "text-purple-700" : "text-white",
+                        showSearchButton ? "text-left" : ""
+                    )}
                 >
                     {title}
                 </IonTitle>
 
-                {/* Botones derechos */}
                 {showRightButton && (
                     <IonButtons slot="end" className="space-x-2">
                         <IonButton
-                            className="rounded-lg p-2"
-                            style={{
-                                '--color-hover': 'white',
-                                '--background-hover': 'rgba(255,255,255,0.1)'
-                            }}
+                            fill="clear"
+                            className="rounded-lg p-2 hover:bg-white/10 transition-colors"
                         >
-                            <Menu className='text-white' />
+                            <Menu className={cn(isScrolled ? 'text-purple-700' : 'text-white')} size={24} />
                         </IonButton>
                     </IonButtons>
                 )}

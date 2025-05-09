@@ -4,4 +4,5 @@ export interface PageProps {
   children?: React.ReactNode;
   className?: string;
   onClick?: () => void;
+  onScroll?: (isScrolled: boolean) => void;
 }

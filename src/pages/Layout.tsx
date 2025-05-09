@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type React from "react";
 import { setSucursal } from "@/hooks/slices/app";
 import { setLocalStorageItem } from "@/utils/functions/local-storage";
@@ -10,11 +11,12 @@ import Page from "./page";
 const Layout: React.FC = () => {
   const dispatch = useAppDispatch();
   const history = useHistory();
+  const [isScrolled, setIsScrolled] = useState(false);
 
   return (
     <IonPage>
-      <Header title="Liz" /* className="bg-white/90" */ />
-      <Page />
+      <Header title="Liz" isScrolled={isScrolled} />
+      <Page onScroll={(scrolled) => setIsScrolled(scrolled)} />
     </IonPage>
   );
 };
