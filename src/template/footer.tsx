@@ -1,9 +1,7 @@
-import { IonFooter } from "@ionic/react";
-
 export default function Footer() {
     const date = new Date().getFullYear();
     return (
-        <IonFooter className="lg:fixed z-40 mt-10 absolute bottom-0 left-0 w-full px-6 py-3 sm:px-8 shadow-md bg-white dark:bg-zinc-800 backdrop-blur-lg">
+        <footer className="Z-50 absolute bottom-0 left-0 w-full px-6 py-3 sm:px-8 shadow-md bg-white dark:bg-zinc-800 backdrop-blur-lg">
             <div className="flex items-center justify-between flex-wrap gap-y-2">
                 {/* Logo y Derechos */}
                 <div className="flex items-center gap-x-2">
@@ -27,6 +25,6 @@ export default function Footer() {
                     </a>
                 </div>
             </div>
-        </IonFooter>
+        </footer>
     );
 }
