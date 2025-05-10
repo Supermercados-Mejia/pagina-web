@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { MainFormProps } from "@/utils/types/interfaces";
@@ -24,9 +24,12 @@ import { FileComponent as File } from "./file";
 import { TagInputComponent as TagInput } from "./tag-input"
 
 import { usePostUserLoginMutation } from "@/hooks/reducers/auth";
+import { Button } from "../button";
 
 export const MainForm = ({ message_button, dataForm, actionType, aditionalData, action, valueAssign, onSuccess }: MainFormProps) => {
 
+  const [page, setPage] = useState(0);
+  const [formData, setFormData] = useState<any>({}); // Estado para guardar datos
   const [loading, setLoading] = useState(false);
 
   const {
@@ -51,12 +54,43 @@ export const MainForm = ({ message_button, dataForm, actionType, aditionalData, 
         return () => { };
     }
   }
+  // Efecto para restaurar los valores del formulario al cambiar de página
+  useEffect(() => {
+    const currentPageData = pages[page].reduce((acc: any, field: any) => {
+      if (field.name && formData[field.name]) {
+        acc[field.name] = formData[field.name];
+      }
+      return acc;
+    }, {});
+
+    Object.keys(currentPageData).forEach((key) => {
+      setValue(key, currentPageData[key]);
+    });
+  }, [page, formData, setValue]);
 
   async function onSubmit(submitData: any) {
     setLoading(true);
-    let combinedData: any = {}
-    if (aditionalData) combinedData = { ...submitData, ...aditionalData };
+
+    let combinedData: any = {};
+    const formatData = new FormData();
+
+    if (Array.isArray(submitData.file)) {
+      submitData.file.forEach((file: File) => {
+        formatData.append("File", file);
+      });
+    } else if (submitData.file) {
+      formatData.append("File", submitData.file);
+    }
+
+    const { file, ...sanitizedData } = submitData;
+
+    if (aditionalData) combinedData = { ...sanitizedData, ...aditionalData };
     else combinedData = submitData;
+
+    let jsonData = {};
+    jsonData = { [actionType]: [combinedData] };
+    formatData.append(actionType, JSON.stringify(combinedData));
+
     const mutationFunction = getMutationFunction(actionType);
     try {
       const result = await mutationFunction(combinedData);
@@ -88,10 +122,25 @@ export const MainForm = ({ message_button, dataForm, actionType, aditionalData, 
       setLoading(false);
     }
   }
+  // Dividir dataForm en páginas basadas en H1
+  const pages = dataForm.reduce((acc: any[], field: any) => {
+    if (field.type === "H1" || acc.length === 0) {
+      acc.push([]);
+    }
+    acc[acc.length - 1].push(field);
+    return acc;
+  }, []);
+
+  const handlePageChange = (newPage: number) => {
+    // Guardar los valores actuales del formulario antes de cambiar de página
+    const currentValues = getValues();
+    setFormData((prevData: any) => ({ ...prevData, ...currentValues }));
+    setPage(newPage);
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-2 my-2 m-auto">
-      {dataForm.map((field, key) => (
+      {pages[page].map((field: any, key: any) => (
         <SwitchTypeInputRender
           key={key}
           cuestion={field}
@@ -105,11 +154,35 @@ export const MainForm = ({ message_button, dataForm, actionType, aditionalData, 
           setValue={setValue}
         />
       ))}
-      <button
-        className="float-right flex items-center rounded-md bg-purple-600 px-4 py-2 text-white transition-colors hover:bg-purple-700"
-        slot="end"
-        type="submit"
-      >{loading ? "Loading..." : message_button}</button>
+      {pages[page].map((field: any, key: any) => (
+        <SwitchTypeInputRender
+          key={key}
+          cuestion={field}
+          control={control}
+          register={register}
+          watch={watch}
+          clearErrors={clearErrors}
+          setError={setError}
+          errors={errors}
+          getValues={getValues}
+          setValue={setValue}
+        />
+      ))}
+
+      <div className="flex justify-between mt-4">
+        {page > 0 && (
+          <Button color="indigo" type="button" label="Anterior" onClick={() => handlePageChange(page - 1)} />
+        )}
+        {page < pages.length - 1 ? (
+          <Button color="indigo" type="button" label="Siguiente" onClick={() => handlePageChange(page + 1)} />
+        ) : (
+          <button
+            className="float-right flex items-center rounded-md bg-purple-600 px-4 py-2 text-white transition-colors hover:bg-purple-700"
+            slot="end"
+            type="submit"
+          >{loading ? "Loading..." : message_button}</button>
+        )}
+      </div>
     </form>
   );
 };
@@ -147,6 +220,8 @@ export function SwitchTypeInputRender(props: any) {
       return <TagInput {...props} />;
     case "Flex":
       return <FlexComponent {...props} elements={props.cuestion.elements} />;
+    case "H1":
+      return <h1 className="text-2xl font-bold">{props.cuestion.label}</h1>;
     default:
       return <h1>{type}</h1>;
   }
