@@ -41,10 +41,10 @@ const App: React.FC = () => {
 
   // Usar useCallback para memoizar la lógica de redirección
   const checkRedirect = useCallback(() => {
-    const isLayoutPage = location.pathname === '/layout';
+    const isLayoutPage = location.pathname === '/';
 
     if (!currentBranch && !isLayoutPage) {
-      history.replace('/layout');
+      history.replace('/');
       return;
     }
 
@@ -63,7 +63,7 @@ const App: React.FC = () => {
       <IonRouterOutlet>
         <Background>
           <Switch>
-            <Route exact path="/layout">
+            <Route exact path="/">
               {currentBranch ? <Redirect to="/products" /> : <Layout />}
             </Route>
             {/*  
@@ -78,7 +78,7 @@ const App: React.FC = () => {
               </Route> 
             */}
             <Route exact path="/">
-              <Redirect to="/products" />
+              <Redirect to="/" />
             </Route>
 
             {/* Manejo de rutas no encontradas */}

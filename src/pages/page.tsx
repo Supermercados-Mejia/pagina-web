@@ -2,8 +2,51 @@ import { BentoGrid, BentoItem } from "@/components/bento-grid";
 import { PageProps } from "@/utils/types/page";
 import { IonContent, IonHeader, IonTitle, IonToolbar } from "@ionic/react";
 import { BarChart3, Calendar } from "lucide-react";
+import { useMemo } from "react";
+import { empresas } from "./data/empresas";
 
 const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
+    /* 
+    const useInfiniteArray = (baseArray: any) => {
+        return useMemo(() => ({
+            getItem: (index: any) => baseArray[index % baseArray.length],
+            totalItems: Infinity
+        }), [baseArray]);
+    };
+    const infiniteArray = useInfiniteArray(empresas);
+    console.log(infiniteArray.getItem); 
+    */
+
+    /*
+    const useInfiniteCycle = (initialItems, interval = 3000) => {
+        const [currentIndex, setCurrentIndex] = useState(0);
+
+        const next = useCallback(() => {
+            setCurrentIndex(prev => (prev + 1) % initialItems.length);
+        }, [initialItems.length]);
+
+        const prev = useCallback(() => {
+            setCurrentIndex(prev => (prev - 1 + initialItems.length) % initialItems.length);
+        }, [initialItems.length]);
+
+    // Auto-avance opcional
+        useEffect(() => {
+            if (interval) {
+            const timer = setInterval(next, interval);
+            return () => clearInterval(timer);
+            }
+        }, [next, interval]);
+
+        return {
+            currentItem: initialItems[currentIndex],
+            next,
+            prev,
+            currentIndex
+        };
+    };
+    const { currentItem, next, prev } = useInfiniteCycle(ruta);
+    */
+    const duplicatedItems = [...empresas, ...empresas];
     return (
         <IonContent
             fullscreen
