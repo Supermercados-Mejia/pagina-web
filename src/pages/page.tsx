@@ -116,7 +116,6 @@ const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
                             colSpan={2}
                             title="Sucursales"
                             description="Encuéntranos en estas ubicaciones"
-                            className="max-h-96 overflow-y-auto"
                             icon={<LocateIcon className="h-6 w-6 text-orange-500" />}
                         >
                             <Sucursales />
