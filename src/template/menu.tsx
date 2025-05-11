@@ -72,7 +72,7 @@ const AppMenu = () => {
             </IonHeader>
 
             <IonContent className="bg-white p-2">
-                <IonList lines="none" className="p-4">
+                <IonList lines="none">
                     {getNavigation().map((item: any) => {
                         const Icon = item.icon;
                         return (
@@ -81,8 +81,9 @@ const AppMenu = () => {
                                 routerLink={item.href}
                                 routerDirection="none"
                                 detail={false}
+                                className="rounded-lg p-2"
                             >
-                                <Icon size={20} className="mr-3 text-gray-600" />
+                                <Icon size={20} className="mx-3 text-gray-600" />
                                 <IonLabel className="font-medium">{item.name}</IonLabel>
                             </IonItem>
                         );
