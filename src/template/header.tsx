@@ -10,7 +10,7 @@ import {
 
 interface HeaderProps {
     title: string;
-    showRightButton?: boolean;
+    showMenuButton?: boolean;
     showSearchButton?: boolean;
     className?: string;
     isScrolled?: boolean;
@@ -19,7 +19,7 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({
     title,
     isScrolled = false,
-    showRightButton = true,
+    showMenuButton = true,
     showSearchButton = false,
     className = ''
 }) => {
@@ -44,7 +44,7 @@ const Header: React.FC<HeaderProps> = ({
                         {title}
                     </IonTitle>
 
-                    {showRightButton && (
+                    {showMenuButton && (
                         <IonButtons slot="end" className="space-x-2">
                             <IonMenuButton className='text-white p-2' />
                         </IonButtons>
