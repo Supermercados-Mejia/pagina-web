@@ -7,6 +7,7 @@ import { useHistory } from "react-router";
 import { IonPage } from "@ionic/react";
 import Header from "@/template/header";
 import Page from "./page";
+import AppMenu from "@/template/menu";
 
 const Layout: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -14,10 +15,13 @@ const Layout: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
 
   return (
-    <IonPage>
-      <Header title="Liz" isScrolled={isScrolled} />
-      <Page onScroll={(scrolled) => setIsScrolled(scrolled)} />
-    </IonPage>
+    <>
+      <AppMenu />
+      <IonPage id="main-content">
+        <Header title="Liz" isScrolled={isScrolled} />
+        <Page onScroll={(scrolled) => setIsScrolled(scrolled)} />
+      </IonPage>
+    </>
   );
 };
 
