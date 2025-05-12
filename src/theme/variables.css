@@ -164,9 +164,6 @@
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
-*{
-    --background: transparent;
-}
 /* Estilos para Firefox */
 html {
     scrollbar-width: thin;
@@ -174,7 +171,6 @@ html {
 }
 ion-content {
     --background: transparent;
-    /* --color: #fff; */
 }
 ion-toolbar {
     --background: var(--background);
@@ -202,11 +198,26 @@ ion-toolbar {
 {
     opacity: 0;
 }
+/* Estilos para el modal */
+.login-modal {
+    --width: auto;
+    --min-width: 320px;
+    --max-width: 440px;
+    --max-height: 100%;
+    --border-radius: 12px;
+    --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+@media (min-width: 768px) {
+    .login-modal {
+        --max-width: 400px;
+        --max-height: 600px;
+    }
+}
 
 ion-radio {
     --border-radius: 4px;
     --inner-border-radius: 4px;
-
     --color: #ddd;
     --color-checked: #6815ec;
 }
@@ -214,7 +225,6 @@ ion-radio {
 ion-radio.ios::part(container) {
     width: 20px;
     height: 20px;
-
     border: 2px solid #ddd;
     border-radius: 4px;
 }

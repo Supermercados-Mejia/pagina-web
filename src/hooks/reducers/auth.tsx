@@ -31,8 +31,6 @@ export const auth = createApi({
                 body: data,
             }),
             onQueryStarted: async (data, { queryFulfilled }) => {
-                console.log(data);
-
                 try {
                     const { data: responseData } = await queryFulfilled;
                     // Verifica si la respuesta contiene un token

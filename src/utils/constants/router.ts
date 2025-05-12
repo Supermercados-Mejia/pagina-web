@@ -8,7 +8,8 @@ import {
   Truck,
   UserPlus,
   Star,
-  CheckCircle,
+  ScanBarcode,
+  BookUser,
 } from "lucide-react";
 
 export const navigation = [
@@ -21,15 +22,14 @@ export const navigation = [
   { name: "Proveedores", href: "/proveedores", icon: Truck },
   { name: "Vacantes", href: "/vacantes", icon: UserPlus },
   { name: "Valoracion", href: "/valoracion", icon: Star },
-  { name: "Verificador", href: "/verificador", icon: CheckCircle },
+  { name: "Verificador", href: "/verificador", icon: ScanBarcode },
 ];
-
 export const navigationUser = [
   { name: "Pantalla Inicial", href: "/home", icon: House },
   { name: "Postulaciones", href: "/postulaciones", icon: Briefcase },
-  { name: "Vacantes", href: "/vacantes", icon: UserPlus },
+  { name: "Vacantes", href: "/vacantes", icon: BookUser },
   { name: "Valoracion", href: "/valoracion", icon: Star },
-  { name: "Verificador", href: "/verificador", icon: CheckCircle },
+  { name: "Verificador", href: "/verificador", icon: ScanBarcode },
 ];
 
 export const navigationAdmin = [
@@ -42,5 +42,5 @@ export const navigationAdmin = [
   { name: "Proveedores", href: "/proveedores", icon: Truck },
   { name: "Vacantes", href: "/vacantes", icon: UserPlus },
   { name: "Valoracion", href: "/valoracion", icon: Star },
-  { name: "Verificador", href: "/verificador", icon: CheckCircle },
+  { name: "Verificador", href: "/verificador", icon: ScanBarcode },
 ];

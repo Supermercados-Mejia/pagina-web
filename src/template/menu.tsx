@@ -1,3 +1,5 @@
+import MainForm from "@/components/form/main-form";
+import { LogInField } from "@/utils/constants/forms/logIn";
 import { navigationAdmin, navigationUser } from "@/utils/constants/router";
 import {
     IonMenu,
@@ -10,12 +12,17 @@ import {
     IonLabel,
     IonButton,
     IonAvatar,
+    IonModal,
+    IonButtons,
 } from "@ionic/react";
+import { X } from "lucide-react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const AppMenu = () => {
     const user: any = [] //{ name: "t1", role: "user", avatar: "/default-avatar.png" }; // Replace with actual user data
     const logout = () => { }
+    const [isOpen, setIsOpen] = useState(false);
 
     const getNavigation = () => {
         if (!user) return [];
@@ -23,85 +30,116 @@ const AppMenu = () => {
     };
 
     return (
-        <IonMenu contentId="main-content" side="end">
-            <IonHeader className="custom-toolbar">
-                <IonToolbar>
-                    {user.lenght ? (
-                        <div className="p-4 text-center">
-                            <IonAvatar className="mx-auto mb-3">
-                                <img
-                                    src={user.avatar || "/default-avatar.png"}
-                                    alt="Avatar"
-                                />
-                            </IonAvatar>
-                            <IonTitle>{user.name}</IonTitle>
-                            <IonButton
-                                expand="block"
-                                fill="solid"
-                                color="light"
-                                onClick={logout}
-                                className="mt-3"
-                            >
-                                Cerrar Sesión
-                            </IonButton>
-                        </div>
-                    ) : (
-                        <div className="p-4 space-y-3">
-                            <IonButton
+        <>
+            <IonMenu contentId="main-content" side="end">
+                <IonHeader className="custom-toolbar">
+                    <IonToolbar>
+                        {user.lenght ? (
+                            <div className="p-4 text-center">
+                                <IonAvatar className="mx-auto mb-3">
+                                    <img
+                                        src={user.avatar || "/default-avatar.png"}
+                                        alt="Avatar"
+                                    />
+                                </IonAvatar>
+                                <IonTitle>{user.name}</IonTitle>
+                                <IonButton
+                                    expand="block"
+                                    fill="solid"
+                                    color="light"
+                                    onClick={logout}
+                                    className="mt-3"
+                                >
+                                    Cerrar Sesión
+                                </IonButton>
+                            </div>
+                        ) : (
+                            <div className="p-4 space-y-3">
+                                <IonButton
+                                    fill="solid"
+                                    color="light"
+                                    expand="block"
+                                    onClick={() => setIsOpen(true)}
+                                    className="font-semibold"
+                                >
+                                    Iniciar Sesión
+                                </IonButton>
+                                <IonButton
+                                    color="light"
+                                    expand="block"
+                                    fill="outline"
+                                    routerLink="/register"
+                                    className="font-semibold"
+                                >
+                                    Registrarse
+                                </IonButton>
+                            </div>
+                        )}
+                    </IonToolbar>
+                </IonHeader>
 
-                                fill="solid"
-                                color="light"
-                                expand="block"
-                                routerLink="/login"
-                                className="font-semibold"
-                            >
-                                Iniciar Sesión
-                            </IonButton>
-                            <IonButton
-                                color="light"
-                                expand="block"
-                                fill="outline"
-                                routerLink="/register"
-                                className="font-semibold"
-                            >
-                                Registrarse
-                            </IonButton>
+                <IonContent className="bg-white p-2">
+                    <IonList lines="none">
+                        {getNavigation().map((item: any) => {
+                            const Icon = item.icon;
+                            return (
+                                <IonItem
+                                    key={item.href}
+                                    routerLink={item.href}
+                                    routerDirection="none"
+                                    detail={false}
+                                    className="rounded-lg p-2"
+                                >
+                                    <Icon size={20} className="mx-3 text-gray-600" />
+                                    <IonLabel className="font-medium">{item.name}</IonLabel>
+                                </IonItem>
+                            );
+                        })}
+                    </IonList>
+
+                    {!user && (
+                        <div className="p-4 text-sm text-gray-500">
+                            <p>
+                                ¿Eres proveedor?
+                                <Link to="/proveedor-login" className="text-primary-600">
+                                    Acceso proveedores
+                                </Link>
+                            </p>
                         </div>
                     )}
-                </IonToolbar>
-            </IonHeader>
-
-            <IonContent className="bg-white p-2">
-                <IonList lines="none">
-                    {getNavigation().map((item: any) => {
-                        const Icon = item.icon;
-                        return (
-                            <IonItem
-                                key={item.href}
-                                routerLink={item.href}
-                                routerDirection="none"
-                                detail={false}
-                                className="rounded-lg p-2"
-                            >
-                                <Icon size={20} className="mx-3 text-gray-600" />
-                                <IonLabel className="font-medium">{item.name}</IonLabel>
-                            </IonItem>
-                        );
-                    })}
-                </IonList>
-
-                {!user && (
-                    <div className="p-4 text-sm text-gray-500">
-                        <p>
-                            ¿Eres proveedor?{" "}
-                            <Link to="/proveedor-login" className="text-primary-600">
-                                Acceso proveedores
-                            </Link>
-                        </p>
-                    </div>
-                )}
-            </IonContent>
-        </IonMenu>
+                </IonContent>
+                <IonModal
+                    isOpen={isOpen}
+                    onDidDismiss={() => setIsOpen(false)}
+                    className="login-modal"
+                    breakpoints={[0.25, 0.5, 0.75]}
+                    initialBreakpoint={0.75}
+                >
+                    <IonHeader className="ion-no-border">
+                        <IonToolbar>
+                            <IonTitle className="text-lg font-medium font-sans">Iniciar Sesión</IonTitle>
+                            <IonButtons slot="end">
+                                <IonButton
+                                    onClick={() => setIsOpen(false)}
+                                    strong
+                                >
+                                    <X className="text-purple-700" />
+                                </IonButton>
+                            </IonButtons>
+                        </IonToolbar>
+                    </IonHeader>
+                    <IonContent className="ion-padding-horizontal">
+                        <div className="max-w-sm mx-auto py-4">
+                            <MainForm
+                                actionType="post-login"
+                                dataForm={LogInField()}
+                                message_button="Iniciar Sesión"
+                            />
+                        </div>
+                    </IonContent>
+                </IonModal>
+            </IonMenu>
+        </>
     );
 };
 

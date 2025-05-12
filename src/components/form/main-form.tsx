@@ -25,6 +25,7 @@ import { TagInputComponent as TagInput } from "./tag-input"
 
 import { usePostUserLoginMutation } from "@/hooks/reducers/auth";
 import { Button } from "../button";
+import { Link } from "react-router-dom";
 
 export const MainForm = ({ message_button, dataForm, actionType, aditionalData, action, valueAssign, onSuccess }: MainFormProps) => {
 
@@ -154,20 +155,6 @@ export const MainForm = ({ message_button, dataForm, actionType, aditionalData, 
           setValue={setValue}
         />
       ))}
-      {pages[page].map((field: any, key: any) => (
-        <SwitchTypeInputRender
-          key={key}
-          cuestion={field}
-          control={control}
-          register={register}
-          watch={watch}
-          clearErrors={clearErrors}
-          setError={setError}
-          errors={errors}
-          getValues={getValues}
-          setValue={setValue}
-        />
-      ))}
 
       <div className="flex justify-between mt-4">
         {page > 0 && (
@@ -222,8 +209,12 @@ export function SwitchTypeInputRender(props: any) {
       return <FlexComponent {...props} elements={props.cuestion.elements} />;
     case "H1":
       return <h1 className="text-2xl font-bold">{props.cuestion.label}</h1>;
+    case "LINK":
+      return <Link to={props.cuestion.href} className="text-primary-600">
+        {props.cuestion.label}
+      </Link>
     default:
-      return <h1>{type}</h1>;
+      return <h2>{type}</h2>;
   }
 }
 interface FlexProps {
