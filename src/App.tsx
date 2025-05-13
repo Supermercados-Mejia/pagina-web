@@ -71,12 +71,16 @@ const App: React.FC = () => {
             <Route exact path="/layout">
               <Layout />
             </Route>
-            {getNavigation().map((key: any, item: any) => {
+            {getNavigation().map((item: any) => {
               const Page = item.page;
-              return (<>
-                {currentBranch ? <Route key={key} exact path={item.href} component={Page} />
-                  : <Redirect key={key} to="/layout" />}
-              </>
+              return (
+                <React.Fragment key={item.href}>
+                  {currentBranch ? (
+                    <Route exact path={item.href} component={Page} />
+                  ) : (
+                    <Redirect to="/layout" />
+                  )}
+                </React.Fragment>
               );
             })}
 
