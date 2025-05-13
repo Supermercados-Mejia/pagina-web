@@ -1,6 +1,7 @@
 import MainForm from "@/components/form/main-form";
 import { LogInField } from "@/utils/constants/forms/logIn";
 import { navigationAdmin, navigationUser } from "@/utils/constants/router";
+import { getLocalStorageItem } from "@/utils/functions/local-storage";
 import {
     IonMenu,
     IonHeader,
@@ -20,13 +21,15 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const AppMenu = () => {
+    // Obtener valores de forma correcta y tipada
+    const userRole = getLocalStorageItem("user-role");
     const user: any = [] //{ name: "t1", role: "user", avatar: "/default-avatar.png" }; // Replace with actual user data
     const logout = () => { }
     const [isOpen, setIsOpen] = useState(false);
 
     const getNavigation = () => {
         if (!user) return [];
-        return user.role === "admin" ? navigationAdmin : navigationUser;
+        return userRole === "admin" ? navigationAdmin : navigationUser;
     };
 
     return (

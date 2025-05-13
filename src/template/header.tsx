@@ -1,5 +1,8 @@
 // components/Header.tsx
+import { useAppSelector } from '@/hooks/selector';
+import { RootState } from '@/hooks/store';
 import { cn } from '@/utils/functions/cn';
+import { getLocalStorageItem } from '@/utils/functions/local-storage';
 import {
     IonHeader,
     IonToolbar,
@@ -23,6 +26,11 @@ const Header: React.FC<HeaderProps> = ({
     showSearchButton = false,
     className = ''
 }) => {
+
+    // Obtener valores de forma correcta y tipada
+    const userToken = getLocalStorageItem("token");
+    const reduxToken = useAppSelector((state: RootState) => state.auth?.mutations?.[0]?.data?.token);
+    const currentBranch = userToken ?? reduxToken;
 
     return (
         <>

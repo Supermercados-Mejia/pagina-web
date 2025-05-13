@@ -23,7 +23,7 @@ import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 import '@ionic/react/css/palettes/dark.class.css';
 import Background from './template/background';
-import Footer from './template/footer';
+import { navigationAdmin, navigationUser } from './utils/constants/router';
 
 setupIonicReact({
   mode: 'ios',
@@ -35,9 +35,10 @@ const App: React.FC = () => {
   const location = useLocation();
 
   // Obtener valores de forma correcta y tipada
-  const localBranch = getLocalStorageItem("sucursal");
-  const reduxBranch = useAppSelector((state: RootState) => state.app.sucursal);
-  const currentBranch = localBranch ?? reduxBranch;
+  const userRole = getLocalStorageItem("user-role");
+  const userToken = getLocalStorageItem("token");
+  const reduxToken = useAppSelector((state: RootState) => state.auth?.mutations?.[0]?.data?.token);
+  const currentBranch = userToken ?? reduxToken;
 
   // Usar useCallback para memoizar la lógica de redirección
   const checkRedirect = useCallback(() => {
@@ -49,10 +50,14 @@ const App: React.FC = () => {
     }
 
     if (currentBranch && isLayoutPage) {
-      history.replace('/products');
+      history.replace('/layout');
     }
   }, [currentBranch, location.pathname, history]);
 
+  const getNavigation = () => {
+    if (!currentBranch) return [];
+    return userRole === "admin" ? navigationAdmin : navigationUser;
+  };
   // Efecto más limpio y eficiente
   useEffect(() => {
     checkRedirect();
@@ -63,29 +68,28 @@ const App: React.FC = () => {
       <IonRouterOutlet>
         <Background>
           <Switch>
-            <Route exact path="/">
-              {currentBranch ? <Redirect to="/products" /> : <Layout />}
+            <Route exact path="/layout">
+              <Layout />
             </Route>
-            {/*  
-              <Route exact path="/products">
-              {currentBranch ? <Page /> : <Redirect to="/layout" />}
-              </Route>
-              <Route exact path="/process">
-                {currentBranch ? <Process /> : <Redirect to="/layout" />}
-              </Route>
-              <Route exact path="/products/:id">
-                {currentBranch ? <ProductID /> : <Redirect to="/layout" />}
-              </Route> 
-            */}
+            {getNavigation().map((key: any, item: any) => {
+              const Page = item.page;
+              return (<>
+                {currentBranch ? <Route key={key} exact path={item.href} component={Page} />
+                  : <Redirect key={key} to="/layout" />}
+              </>
+              );
+            })}
+
             <Route exact path="/">
-              <Redirect to="/" />
+              <Redirect to="/layout" />
             </Route>
 
             {/* Manejo de rutas no encontradas */}
             <Route>
               <NotFound />
             </Route>
-          </Switch>
+
+          </Switch >
         </Background>
       </IonRouterOutlet>
     </IonApp>

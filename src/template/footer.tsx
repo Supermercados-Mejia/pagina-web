@@ -1,7 +1,7 @@
 export default function Footer() {
     const date = new Date().getFullYear();
     return (
-        <footer className="w-full fixed left-0 bottom-0 border-t px-6 py-3 sm:px-8 bg-white backdrop-blur-lg transition-transform duration-300 translate-y-full">
+        <footer className=" w-full h-16 block bottom-0 border-t px-6 py-3 sm:px-8 bg-white/70 backdrop-blur-lg">
             <div className="flex items-center justify-between flex-wrap gap-y-2 max-w-7xl mx-auto">
                 {/* Logo y Derechos */}
                 <div className="flex items-center gap-x-2">

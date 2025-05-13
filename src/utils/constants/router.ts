@@ -11,36 +11,104 @@ import {
   ScanBarcode,
   BookUser,
 } from "lucide-react";
+import React from "react";
 
-export const navigation = [
-  { name: "Pantalla Inicial", href: "/home", icon: House },
-  { name: "Combos", href: "/combos", icon: Package },
-  { name: "Etiquetas", href: "/etiquetas", icon: Tag },
-  { name: "Evaluacion", href: "/evaluacion", icon: ClipboardList },
-  { name: "Listas", href: "/listas", icon: List },
-  { name: "Postulaciones", href: "/postulaciones", icon: Briefcase },
-  { name: "Proveedores", href: "/proveedores", icon: Truck },
-  { name: "Vacantes", href: "/vacantes", icon: UserPlus },
-  { name: "Valoracion", href: "/valoracion", icon: Star },
-  { name: "Verificador", href: "/verificador", icon: ScanBarcode },
-];
+const Pages = {
+  Layout: () => import("@/pages/Layout"),
+  // ... otros componentes
+};
 export const navigationUser = [
-  { name: "Pantalla Inicial", href: "/home", icon: House },
-  { name: "Postulaciones", href: "/postulaciones", icon: Briefcase },
-  { name: "Vacantes", href: "/vacantes", icon: BookUser },
-  { name: "Valoracion", href: "/valoracion", icon: Star },
-  { name: "Verificador", href: "/verificador", icon: ScanBarcode },
+  {
+    name: "Pantalla Inicial",
+    href: "/layout",
+    icon: House,
+    page: React.lazy(Pages.Layout),
+  },
+  {
+    name: "Postulaciones",
+    href: "/postulaciones",
+    icon: Briefcase,
+    page: React.lazy(Pages.Layout),
+  },
+  {
+    name: "Vacantes",
+    href: "/vacantes",
+    icon: BookUser,
+    page: React.lazy(Pages.Layout),
+  },
+  {
+    name: "Valoracion",
+    href: "/valoracion",
+    icon: Star,
+    page: React.lazy(Pages.Layout),
+  },
+  {
+    name: "Verificador",
+    href: "/verificador",
+    icon: ScanBarcode,
+    page: React.lazy(Pages.Layout),
+  },
 ];
 
 export const navigationAdmin = [
-  { name: "Pantalla Inicial", href: "/home", icon: House },
-  { name: "Combos", href: "/combos", icon: Package },
-  { name: "Etiquetas", href: "/etiquetas", icon: Tag },
-  { name: "Evaluacion", href: "/evaluacion", icon: ClipboardList },
-  { name: "Listas", href: "/listas", icon: List },
-  { name: "Postulaciones", href: "/postulaciones", icon: Briefcase },
-  { name: "Proveedores", href: "/proveedores", icon: Truck },
-  { name: "Vacantes", href: "/vacantes", icon: UserPlus },
-  { name: "Valoracion", href: "/valoracion", icon: Star },
-  { name: "Verificador", href: "/verificador", icon: ScanBarcode },
+  {
+    name: "Pantalla Inicial",
+    href: "/layout",
+    icon: House,
+    page: React.lazy(Pages.Layout),
+  },
+  {
+    name: "Combos",
+    href: "/combos",
+    icon: Package,
+    page: React.lazy(Pages.Layout),
+  },
+  {
+    name: "Etiquetas",
+    href: "/etiquetas",
+    icon: Tag,
+    page: React.lazy(Pages.Layout),
+  },
+  {
+    name: "Evaluacion",
+    href: "/evaluacion",
+    icon: ClipboardList,
+    page: React.lazy(Pages.Layout),
+  },
+  {
+    name: "Listas",
+    href: "/listas",
+    icon: List,
+    page: React.lazy(Pages.Layout),
+  },
+  {
+    name: "Postulaciones",
+    href: "/postulaciones",
+    icon: Briefcase,
+    page: React.lazy(Pages.Layout),
+  },
+  {
+    name: "Proveedores",
+    href: "/proveedores",
+    icon: Truck,
+    page: React.lazy(Pages.Layout),
+  },
+  {
+    name: "Vacantes",
+    href: "/vacantes",
+    icon: UserPlus,
+    page: React.lazy(Pages.Layout),
+  },
+  {
+    name: "Valoracion",
+    href: "/valoracion",
+    icon: Star,
+    page: React.lazy(Pages.Layout),
+  },
+  {
+    name: "Verificador",
+    href: "/verificador",
+    icon: ScanBarcode,
+    page: React.lazy(Pages.Layout),
+  },
 ];

@@ -19,12 +19,22 @@ export const store = configureStore({
     [api.reducerPath]: api.reducer,
     [auth.reducerPath]: auth.reducer,
   },
-  devTools: /* config.mode !== "production" */ true,
+  devTools: config.mode !== "production",
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({}).concat([api.middleware, auth.middleware]),
 });
 
 setupListeners(store.dispatch);
 
-export type RootState = ReturnType<typeof store.getState>;
+export interface Auth {
+  mutations: Array<{
+    data?: {
+      token?: string;
+    };
+  }>;
+}
+
+export type RootState = ReturnType<typeof store.getState> & {
+  auth: Auth;
+};
 export type AppDispatch = typeof store.dispatch;
