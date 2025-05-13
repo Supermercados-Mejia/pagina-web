@@ -31,7 +31,7 @@ const AppMenu = () => {
 
     return (
         <>
-            <IonMenu contentId="main-content" side="end">
+            <IonMenu contentId="main-content" side="end" className="">
                 <IonHeader className="custom-toolbar">
                     <IonToolbar>
                         {user.lenght ? (
@@ -78,7 +78,7 @@ const AppMenu = () => {
                     </IonToolbar>
                 </IonHeader>
 
-                <IonContent className="bg-white p-2">
+                <IonContent className="bg-white p-2 z-50">
                     <IonList lines="none">
                         {getNavigation().map((item: any) => {
                             const Icon = item.icon;

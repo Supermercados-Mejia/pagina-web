@@ -34,10 +34,11 @@ const Header: React.FC<HeaderProps> = ({
                     className
                 )}
             >
-                <IonToolbar className='p-2'>
+                <IonToolbar className='p-2 flex items-center justify-between'>
                     <IonTitle
                         className={cn(
-                            "text-xl font-light tracking-tight pl-0", isScrolled ? "text-purple-700" : "text-white",
+                            "text-xl font-light tracking-tight",
+                            isScrolled ? "text-purple-700" : "text-white",
                             showSearchButton ? "text-left" : "",
                         )}
                     >
@@ -45,7 +46,7 @@ const Header: React.FC<HeaderProps> = ({
                     </IonTitle>
 
                     {showMenuButton && (
-                        <IonButtons slot="end" className="space-x-2">
+                        <IonButtons slot="end">
                             <IonMenuButton className={cn(isScrolled ? 'text-purple-700' : 'text-white')} />
                         </IonButtons>
                     )}

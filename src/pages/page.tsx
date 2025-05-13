@@ -1,11 +1,14 @@
 import { BentoGrid, BentoItem } from "@/components/bento-grid";
 import { PageProps } from "@/utils/types/page";
-import { IonContent, IonHeader, IonIcon, IonTitle, IonToolbar } from "@ionic/react";
-import { ArrowDownAzIcon, ArrowRightIcon, BadgeDollarSign, BarChart3, Blocks, Calendar, HistoryIcon, LocateIcon, Newspaper, PackageSearch } from "lucide-react";
+import { IonButton, IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonTitle, IonToolbar } from "@ionic/react";
+import { ArrowRightIcon, BadgeDollarSign, Blocks, HistoryIcon, LocateIcon, Newspaper, PackageSearch } from "lucide-react";
 import { empresas } from "./data/empresas";
 import { OffertCard } from "./components/cards";
 import { servicios } from "./data/servicios";
 import Sucursales from "./components/sucursales";
+import { socialLinks } from "./data/enlaces";
+import { cn } from "@/utils/functions/cn";
+import { chevronDown } from "ionicons/icons";
 
 const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
     const duplicatedItems = [...empresas, ...empresas];
@@ -32,6 +35,38 @@ const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
                 </IonToolbar>
             </IonHeader>
 
+            <section className="section w-full lg:min-h-[70vh] min-h-[60vh] -top-8 absolute px-1">
+                <div className="overlay m-auto ">
+                    <h2 className="text-center text-lg font-semibold text-violet-800 shadow-2xl">Tu supermercado de confianza</h2>
+                    <p className="mx-auto mt-2 max-w-lg text-center text-4xl font-semibold font-[Lobster] tracking-tight text-balance text-purple-600 sm:text-5xl">
+                        Siempre Fresco Siempre Bien
+                    </p>
+                </div>
+            </section>
+
+            <ul className="mt-[58vh] mb-28 bottom-0 left-0 z-50 flex w-full items-center justify-center gap-4 p-4 border-t border-t-gray-200">
+                <IonFab style={{ bottom: '15rem', left: '50%', transform: 'translate(-50%, -50%)' }}>
+                    <IonFabButton className="bg-purple-800 rounded-full text-white" color="#6000a0" >
+                        <IonIcon icon={chevronDown} />
+                    </IonFabButton>
+                </IonFab>
+                {socialLinks.map((link, index) => {
+                    const IconComponent = link.icon;
+                    return (
+                        <li key={index}>
+                            <a href={link.href} target={link.target}>
+                                <IonButton
+                                    shape="round"
+                                    fill="clear"
+                                    color={link.color}
+                                >
+                                    <IonIcon icon={IconComponent} className={cn("h-6 w-6", link.className)} />
+                                </IonButton>
+                            </a>
+                        </li>
+                    );
+                })}
+            </ul>
             <div className="lg:mb-16 mb-36">
                 <section
                     className="-mt-10">
@@ -160,8 +195,8 @@ const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
                     </BentoGrid>
                 </section>
 
-                <h2 className="text-center">Marcas que nos acompañan</h2>
-                <div className="flex animate-infinite-scroll mt-10 mb-10">
+                <h2 className="text-center font-bold text-">Marcas que nos acompañan</h2>
+                <div className="flex animate-infinite-scroll ">
                     {duplicatedItems.map((data, key) => (
                         <OffertCard key={key} avatarUrl={data.link} />
                     ))}

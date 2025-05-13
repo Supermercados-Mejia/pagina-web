@@ -86,7 +86,6 @@ const App: React.FC = () => {
               <NotFound />
             </Route>
           </Switch>
-          <Footer />
         </Background>
       </IonRouterOutlet>
     </IonApp>
