@@ -183,7 +183,7 @@ ion-toolbar {
 }
 .section {
     background-image:
-        linear-gradient(#69696979 0%, #fdfdfdb9 70%, #ffffff 100%),
+        linear-gradient(#69696948 0%, #f8f8f8b9 70%, #ffffff 100%),
         url('/merc1.jpg');
     background-size: cover;
     display: flex;

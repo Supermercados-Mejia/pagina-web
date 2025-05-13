@@ -6,10 +6,13 @@ import { useAppSelector } from './hooks/selector';
 import { getLocalStorageItem } from './utils/functions/local-storage';
 import { RootState } from './hooks/store';
 
-// Importa tus componentes
 import Layout from './pages/Layout';
 import NotFound from './pages/NotFound';
-// Estilos
+
+import Background from './template/background';
+
+import { navigationAdmin, navigationUser } from './utils/constants/router';
+
 import './theme/variables.css';
 import '@ionic/react/css/core.css';
 import '@ionic/react/css/normalize.css';
@@ -22,46 +25,47 @@ import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 import '@ionic/react/css/palettes/dark.class.css';
-import Background from './template/background';
-import { navigationAdmin, navigationUser } from './utils/constants/router';
 
-setupIonicReact({
-  mode: 'ios',
-});
+// Generar conjunto de todas las rutas válidas
+const allValidPaths = [...navigationAdmin, ...navigationUser].map((item: any) => item.page && item.href);
+const validPathsSet = new Set(allValidPaths);
+
+setupIonicReact({ mode: 'ios' });
 
 const App: React.FC = () => {
-  // Usar useNavigate en lugar de useHistory para react-router v6 (si es posible)
   const history = useHistory();
   const location = useLocation();
 
-  // Obtener valores de forma correcta y tipada
   const userRole = getLocalStorageItem("user-role");
   const userToken = getLocalStorageItem("token");
   const reduxToken = useAppSelector((state: RootState) => state.auth?.mutations?.[0]?.data?.token);
+
   const currentBranch = userToken ?? reduxToken;
 
-  // Usar useCallback para memoizar la lógica de redirección
   const checkRedirect = useCallback(() => {
-    const isLayoutPage = location.pathname === '/';
+    const currentPath = location.pathname;
 
-    if (!currentBranch && !isLayoutPage) {
-      history.replace('/');
-      return;
-    }
-
-    if (currentBranch && isLayoutPage) {
-      history.replace('/layout');
+    if (!currentBranch) {
+      // Usuario no autenticado: redirigir solo si está en ruta válida o raíz
+      if (validPathsSet.has(currentPath) || currentPath === '/') {
+        history.replace('/');
+      }
+    } else {
+      // Usuario autenticado: redirigir desde raíz a layout
+      if (currentPath === '/') {
+        history.replace('/layout');
+      }
     }
   }, [currentBranch, location.pathname, history]);
+
+  useEffect(() => {
+    checkRedirect();
+  }, [checkRedirect]);
 
   const getNavigation = () => {
     if (!currentBranch) return [];
     return userRole === "admin" ? navigationAdmin : navigationUser;
   };
-  // Efecto más limpio y eficiente
-  useEffect(() => {
-    checkRedirect();
-  }, [checkRedirect]);
 
   return (
     <IonApp>
@@ -71,29 +75,26 @@ const App: React.FC = () => {
             <Route exact path="/layout">
               <Layout />
             </Route>
+
             {getNavigation().map((item: any) => {
               const Page = item.page;
               return (
-                <React.Fragment key={item.href}>
-                  {currentBranch ? (
-                    <Route exact path={item.href} component={Page} />
-                  ) : (
-                    <Redirect to="/layout" />
-                  )}
-                </React.Fragment>
+                <Route
+                  key={item.href}
+                  exact
+                  path={item.href}
+                  component={currentBranch ? Page : () => <Redirect to="/" />}
+                />
               );
             })}
 
             <Route exact path="/">
-              <Redirect to="/layout" />
+              {currentBranch ? <Redirect to="/layout" /> : <Redirect to="/" />}
             </Route>
 
-            {/* Manejo de rutas no encontradas */}
-            <Route>
-              <NotFound />
-            </Route>
-
-          </Switch >
+            {/* Ruta 404 debe ser la última */}
+            <Route component={NotFound} />
+          </Switch>
         </Background>
       </IonRouterOutlet>
     </IonApp>

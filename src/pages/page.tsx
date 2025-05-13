@@ -44,7 +44,7 @@ const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
                 </div>
             </section>
 
-            <ul className="mt-[58vh] mb-28 bottom-0 left-0 z-50 flex w-full items-center justify-center gap-4 p-4 border-t border-t-gray-200">
+            <ul className="md:mt-[64vh] mt-[62vh] mb-28 bottom-0 left-0 z-50 flex w-full items-center justify-center gap-4 p-4 border-t border-t-gray-200">
                 <IonFab style={{ bottom: '15rem', left: '50%', transform: 'translate(-50%, -50%)' }}>
                     <IonFabButton className="bg-purple-800 rounded-full text-white" color="#6000a0" >
                         <IonIcon icon={chevronDown} />
