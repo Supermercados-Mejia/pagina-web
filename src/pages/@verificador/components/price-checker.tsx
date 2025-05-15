@@ -28,7 +28,7 @@ const Input = ({ className = "", ...props }: React.InputHTMLAttributes<HTMLInput
 };
 
 const PAGE_SIZE = 5;
-const COOLDOWN_TIME = 3000;
+const COOLDOWN_TIME = 5000;
 
 function PriceChecker() {
     const [displayData, setDisplayData] = useState<Product[]>([]);
@@ -38,6 +38,19 @@ function PriceChecker() {
     const [getProgress, setProgress] = useState(0);
     const timeoutRef = useRef<NodeJS.Timeout>(null);
     const inputValueRef = useRef(inputValue);
+
+    const resetStates = () => {
+        setDisplayData([]);
+        setInputValue("");
+        setSelectedSucursal(sucursales[2].id);
+        setProductNotFound(false);
+        setProgress(0);
+    };
+
+    const resetCooldownTimer = () => {
+        if (timeoutRef.current) clearTimeout(timeoutRef.current);
+        timeoutRef.current = setTimeout(resetStates, COOLDOWN_TIME);
+    };
 
     const { data, isLoading, refetch } = useGetArticulosQuery(
         {
@@ -52,18 +65,8 @@ function PriceChecker() {
         inputValueRef.current = inputValue;
     }, [inputValue]);
 
-    const startDisplayTimer = () => {
-        if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current);
-        }
-        timeoutRef.current = setTimeout(() => {
-            setDisplayData([]);
-            setInputValue('');
-        }, COOLDOWN_TIME);
-    };
-
     useEffect(() => {
-        if (data) {
+        if (data && data.precios) {
             const isBarcode = /^\d{12,13}$/.test(inputValueRef.current);
             const newProducts = data.precios.map((item: any) => {
                 const oferta = data.ofertas?.find((o: any) => o.articulo === item.cuenta);
@@ -81,38 +84,38 @@ function PriceChecker() {
 
             if (isBarcode && data.precios.length === 0) {
                 setProductNotFound(true);
-                startDisplayTimer();
             } else {
                 setDisplayData(newProducts);
                 setProductNotFound(false);
-                startDisplayTimer();
             }
         } else {
             setProductNotFound(true);
         }
-    }, [data]);
+        resetCooldownTimer();
+    }, [data, inputValueRef.current, selectedSucursal]);
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setProgress(prev => prev >= 1 ? 1 : prev + 0.05);
-        }, 100);
-        return () => clearInterval(interval);
+            setProgress(prev => prev >= 1 ? 1 : prev + 1 / 100);
+        }, 50);
+        return () => { clearInterval(interval); setProgress(0); };
     }, [displayData]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setProductNotFound(false);
         const newValue = e.target.value;
         setInputValue(newValue);
-
-        if (/^\d{12,13}$/.test(newValue)) {
-            refetch();
-            startDisplayTimer();
-        }
+        resetCooldownTimer();
     };
-
     const handleSucursalChange = (e: CustomEvent) => {
         setSelectedSucursal(e.detail.value);
+        resetCooldownTimer();
     };
+
+    useEffect(() => {
+        return () => {
+            if (timeoutRef.current) clearTimeout(timeoutRef.current);
+        };
+    }, []);
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter') e.preventDefault();
