@@ -10,11 +10,13 @@ import {
   Star,
   ScanBarcode,
   BookUser,
+  Clock,
 } from "lucide-react";
 import React from "react";
 
 const Pages = {
   Layout: () => import("@/pages/Layout"),
+  LayoutVerificador: () => import("@/pages/@verificador/layout"),
   // ... otros componentes
 };
 export const navigationUser = [
@@ -22,6 +24,12 @@ export const navigationUser = [
     name: "Pantalla Inicial",
     href: "/layout",
     icon: House,
+    page: React.lazy(Pages.Layout),
+  },
+  {
+    name: "Historia",
+    href: "/Historia",
+    icon: Clock,
     page: React.lazy(Pages.Layout),
   },
   {
@@ -46,7 +54,7 @@ export const navigationUser = [
     name: "Verificador",
     href: "/verificador",
     icon: ScanBarcode,
-    page: React.lazy(Pages.Layout),
+    page: React.lazy(Pages.LayoutVerificador),
   },
 ];
 
@@ -109,6 +117,6 @@ export const navigationAdmin = [
     name: "Verificador",
     href: "/verificador",
     icon: ScanBarcode,
-    page: React.lazy(Pages.Layout),
+    page: React.lazy(Pages.LayoutVerificador),
   },
 ];

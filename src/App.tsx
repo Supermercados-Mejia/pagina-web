@@ -72,7 +72,7 @@ const App: React.FC = () => {
       <IonRouterOutlet>
         <Background>
           <Switch>
-            <Route exact path="/layout">
+            <Route exact path="/">
               <Layout />
             </Route>
 
@@ -89,7 +89,7 @@ const App: React.FC = () => {
             })}
 
             <Route exact path="/">
-              {currentBranch ? <Redirect to="/layout" /> : <Redirect to="/" />}
+              <Redirect to="/" />
             </Route>
 
             {/* Ruta 404 debe ser la última */}

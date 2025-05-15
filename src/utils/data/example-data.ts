@@ -8,4 +8,8 @@ export interface Product {
   precio: number;
   precioRegular?: number;
   factor?: number;
+  oferta?: {
+    precio: number;
+    fechaHasta: string;
+  };
 }

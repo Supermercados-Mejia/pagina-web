@@ -1,9 +1,8 @@
 ;
 import { EnvConfig } from "@/utils/constants/env.config";
-import { getLocalStorageItem, setLocalStorageItem } from "@/utils/functions/local-storage";
+import { getLocalStorageItem, removeFromLocalStorage, setLocalStorageItem } from "@/utils/functions/local-storage";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-export const getUserData = () => getLocalStorageItem("user_data");
 const { api: apiUrl } = EnvConfig();
 
 export const auth = createApi({
@@ -13,6 +12,10 @@ export const auth = createApi({
         baseUrl: apiUrl,
         prepareHeaders: (headers) => {
             headers.set("Content-Type", "application/json");
+            const token = getLocalStorageItem("token");
+            if (token) {
+                headers.set("Authorization", `Bearer ${token}`);
+            }
             return headers;
         },
     }),
@@ -30,13 +33,14 @@ export const auth = createApi({
                 method: "POST",
                 body: data,
             }),
-            onQueryStarted: async (data, { queryFulfilled }) => {
+            onQueryStarted: async (_, { queryFulfilled }) => {
                 try {
                     const { data: responseData } = await queryFulfilled;
                     // Verifica si la respuesta contiene un token
                     if (responseData.token) {
                         // Guardar el token en localStorage
-                        setLocalStorageItem("user-role", "user")
+                        setLocalStorageItem("user-role", responseData.role.trimEnd());
+                        setLocalStorageItem("user-id", responseData.userId);
                         setLocalStorageItem("token", responseData.token);
                     }
                 } catch (error) {
@@ -45,11 +49,22 @@ export const auth = createApi({
             },
         }),
         postLogut: builder.mutation({
-            query: (data) => ({
+            query: (userId) => ({
                 url: `v1/users/logout`,
                 method: "POST",
-                body: data,
+                params: { id: userId },
             }),
+            onQueryStarted: async (_, { queryFulfilled }) => {
+                try {
+                    await queryFulfilled;
+                    // Eliminar todos los datos relacionados con la sesión
+                    removeFromLocalStorage("user-role");
+                    removeFromLocalStorage("user-id");
+                    removeFromLocalStorage("token");
+                } catch (error) {
+                    console.log("Error al hacer logout:", error);
+                }
+            },
         }),
     }),
 });

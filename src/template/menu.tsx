@@ -1,4 +1,5 @@
 import MainForm from "@/components/form/main-form";
+import { usePostLogutMutation } from "@/hooks/reducers/auth";
 import { LogInField } from "@/utils/constants/forms/logIn";
 import { navigationAdmin, navigationUser } from "@/utils/constants/router";
 import { getLocalStorageItem } from "@/utils/functions/local-storage";
@@ -22,13 +23,28 @@ import { Link } from "react-router-dom";
 
 const AppMenu = () => {
     // Obtener valores de forma correcta y tipada
+    const [LogOutProces] = usePostLogutMutation();
+
     const userRole = getLocalStorageItem("user-role");
-    const user: any = [] //{ name: "t1", role: "user", avatar: "/default-avatar.png" }; // Replace with actual user data
-    const logout = () => { }
+    const userId = getLocalStorageItem("user-id");
+    const user = getLocalStorageItem("token");
+
+    const logout = async () => {
+        if (!userId) {
+            console.error("No user ID found");
+            return;
+        }
+
+        try {
+            await LogOutProces(userId).unwrap(); // ✅ Envía solo el ID
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
+    }
     const [isOpen, setIsOpen] = useState(false);
 
     const getNavigation = () => {
-        if (!user) return [];
+        if (!userRole) return navigationUser;
         return userRole === "admin" ? navigationAdmin : navigationUser;
     };
 
@@ -37,15 +53,15 @@ const AppMenu = () => {
             <IonMenu contentId="main-content" side="end" className="">
                 <IonHeader className="custom-toolbar">
                     <IonToolbar>
-                        {user.lenght ? (
+                        {user ? (
                             <div className="p-4 text-center">
-                                <IonAvatar className="mx-auto mb-3">
+                                {/* <IonAvatar className="mx-auto mb-3">
                                     <img
                                         src={user.avatar || "/default-avatar.png"}
                                         alt="Avatar"
                                     />
                                 </IonAvatar>
-                                <IonTitle>{user.name}</IonTitle>
+                                <IonTitle>{user.name}</IonTitle> */}
                                 <IonButton
                                     expand="block"
                                     fill="solid"
@@ -137,6 +153,10 @@ const AppMenu = () => {
                                 actionType="post-login"
                                 dataForm={LogInField()}
                                 message_button="Iniciar Sesión"
+                                onSuccess={({ data }: any) => {
+                                    console.log("Login successful:", data);
+                                    setIsOpen(false);
+                                }}
                             />
                         </div>
                     </IonContent>

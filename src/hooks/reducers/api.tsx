@@ -2,8 +2,8 @@ import { EnvConfig } from "@/utils/constants/env.config";
 import { getLocalStorageItem } from "@/utils/functions/local-storage";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-export const getUserData = () => getLocalStorageItem("user_data");
 const { api: apiUrl } = EnvConfig();
+
 export const api = createApi({
     reducerPath: "api",
     refetchOnFocus: true,
