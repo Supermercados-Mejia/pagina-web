@@ -3,8 +3,8 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { IonItem, IonLabel, IonList, IonSpinner, IonSelect, IonSelectOption, IonProgressBar } from "@ionic/react";
 import { ScanBarcode, Search, ShoppingBasket } from "lucide-react";
-import { useGetArticulosQuery } from "@/hooks/reducers/api";
 import { Product } from "@/utils/data/example-data";
+import { useGetArticulosQuery } from "@/hooks/reducers/api_int";
 
 type Sucursal = {
     id: string;
@@ -53,17 +53,17 @@ function PriceChecker() {
     }, [inputValue]);
 
     const startDisplayTimer = () => {
-        if (timeoutRef.current) {
+        /* if (timeoutRef.current) {
             clearTimeout(timeoutRef.current);
         }
         timeoutRef.current = setTimeout(() => {
             setDisplayData([]);
             setInputValue('');
-        }, COOLDOWN_TIME);
+        }, COOLDOWN_TIME); */
     };
 
     useEffect(() => {
-        if (data && data.precios) {
+        if (data) {
             const isBarcode = /^\d{12,13}$/.test(inputValueRef.current);
             const newProducts = data.precios.map((item: any) => {
                 const oferta = data.ofertas?.find((o: any) => o.articulo === item.cuenta);

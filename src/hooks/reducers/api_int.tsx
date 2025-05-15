@@ -2,15 +2,16 @@ import { EnvConfig } from "@/utils/constants/env.config";
 import { getLocalStorageItem } from "@/utils/functions/local-storage";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const { api: apiUrl } = EnvConfig();
+const { api_int } = EnvConfig();
+console.log(api_int);
 
-export const api = createApi({
-    reducerPath: "api",
+export const apiInt = createApi({
+    reducerPath: "apiInt",
     refetchOnFocus: true,
     keepUnusedDataFor: 10, // Reducir tiempo de caché para datos no usados
     refetchOnMountOrArgChange: true, // Mejor control de refetch
     baseQuery: fetchBaseQuery({
-        baseUrl: apiUrl,
+        baseUrl: api_int,
         prepareHeaders: (headers, { }) => {
             headers.set("Content-Type", "application/json");
             const token = getLocalStorageItem("token");
@@ -48,10 +49,29 @@ export const api = createApi({
             }),
             extraOptions: { maxRetries: 2 }
         }),
+        getArticulos: builder.query({
+            query: ({ page, pageSize, filtro, listaPrecio, signal }) => ({
+                url: `Precios`,
+                method: "GET",
+                params: {
+                    page,
+                    pageSize,
+                    listaPrecio,
+                    filtro// codigo de barras o nombre
+                },
+                signal
+            }),
+            transformErrorResponse: (response: any) => ({
+                status: response.status,
+                message: response.data?.message || 'Error fetching data',
+            }),
+            extraOptions: { maxRetries: 2 }
+        }),
     }),
 });
 
 export const {
     useGetAllMutation,
     usePostMutation,
-} = api;
+    useGetArticulosQuery,
+} = apiInt;
