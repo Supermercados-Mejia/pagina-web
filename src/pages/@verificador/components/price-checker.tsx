@@ -53,13 +53,13 @@ function PriceChecker() {
     }, [inputValue]);
 
     const startDisplayTimer = () => {
-        /* if (timeoutRef.current) {
+        if (timeoutRef.current) {
             clearTimeout(timeoutRef.current);
         }
         timeoutRef.current = setTimeout(() => {
             setDisplayData([]);
             setInputValue('');
-        }, COOLDOWN_TIME); */
+        }, COOLDOWN_TIME);
     };
 
     useEffect(() => {
