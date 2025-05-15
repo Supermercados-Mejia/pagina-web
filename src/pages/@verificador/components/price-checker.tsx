@@ -66,7 +66,7 @@ function PriceChecker() {
     }, [inputValue]);
 
     useEffect(() => {
-        if (data && data.precios) {
+        if (data && data.precios.length > 0) {
             const isBarcode = /^\d{12,13}$/.test(inputValueRef.current);
             const newProducts = data.precios.map((item: any) => {
                 const oferta = data.ofertas?.find((o: any) => o.articulo === item.cuenta);
