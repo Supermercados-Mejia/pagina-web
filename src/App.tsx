@@ -11,7 +11,7 @@ import NotFound from './pages/NotFound';
 
 import Background from './template/background';
 
-import { navigationAdmin, navigationUser } from './utils/constants/router';
+import { navigationAdmin, navigationDefault, navigationUser } from './utils/constants/router';
 
 import './theme/variables.css';
 import '@ionic/react/css/core.css';
@@ -51,9 +51,9 @@ const App: React.FC = () => {
         history.replace('/');
       }
     } else {
-      // Usuario autenticado: redirigir desde raíz a layout
+      // Usuario autenticado: redirigir desde raíz a dashboard');
       if (currentPath === '/') {
-        history.replace('/layout');
+        history.replace('/dashboard');
       }
     }
   }, [currentBranch, location.pathname, history]);
@@ -63,7 +63,7 @@ const App: React.FC = () => {
   }, [checkRedirect]);
 
   const getNavigation = () => {
-    if (!currentBranch) return [];
+    if (!currentBranch) return navigationDefault;
     return userRole === "admin" ? navigationAdmin : navigationUser;
   };
 

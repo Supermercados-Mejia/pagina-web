@@ -19,6 +19,40 @@ const Pages = {
   LayoutVerificador: () => import("@/pages/@verificador/layout"),
   // ... otros componentes
 };
+
+export const navigationDefault = [
+  {
+    name: "Pantalla Inicial",
+    href: "/layout",
+    icon: House,
+    page: React.lazy(Pages.Layout),
+  },
+  {
+    name: "Historia",
+    href: "/Historia",
+    icon: Clock,
+    page: React.lazy(Pages.Layout),
+  },
+  {
+    name: "Postulaciones",
+    href: "/postulaciones",
+    icon: Briefcase,
+    page: React.lazy(Pages.Layout),
+  },
+  {
+    name: "Vacantes",
+    href: "/vacantes",
+    icon: BookUser,
+    page: React.lazy(Pages.Layout),
+  },
+  {
+    name: "Valoracion",
+    href: "/valoracion",
+    icon: Star,
+    page: React.lazy(Pages.Layout),
+  },
+];
+
 export const navigationUser = [
   {
     name: "Pantalla Inicial",
