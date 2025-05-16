@@ -17,7 +17,8 @@ export type FieldType =
   | "IMG"
   | "SEARCH"
   | "LINK"
-  | "TAG_INPUT";
+  | "TAG_INPUT"
+  | "H1";
 
 export interface SelectOption {
   value: string;

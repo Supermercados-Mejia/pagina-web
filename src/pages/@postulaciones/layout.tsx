@@ -5,6 +5,7 @@ import Header from "@/template/header";
 import AppMenu from "@/template/menu";
 import { getLocalStorageItem } from "@/utils/functions/local-storage";
 import AdminPostulaciones from "./@admin/page";
+import UserPostulaciones from "./@user/page";
 
 const LayoutPostulaciones: React.FC = () => {
 
@@ -19,7 +20,7 @@ const LayoutPostulaciones: React.FC = () => {
                 {userRole === 'admin' ?
                     (<AdminPostulaciones />)
                     :
-                    (<></>)
+                    (<UserPostulaciones />)
                 }
             </IonPage>
         </>

@@ -99,7 +99,7 @@ const App: React.FC = () => {
                   key={item.href}
                   exact
                   path={item.href}
-                  component={currentBranch ? Page : () => <Redirect to="/" />}
+                  component={Page}
                 />
               );
             })}
