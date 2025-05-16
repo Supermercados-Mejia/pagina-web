@@ -47,9 +47,9 @@ const App: React.FC = () => {
 
     if (!currentBranch) {
       // Usuario no autenticado: redirigir solo si está en ruta válida o raíz
-      if (validPathsSet.has(currentPath) || currentPath === '/') {
+      /* if (validPathsSet.has(currentPath) || currentPath === '/') {
         history.replace('/');
-      }
+      } */
     } else {
       // Usuario autenticado: redirigir desde raíz a dashboard');
       if (currentPath === '/') {
