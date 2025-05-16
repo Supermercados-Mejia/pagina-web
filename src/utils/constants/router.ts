@@ -17,6 +17,7 @@ import React from "react";
 const Pages = {
   Layout: () => import("@/pages/Layout"),
   LayoutVerificador: () => import("@/pages/@verificador/layout"),
+  LayoutPostulaciones: () => import("@/pages/@postulaciones/layout"),
   // ... otros componentes
 };
 
@@ -37,7 +38,7 @@ export const navigationDefault = [
     name: "Postulaciones",
     href: "/postulaciones",
     icon: Briefcase,
-    page: React.lazy(Pages.Layout),
+    page: React.lazy(Pages.LayoutPostulaciones),
   },
   {
     name: "Vacantes",
@@ -70,7 +71,7 @@ export const navigationUser = [
     name: "Postulaciones",
     href: "/postulaciones",
     icon: Briefcase,
-    page: React.lazy(Pages.Layout),
+    page: React.lazy(Pages.LayoutPostulaciones),
   },
   {
     name: "Vacantes",
@@ -127,7 +128,7 @@ export const navigationAdmin = [
     name: "Postulaciones",
     href: "/postulaciones",
     icon: Briefcase,
-    page: React.lazy(Pages.Layout),
+    page: React.lazy(Pages.LayoutPostulaciones),
   },
   {
     name: "Proveedores",

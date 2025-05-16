@@ -68,11 +68,9 @@ const App: React.FC = () => {
   const checkRedirect = useCallback(() => {
     const currentPath = location.pathname;
 
-    if (currentBranch) {
+    if (currentBranch && currentPath === '/') {
       // Usuario autenticado: redirigir desde raíz a dashboard');
-      if (currentPath === '/') {
-        history.replace('/dashboard');
-      }
+      history.replace('/dashboard');
     }
   }, [currentBranch, location.pathname, history]);
 

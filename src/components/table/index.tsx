@@ -1,7 +1,7 @@
-;
+"use client";
 
 import type React from "react";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Check, ChevronDown, Download, Grid2x2X, X } from "lucide-react";
 import { ViewTR } from "./toggle-view";
@@ -23,13 +23,21 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ data }) => {
     const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
     const [showColumnMenu, setShowColumnMenu] = useState<string | null>(null)
 
-    const [visibleColumns, setVisibleColumns] = useState<Record<string, boolean>>(
-        columns.reduce((acc, column) => ({ ...acc, [column]: true }), {}),
-    )
+    const [visibleColumns, setVisibleColumns] = useState<Record<string, boolean>>({});
+
+    useEffect(() => {
+        setVisibleColumns((prev) => {
+            return columns.reduce((acc, column) => {
+                acc[column] = column in prev ? prev[column] : true;
+                return acc;
+            }, {} as Record<string, boolean>);
+        });
+    }, [columns]);
 
     const toggleColumn = (column: string) => {
-        setVisibleColumns((prev) => ({ ...prev, [column]: !prev[column] }))
-    }
+        setVisibleColumns((prev) => ({ ...prev, [column]: !prev[column] }));
+    };
+
     const toggleRowSelection = (id: number) => {
         setSelectedRows((prev) => (prev.includes(id) ? prev.filter((rowId) => rowId !== id) : [...prev, id]));
     };

@@ -4,8 +4,9 @@ import { IonPage } from "@ionic/react";
 import Header from "@/template/header";
 import AppMenu from "@/template/menu";
 import { getLocalStorageItem } from "@/utils/functions/local-storage";
+import AdminPostulaciones from "./@admin/page";
 
-const LayoutVerificador: React.FC = () => {
+const LayoutPostulaciones: React.FC = () => {
 
     const userRole = getLocalStorageItem("user-role");
     const [isScrolled, setIsScrolled] = useState(false);
@@ -16,7 +17,7 @@ const LayoutVerificador: React.FC = () => {
             <IonPage id="main-content">
                 <Header title="Liz" isScrolled={isScrolled} showMenuButton />
                 {userRole === 'admin' ?
-                    (<></>)
+                    (<AdminPostulaciones />)
                     :
                     (<></>)
                 }
@@ -25,4 +26,4 @@ const LayoutVerificador: React.FC = () => {
     );
 };
 
-export default LayoutVerificador;
+export default LayoutPostulaciones;

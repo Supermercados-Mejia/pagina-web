@@ -2,7 +2,8 @@ import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 
 import { api } from "@/hooks/reducers/api";
-import { apiInt } from "@/hooks/reducers/api_int";
+import { api_int } from "@/hooks/reducers/api_int";
+import { api_landing } from "@/hooks/reducers/api_landing";
 import { auth } from "@/hooks/reducers/auth";
 import { EnvConfig } from "@/utils/constants/env.config";
 
@@ -18,14 +19,16 @@ export const store = configureStore({
     cart: cartReducer,
     app: appReducer,
     [api.reducerPath]: api.reducer,
-    [apiInt.reducerPath]: apiInt.reducer,
+    [api_int.reducerPath]: api_int.reducer,
+    [api_landing.reducerPath]: api_landing.reducer,
     [auth.reducerPath]: auth.reducer,
   },
   devTools: config.mode !== "production",
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({}).concat([
       api.middleware,
-      apiInt.middleware,
+      api_int.middleware,
+      api_landing.middleware,
       auth.middleware,
     ]),
 });
