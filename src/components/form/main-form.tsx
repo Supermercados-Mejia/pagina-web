@@ -20,6 +20,7 @@ import { CalendarComponent as Calendar } from "./calendar";
 import { DateRangeComponent as DateRange } from "./date-range";
 
 import { FileComponent as File } from "./file";
+import { ImgComponent as Image } from "./img";
 
 import { TagInputComponent as TagInput } from "./tag-input"
 
@@ -201,6 +202,8 @@ export function SwitchTypeInputRender(props: any) {
       return <CheckboxGroup {...props} />;
     case "FILE":
       return <File {...props} />;
+    case "IMG":
+      return <Image {...props} />;
     case "SEARCH":
       return <Search {...props} />;
     case "TAG_INPUT":
