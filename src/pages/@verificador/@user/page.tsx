@@ -1,6 +1,7 @@
 import { PageProps } from "@/utils/types/page";
 import PriceChecker from "../components/price-checker";
 import { IonContent, IonHeader, IonTitle, IonToolbar } from "@ionic/react";
+import Footer from "@/template/footer";
 
 
 export default function VerificadorUser({ onScroll }: PageProps) {
@@ -24,10 +25,12 @@ export default function VerificadorUser({ onScroll }: PageProps) {
                     </IonTitle>
                 </IonToolbar>
             </IonHeader>
-            <div className="w-full max-w-xl m-auto mt-20">
+            <div className="w-full h-[68vh] max-w-xl m-auto mt-20">
                 <h1 className="text-2xl font-bold mb-6 text-center">Verificador de Precios</h1>
                 <PriceChecker />
             </div>
+
+            <Footer />
         </IonContent>
     )
 }

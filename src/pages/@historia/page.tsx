@@ -2,6 +2,7 @@ import { IonContent, IonHeader, IonToolbar, IonTitle } from '@ionic/react';
 import style from './page.module.css';
 import { PageProps } from '@/utils/types/page';
 import { timelineEvents } from './data/json-default';
+import Footer from '@/template/footer';
 
 
 
@@ -23,19 +24,19 @@ const HistoriaPage = ({ onScroll }: PageProps) => {
                 </IonToolbar>
             </IonHeader>
 
-            <div className={style.timeline}>
+            <section className={style.timeline}>
                 {timelineEvents.map((event) => (
                     <div key={event.id} className={style["timeline-event"]}>
-                        <div className={style["timeline-icon"]} style={{ backgroundColor: event.backgroundColor }}>
+                        <u className={style["timeline-icon"]} style={{ backgroundColor: event.backgroundColor }}>
                             {event.image && (
-                                <div className={style.container}>
+                                <span className={style.container}>
                                     <img src={event.image} alt={event.title} />
-                                </div>
+                                </span>
                             )}
                             <event.Icon size={40} />
-                        </div>
+                        </u>
 
-                        <div className={style["timeline-content"]}>
+                        <label className={style["timeline-content"]}>
                             {event.title && (
                                 <h3>
                                     {event.year && `${event.year} - `}
@@ -43,11 +44,13 @@ const HistoriaPage = ({ onScroll }: PageProps) => {
                                 </h3>
                             )}
                             <p>{event.content}</p>
-                        </div>
+                        </label>
                     </div>
                 ))}
-            </div>
-        </IonContent>
+            </section>
+
+            <Footer />
+        </IonContent >
     );
 }
 

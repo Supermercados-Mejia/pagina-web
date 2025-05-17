@@ -1,5 +1,3 @@
-import Footer from "./footer";
-
 export default function Background({
     children,
 }: Readonly<{
@@ -15,8 +13,6 @@ export default function Background({
             <div className="flex-grow">
                 {children}
             </div>
-
-            <Footer />
         </main>
     );
 }

@@ -4,6 +4,7 @@ import DynamicTable from "@/components/table";
 import { PageProps } from "@/utils/types/page";
 import { IonContent, IonHeader, IonToolbar, IonTitle } from "@ionic/react";
 import { PostulacionesField } from "../utils/postulaciones-field";
+import Footer from "@/template/footer";
 
 
 export default function UserPostulaciones({ onScroll }: PageProps) {
@@ -28,7 +29,7 @@ export default function UserPostulaciones({ onScroll }: PageProps) {
                     </IonTitle>
                 </IonToolbar>
             </IonHeader>
-            <div className="w-4/5 m-auto -mt-10 h-[100vh]">
+            <div className="w-4/5 m-auto -mt-10 ">
                 <MainForm
                     actionType={'v2/insert/postulaciones'}
                     dataForm={PostulacionesField()}
@@ -38,6 +39,7 @@ export default function UserPostulaciones({ onScroll }: PageProps) {
                     message_button="registrar"
                 />
             </div>
+            <Footer />
         </IonContent>
     );
 }

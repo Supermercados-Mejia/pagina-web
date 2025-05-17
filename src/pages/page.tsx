@@ -9,6 +9,7 @@ import Sucursales from "./components/sucursales";
 import { socialLinks } from "./data/enlaces";
 import { cn } from "@/utils/functions/cn";
 import { chevronDown } from "ionicons/icons";
+import Footer from "@/template/footer";
 
 const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
     const duplicatedItems = [...empresas, ...empresas];
@@ -202,6 +203,8 @@ const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
                     ))}
                 </div>
             </div>
+
+            <Footer />
         </IonContent >
     )
 }
