@@ -1,5 +1,4 @@
 import { PageProps } from "@/utils/types/page";
-import PriceChecker from "../components/price-checker";
 import { IonContent, IonHeader, IonTitle, IonToolbar } from "@ionic/react";
 
 

@@ -18,6 +18,7 @@ const Pages = {
   Layout: () => import("@/pages/Layout"),
   LayoutVerificador: () => import("@/pages/@verificador/layout"),
   LayoutPostulaciones: () => import("@/pages/@postulaciones/layout"),
+  LayoutHistoria: () => import("@/pages/@historia/layout"),
   // ... otros componentes
 };
 
@@ -32,7 +33,7 @@ export const navigationDefault = [
     name: "Historia",
     href: "/Historia",
     icon: Clock,
-    page: React.lazy(Pages.Layout),
+    page: React.lazy(Pages.LayoutHistoria),
   },
   {
     name: "Postulaciones",
@@ -65,7 +66,7 @@ export const navigationUser = [
     name: "Historia",
     href: "/Historia",
     icon: Clock,
-    page: React.lazy(Pages.Layout),
+    page: React.lazy(Pages.LayoutHistoria),
   },
   {
     name: "Postulaciones",
