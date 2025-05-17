@@ -28,7 +28,7 @@ export default function UserPostulaciones({ onScroll }: PageProps) {
                     </IonTitle>
                 </IonToolbar>
             </IonHeader>
-            <div className="w-4/5 m-auto -mt-10">
+            <div className="w-4/5 m-auto -mt-10 h-[100vh]">
                 <MainForm
                     actionType={'v2/insert/postulaciones'}
                     dataForm={PostulacionesField()}
