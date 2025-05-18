@@ -19,6 +19,7 @@ const Pages = {
   LayoutVerificador: () => import("@/pages/@verificador/layout"),
   LayoutPostulaciones: () => import("@/pages/@postulaciones/layout"),
   LayoutHistoria: () => import("@/pages/@historia/layout"),
+  LayoutValoraciones: () => import("@/pages/@valoracion/layout"),
   // ... otros componentes
 };
 
@@ -51,7 +52,7 @@ export const navigationDefault = [
     name: "Valoracion",
     href: "/valoracion",
     icon: Star,
-    page: React.lazy(Pages.Layout),
+    page: React.lazy(Pages.LayoutValoraciones),
   },
 ];
 
@@ -84,7 +85,7 @@ export const navigationUser = [
     name: "Valoracion",
     href: "/valoracion",
     icon: Star,
-    page: React.lazy(Pages.Layout),
+    page: React.lazy(Pages.LayoutValoraciones),
   },
   {
     name: "Verificador",
@@ -147,7 +148,7 @@ export const navigationAdmin = [
     name: "Valoracion",
     href: "/valoracion",
     icon: Star,
-    page: React.lazy(Pages.Layout),
+    page: React.lazy(Pages.LayoutValoraciones),
   },
   {
     name: "Verificador",

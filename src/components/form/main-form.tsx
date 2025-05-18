@@ -22,6 +22,8 @@ import { DateRangeComponent as DateRange } from "./date-range";
 import { FileComponent as File } from "./file";
 import { ImgComponent as Image } from "./img";
 
+import { Rating } from "./rating";
+
 import { TagInputComponent as TagInput } from "./tag-input"
 
 import { usePostUserLoginMutation } from "@/hooks/reducers/auth";
@@ -208,6 +210,8 @@ export function SwitchTypeInputRender(props: any) {
       return <Search {...props} />;
     case "TAG_INPUT":
       return <TagInput {...props} />;
+    case "RATING":
+      return <Rating {...props} />;
     case "Flex":
       return <FlexComponent {...props} elements={props.cuestion.elements} />;
     case "H1":

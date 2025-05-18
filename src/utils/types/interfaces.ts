@@ -17,6 +17,7 @@ export type FieldType =
   | "IMG"
   | "SEARCH"
   | "LINK"
+  | "RATING"
   | "TAG_INPUT"
   | "H1";
 
@@ -32,6 +33,7 @@ export interface Field {
   label?: string;
   placeholder?: string;
   require: boolean;
+  stars?: number[]; // For RATING
   elements?: Field[]; // For Flex type
   options?: string[] | SelectOption[]; // For CHECKBOX_GROUP and SELECT
   enableAutocomplete?: string; // Changed to string to match "true"
@@ -160,4 +162,22 @@ export interface UserRoleRendererProps {
 export interface DashboardLayoutProps {
   admin: React.ReactNode;
   user: React.ReactNode;
+}
+
+export interface StarRatingProps {
+  cuestion: {
+    name: string;
+    label: string;
+    stars?: number[];
+    activeClass: string;
+    inactiveClass: string;
+  } & Field;
+  handleSubmit: () => void;
+  watch: (name: string) => string;
+  getValues: (name: string) => string;
+  setValue: (name: string, value: string) => void;
+  setError: (name: string, error: object) => void;
+  clearErrors: (name: string) => void;
+  register: (name: string, options: { required?: string }) => object;
+  errors: Record<string, { message?: string } | undefined>;
 }
