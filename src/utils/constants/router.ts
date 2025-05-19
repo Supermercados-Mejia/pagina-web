@@ -11,6 +11,7 @@ import {
   ScanBarcode,
   BookUser,
   Clock,
+  TicketPercent,
 } from "lucide-react";
 import React from "react";
 
@@ -21,6 +22,7 @@ const Pages = {
   LayoutHistoria: () => import("@/pages/@historia/layout"),
   LayoutValoraciones: () => import("@/pages/@valoracion/layout"),
   LayoutVacantes: () => import("@/pages/@vacantes/layout"),
+  LayoutPromociones: () => import("@/pages/@promociones/layout"),
   // ... otros componentes
 };
 
@@ -42,6 +44,12 @@ export const navigationDefault = [
     href: "/postulaciones",
     icon: Briefcase,
     page: React.lazy(Pages.LayoutPostulaciones),
+  },
+  {
+    name: "Promociones",
+    href: "/promociones",
+    icon: TicketPercent,
+    page: React.lazy(Pages.LayoutPromociones),
   },
   {
     name: "Vacantes",
@@ -132,6 +140,12 @@ export const navigationAdmin = [
     href: "/postulaciones",
     icon: Briefcase,
     page: React.lazy(Pages.LayoutPostulaciones),
+  },
+  {
+    name: "Promociones",
+    href: "/promociones",
+    icon: TicketPercent,
+    page: React.lazy(Pages.LayoutPromociones),
   },
   {
     name: "Proveedores",

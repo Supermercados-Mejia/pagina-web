@@ -3,6 +3,7 @@ import { PageProps } from "@/utils/types/page";
 import { IonContent, IonHeader, IonToolbar, IonTitle, IonSegment, IonLabel, IonSegmentButton } from "@ionic/react";
 import { vacantes } from "../data/example";
 import { useState } from "react";
+import { CardVacante } from "../components/card-vacante";
 
 export default function VacantesUser({ onScroll }: PageProps) {
 
@@ -46,7 +47,6 @@ export default function VacantesUser({ onScroll }: PageProps) {
                     </header>
 
                     <div className="max-w-2xl mx-auto mb-8">
-                        {/* 3. Conectar el segmento al estado */}
                         <IonSegment
                             value={selectedDepartment}
                             onIonChange={(e: any) => setSelectedDepartment(e.detail.value!)}
@@ -76,32 +76,7 @@ export default function VacantesUser({ onScroll }: PageProps) {
 
                         <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {filteredVacantes.length ? filteredVacantes.map((item: any, index) => (
-                                <li key={index} className="list-none">
-                                    <article
-                                        aria-labelledby={`position-${index}`}
-                                        className="bg-white border border-gray-200 rounded-xl p-6 transition-all
-                                     hover:shadow-lg cursor-pointer h-full
-                                     flex flex-col"
-                                    >
-                                        <header className="flex justify-between items-start gap-3 mb-4">
-                                            <h3 id={`position-${index}`} className="text-xl font-semibold text-gray-900">
-                                                {item.titulo}
-                                            </h3>
-                                            <span className="border font-bold text-xs px-3 py-1 rounded-full shrink-0">
-                                                {item.tipo}
-                                            </span>
-                                        </header>
-                                        <p className="text-purple-600">{item.departamento}</p>
-                                        <p className="text-gray-600 mb-4 flex-grow">
-                                            {item.descripcion}
-                                        </p>
-                                        <footer className="mt-auto">
-                                            <button className="text-purple-600 hover:text-purple-800 hover:underline font-medium text-sm">
-                                                Ver detalles →
-                                            </button>
-                                        </footer>
-                                    </article>
-                                </li>
+                                <CardVacante vacante={item} index={index} key={index} />
                             )) : (<li className="m-auto list-none col-span-3"> Actualmente no hay vacantes disponibles, vuelve en otro momento. </li>)}
                         </ul>
                     </section>
