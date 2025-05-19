@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { act, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { MainFormProps } from "@/utils/types/interfaces";
@@ -29,6 +29,7 @@ import { TagInputComponent as TagInput } from "./tag-input"
 import { usePostUserLoginMutation } from "@/hooks/reducers/auth";
 import { Button } from "../button";
 import { Link } from "react-router-dom";
+import { usePostLandingMutation } from "@/hooks/reducers/api_landing";
 
 export const MainForm = ({ message_button, dataForm, actionType, aditionalData, action, valueAssign, onSuccess }: MainFormProps) => {
 
@@ -49,13 +50,19 @@ export const MainForm = ({ message_button, dataForm, actionType, aditionalData, 
   } = useForm();
 
   const [postUserLogin] = usePostUserLoginMutation();
+  const [postLanding] = usePostLandingMutation();
 
-  function getMutationFunction(actionType: string) {
+  async function getMutationFunction(actionType: string, data: any) {
     switch (actionType) {
       case "post-login":
-        return postUserLogin
+        return postUserLogin;
       default:
-        return () => { };
+        const mutationResult = await postLanding({
+          url: actionType,
+          data: { [actionType.toLowerCase()]: [data] },
+          signal: new AbortController().signal,
+        });
+        return mutationResult;
     }
   }
   // Efecto para restaurar los valores del formulario al cambiar de página
@@ -91,13 +98,11 @@ export const MainForm = ({ message_button, dataForm, actionType, aditionalData, 
     if (aditionalData) combinedData = { ...sanitizedData, ...aditionalData };
     else combinedData = submitData;
 
-    let jsonData = {};
-    jsonData = { [actionType]: [combinedData] };
-    formatData.append(actionType, JSON.stringify(combinedData));
+    formatData.append(actionType, combinedData);
+    console.log(formatData);
 
-    const mutationFunction = getMutationFunction(actionType);
     try {
-      const result = await mutationFunction(combinedData);
+      const result = await getMutationFunction(actionType, combinedData);
       if (onSuccess) {
         onSuccess(result, combinedData);
       }

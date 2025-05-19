@@ -21,7 +21,7 @@ export const api_landing = createApi({
         },
     }),
     endpoints: (builder) => ({
-        getAll: builder.mutation({
+        getLanding: builder.mutation({
             query: ({ url, filters, signal, page, pageSize, sum, distinct }) => ({
                 url: `v2/${url}`,
                 method: "POST",
@@ -35,7 +35,7 @@ export const api_landing = createApi({
             }),
             extraOptions: { maxRetries: 2 }
         }),
-        post: builder.mutation({
+        postLanding: builder.mutation({
             query: ({ url, data, signal }) => ({
                 url: `v2/insert/${url}`,
                 method: "POST",
@@ -52,6 +52,6 @@ export const api_landing = createApi({
 });
 
 export const {
-    useGetAllMutation,
-    usePostMutation,
+    useGetLandingMutation,
+    usePostLandingMutation,
 } = api_landing;

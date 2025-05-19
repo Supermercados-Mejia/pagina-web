@@ -4,8 +4,8 @@ export function ValoracionesField(): Field[] {
   return [
     {
       type: "RATING",
-      name: "rating",
-      label: "Datos personales",
+      name: "calidad",
+      label: "Calificación",
       stars: [1, 2, 3, 4, 5],
       require: true,
     },
@@ -22,7 +22,7 @@ export function ValoracionesField(): Field[] {
           label: "Nombre",
           placeholder: "Nombre",
           require: false,
-        },
+        } /* ,
         {
           id: 1,
           type: "INPUT",
@@ -38,9 +38,9 @@ export function ValoracionesField(): Field[] {
           label: "Apellido Materno",
           placeholder: "Apellido Materno",
           require: false,
-        },
+        }, */,
       ],
-    },
+    } /* ,
     {
       id: 6,
       type: "PHONE",
@@ -48,6 +48,6 @@ export function ValoracionesField(): Field[] {
       label: "Número de Teléfono",
       placeholder: "Número de Teléfono",
       require: false,
-    },
+    }, */,
   ];
 }

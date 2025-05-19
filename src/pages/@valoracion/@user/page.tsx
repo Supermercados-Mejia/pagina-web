@@ -32,10 +32,10 @@ export default function UserValoraciones({ onScroll }: PageProps) {
             </IonHeader>
             <div className="w-4/5 m-auto -mt-10 h-[77vh] ">
                 <MainForm
-                    actionType={'v2/insert/Evaluacion'}
+                    actionType={'Evaluacion'}
                     dataForm={ValoracionesField()}
                     aditionalData={{
-                        date: new Date()
+                        fecha: new Date()
                     }}
                     message_button="registrar"
                 />

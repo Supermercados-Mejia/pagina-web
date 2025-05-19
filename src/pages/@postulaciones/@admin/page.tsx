@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Pagination from "@/components/pagination";
-import { useGetAllMutation } from "@/hooks/reducers/api_landing";
+import { useGetLandingMutation } from "@/hooks/reducers/api_landing";
 import DynamicTable from "@/components/table";
 import { loadDataFromAPI } from "../utils/load-data";
 import { PageProps } from "@/utils/types/page";
@@ -51,7 +51,7 @@ export default function AdminPostulaciones({ onScroll }: PageProps) {
     const [data, setData] = useState<Record<string, any>[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
-    const [getData, { isLoading }] = useGetAllMutation();
+    const [getData, { isLoading }] = useGetLandingMutation();
     const [error, setError] = useState<string | null>(null);
 
     const handleLoadData = useCallback(async () => {
