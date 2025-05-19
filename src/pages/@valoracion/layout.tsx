@@ -16,7 +16,7 @@ const LayoutValoraciones: React.FC = () => {
             <AppMenu />
             <IonPage id="main-content">
                 <Header title="Liz" isScrolled={isScrolled} showMenuButton />
-                <UserValoraciones />
+                <UserValoraciones onScroll={(scrolled) => setIsScrolled(scrolled)} />
                 {/* {userRole === 'admin' ?
                     (<AdminValoraciones />)
                     :
