@@ -31,7 +31,7 @@ export function Rating(props: StarRatingProps) {
                             onMouseEnter={() => setHover(star)}
                             onMouseLeave={() => setHover(0)}
                             onClick={() => handleRating(star)}
-                            size={40}
+                            size={30}
                         />
                     ))}
             </div>
