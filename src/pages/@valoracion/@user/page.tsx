@@ -31,7 +31,7 @@ export default function UserValoraciones({ onScroll }: PageProps) {
                     </IonTitle>
                 </IonToolbar>
             </IonHeader>
-            <main className="w-full min-h-[77vh] px-4 sm:px-6 lg:px-8 pb-7">
+            <main className="w-full min-h-[75vh] px-4 sm:px-6 lg:px-8 pb-7">
                 <div className="max-w-2xl mx-auto">
                     <header className="text-center mb-8">
                         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Valoracion</h1>

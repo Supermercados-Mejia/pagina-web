@@ -12,6 +12,7 @@ import {
   BookUser,
   Clock,
   TicketPercent,
+  LayoutList,
 } from "lucide-react";
 import React from "react";
 
@@ -40,12 +41,6 @@ export const navigationDefault = [
     page: React.lazy(Pages.LayoutHistoria),
   },
   {
-    name: "Postulaciones",
-    href: "/postulaciones",
-    icon: Briefcase,
-    page: React.lazy(Pages.LayoutPostulaciones),
-  },
-  {
     name: "Promociones",
     href: "/promociones",
     icon: TicketPercent,
@@ -56,6 +51,12 @@ export const navigationDefault = [
     href: "/vacantes",
     icon: BookUser,
     page: React.lazy(Pages.LayoutVacantes),
+  },
+  {
+    name: "Postulaciones",
+    href: "/postulaciones",
+    icon: Briefcase,
+    page: React.lazy(Pages.LayoutPostulaciones),
   },
   {
     name: "Valoracion",
@@ -73,33 +74,15 @@ export const navigationUser = [
     page: React.lazy(Pages.Layout),
   },
   {
-    name: "Historia",
-    href: "/Historia",
-    icon: Clock,
-    page: React.lazy(Pages.LayoutHistoria),
-  },
-  {
-    name: "Postulaciones",
-    href: "/postulaciones",
-    icon: Briefcase,
-    page: React.lazy(Pages.LayoutPostulaciones),
-  },
-  {
-    name: "Vacantes",
-    href: "/vacantes",
-    icon: BookUser,
-    page: React.lazy(Pages.LayoutVacantes),
-  },
-  {
-    name: "Valoracion",
-    href: "/valoracion",
-    icon: Star,
-    page: React.lazy(Pages.LayoutValoraciones),
-  },
-  {
     name: "Verificador",
     href: "/verificador",
     icon: ScanBarcode,
+    page: React.lazy(Pages.LayoutVerificador),
+  },
+  {
+    name: "Listas",
+    href: "/listas",
+    icon: LayoutList,
     page: React.lazy(Pages.LayoutVerificador),
   },
 ];

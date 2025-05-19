@@ -55,7 +55,8 @@ export const MainForm = ({ message_button, dataForm, actionType, aditionalData, 
   async function getMutationFunction(actionType: string, data: any) {
     switch (actionType) {
       case "post-login":
-        return postUserLogin;
+        const loginResult = await postUserLogin(data);
+        return loginResult;
       default:
         const mutationResult = await postLanding({
           url: actionType,
