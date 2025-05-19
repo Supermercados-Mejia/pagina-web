@@ -2,8 +2,19 @@ import Footer from "@/template/footer";
 import { PageProps } from "@/utils/types/page";
 import { IonContent, IonHeader, IonToolbar, IonTitle, IonSegment, IonLabel, IonSegmentButton } from "@ionic/react";
 import { vacantes } from "../data/example";
+import { useState } from "react";
 
 export default function VacantesUser({ onScroll }: PageProps) {
+
+    const [selectedDepartment, setSelectedDepartment] = useState<string>('todo');
+
+    // 2. Filtrar vacantes basado en la selección
+    const filteredVacantes = vacantes.filter(item =>
+        selectedDepartment === 'todo'
+            ? true
+            : item.departamento.toLowerCase() === selectedDepartment
+    );
+
     return (
         <IonContent
             fullscreen
@@ -35,30 +46,36 @@ export default function VacantesUser({ onScroll }: PageProps) {
                     </header>
 
                     <div className="max-w-2xl mx-auto mb-8">
-                        <IonSegment value="todo">
+                        {/* 3. Conectar el segmento al estado */}
+                        <IonSegment
+                            value={selectedDepartment}
+                            onIonChange={(e: any) => setSelectedDepartment(e.detail.value!)}
+                        >
                             <IonSegmentButton value="todo">
                                 <IonLabel>Todo</IonLabel>
                             </IonSegmentButton>
                             <IonSegmentButton value="sistemas">
                                 <IonLabel>Sistemas</IonLabel>
                             </IonSegmentButton>
-                            <IonSegmentButton value="seguriada">
-                                <IonLabel>Seguriada</IonLabel>
+                            {/* 4. Corregir typo en seguridad */}
+                            <IonSegmentButton value="seguridad">
+                                <IonLabel>Seguridad</IonLabel>
                             </IonSegmentButton>
                             <IonSegmentButton value="cajas">
                                 <IonLabel>Cajas</IonLabel>
                             </IonSegmentButton>
                             <IonSegmentButton value="almacen">
-                                <IonLabel>Almacen</IonLabel>
+                                <IonLabel>Almacén</IonLabel>
                             </IonSegmentButton>
                         </IonSegment>
                     </div>
+
 
                     <section aria-labelledby="job-openings-heading" className="mt-6">
                         <h2 id="job-openings-heading" className="sr-only">Posiciones Disponibles</h2>
 
                         <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {vacantes.length ? vacantes.map((item: any, index) => (
+                            {filteredVacantes.length ? filteredVacantes.map((item: any, index) => (
                                 <li key={index} className="list-none">
                                     <article
                                         aria-labelledby={`position-${index}`}
@@ -74,6 +91,7 @@ export default function VacantesUser({ onScroll }: PageProps) {
                                                 {item.tipo}
                                             </span>
                                         </header>
+                                        <p className="text-purple-600">{item.departamento}</p>
                                         <p className="text-gray-600 mb-4 flex-grow">
                                             {item.descripcion}
                                         </p>

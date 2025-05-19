@@ -2,7 +2,7 @@ export const vacantes = [
   {
     id: 1,
     titulo: "Desarrollador Frontend",
-    departamento: "Tecnología",
+    departamento: "Sistemas",
     ubicacion: "Ciudad de México",
     tipo: "Tiempo Completo",
     fechaPublicacion: "15 de mayo, 2025",
