@@ -6,6 +6,7 @@ import { IonContent, IonHeader, IonToolbar, IonTitle } from "@ionic/react";
 
 import Footer from "@/template/footer";
 import { ValoracionesField } from "../utils/valorraciones-field";
+import { Info } from "lucide-react";
 
 
 export default function UserValoraciones({ onScroll }: PageProps) {
@@ -30,16 +31,25 @@ export default function UserValoraciones({ onScroll }: PageProps) {
                     </IonTitle>
                 </IonToolbar>
             </IonHeader>
-            <div className="w-4/5 m-auto -mt-10 h-[77vh] ">
-                <MainForm
-                    actionType={'Evaluacion'}
-                    dataForm={ValoracionesField()}
-                    aditionalData={{
-                        fecha: new Date()
-                    }}
-                    message_button="registrar"
-                />
-            </div>
+            <main className="w-full min-h-[77vh] px-4 sm:px-6 lg:px-8 pb-7">
+                <div className="max-w-2xl mx-auto">
+                    <header className="text-center mb-8">
+                        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Valoracion</h1>
+                        <div className="space-y-1">
+                            <p className="text-gray-600 text-lg">Danos tu opinion</p>
+                            <p className="text-gray-600 text-sm">Quejas y sugerencias seran bien recibidas y tomadas en cuenta.</p>
+                        </div>
+                    </header>
+                    <MainForm
+                        actionType={'Evaluacion'}
+                        dataForm={ValoracionesField()}
+                        aditionalData={{
+                            fecha: new Date()
+                        }}
+                        message_button="registrar"
+                    />
+                </div>
+            </main>
             <Footer />
         </IonContent>
     );

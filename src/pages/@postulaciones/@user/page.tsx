@@ -29,16 +29,25 @@ export default function UserPostulaciones({ onScroll }: PageProps) {
                     </IonTitle>
                 </IonToolbar>
             </IonHeader>
-            <div className="w-4/5 m-auto -mt-10 ">
-                <MainForm
-                    actionType={'v2/insert/postulaciones'}
-                    dataForm={PostulacionesField()}
-                    aditionalData={{
-                        date: new Date()
-                    }}
-                    message_button="registrar"
-                />
-            </div>
+            <main className="w-full min-h-[77vh] px-4 sm:px-6 lg:px-8 pb-7">
+                <div className="max-w-2xl mx-auto">
+                    <header className="text-center mb-8">
+                        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Postulacion</h1>
+                        <div className="space-y-1">
+                            <p className="text-gray-600 text-lg">Se parte de la familia</p>
+                            <p className="text-gray-600 text-lg">Crece con nosotros.</p>
+                        </div>
+                    </header>
+                    <MainForm
+                        actionType={'v2/insert/postulaciones'}
+                        dataForm={PostulacionesField()}
+                        aditionalData={{
+                            date: new Date()
+                        }}
+                        message_button="registrar"
+                    />
+                </div>
+            </main>
             <Footer />
         </IonContent>
     );
