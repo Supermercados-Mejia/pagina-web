@@ -18,9 +18,9 @@ const LayoutPostulaciones: React.FC = () => {
             <IonPage id="main-content">
                 <Header title="Liz" isScrolled={isScrolled} showMenuButton />
                 {userRole === 'admin' ?
-                    (<AdminPostulaciones />)
+                    (<AdminPostulaciones onScroll={(scrolled) => setIsScrolled(scrolled)} />)
                     :
-                    (<UserPostulaciones />)
+                    (<UserPostulaciones onScroll={(scrolled) => setIsScrolled(scrolled)} />)
                 }
             </IonPage>
         </>

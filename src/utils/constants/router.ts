@@ -20,6 +20,7 @@ const Pages = {
   LayoutPostulaciones: () => import("@/pages/@postulaciones/layout"),
   LayoutHistoria: () => import("@/pages/@historia/layout"),
   LayoutValoraciones: () => import("@/pages/@valoracion/layout"),
+  LayoutVacantes: () => import("@/pages/@vacantes/layout"),
   // ... otros componentes
 };
 
@@ -46,7 +47,7 @@ export const navigationDefault = [
     name: "Vacantes",
     href: "/vacantes",
     icon: BookUser,
-    page: React.lazy(Pages.Layout),
+    page: React.lazy(Pages.LayoutVacantes),
   },
   {
     name: "Valoracion",
@@ -79,7 +80,7 @@ export const navigationUser = [
     name: "Vacantes",
     href: "/vacantes",
     icon: BookUser,
-    page: React.lazy(Pages.Layout),
+    page: React.lazy(Pages.LayoutVacantes),
   },
   {
     name: "Valoracion",
@@ -142,7 +143,7 @@ export const navigationAdmin = [
     name: "Vacantes",
     href: "/vacantes",
     icon: UserPlus,
-    page: React.lazy(Pages.Layout),
+    page: React.lazy(Pages.LayoutVacantes),
   },
   {
     name: "Valoracion",
