@@ -10,10 +10,12 @@ import { socialLinks } from "./data/enlaces";
 import { cn } from "@/utils/functions/cn";
 import { chevronDown } from "ionicons/icons";
 import Footer from "@/template/footer";
+import { useHistory } from "react-router-dom";
 
 const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
     const duplicatedItems = [...empresas, ...empresas];
 
+    const history = useHistory();
     return (
         <IonContent
             fullscreen
@@ -138,7 +140,7 @@ const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
                                     <div className="text-center">
                                         <p className="font-bold text-purple-600">-30%</p>
                                         <p className="text-lg font-medium">$69.99</p>
-                                        <button className="mt-2 text-purple-600 hover:underline">
+                                        <button className="mt-2 text-purple-600 hover:underline" onClick={() => history.push('/promociones')}>
                                             Ver oferta <ArrowRightIcon className="ml-1 inline" />
                                         </button>
                                     </div>
@@ -185,10 +187,10 @@ const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
                             icon={<Blocks className="h-6 w-6 text-purple-500" />}
                         >
                             <div className="flex flex-col p-4 text-center">
-                                <button className="mb-2 block text-purple-600 hover:underline">
+                                <button className="mb-2 block text-purple-600 hover:underline" onClick={() => history.push('/vacantes')}>
                                     Ver vacantes <ArrowRightIcon className="ml-1 inline" />
                                 </button>
-                                <button className="text-purple-600 hover:underline">
+                                <button className="text-purple-600 hover:underline" onClick={() => history.push('/postulaciones')}>
                                     Postulate <ArrowRightIcon className="ml-1 inline" />
                                 </button>
                             </div>
