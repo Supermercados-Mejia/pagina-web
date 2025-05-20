@@ -97,7 +97,7 @@ function PriceChecker() {
 
             setDisplayData(newProducts);
             setProductNotFound(false);
-        } else {
+        } else if (isBarcode) {
             setProductNotFound(true);
             handleNotFound(inputValueRef.current);
         }
