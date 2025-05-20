@@ -6,6 +6,7 @@ import { ScanBarcode, Search, ShoppingBasket } from "lucide-react";
 import { Product } from "@/utils/data/example-data";
 import { useGetArticulosQuery } from "@/hooks/reducers/api_int";
 import { usePostMutation } from "@/hooks/reducers/api";
+import { getLocalStorageItem } from "@/utils/functions/local-storage";
 
 type Sucursal = {
     id: string;
@@ -32,6 +33,7 @@ const PAGE_SIZE = 5;
 const COOLDOWN_TIME = 5000;
 
 function PriceChecker() {
+    const id_user = getLocalStorageItem("user-id");
     const [displayData, setDisplayData] = useState<Product[]>([]);
     const [inputValue, setInputValue] = useState("");
     const [selectedSucursal, setSelectedSucursal] = useState(sucursales[2].id);
@@ -55,7 +57,7 @@ function PriceChecker() {
         timeoutRef.current = setTimeout(resetStates, COOLDOWN_TIME);
     };
 
-    const { data, isLoading, refetch } = useGetArticulosQuery(
+    const { data, isLoading } = useGetArticulosQuery(
         {
             pageSize: PAGE_SIZE,
             filtro: inputValue,
@@ -67,7 +69,7 @@ function PriceChecker() {
     async function handleNotFound(barrcode: string) {
         const mutationResult = await postNotFound({
             url: "notfound",
-            data: { "NotFound": [{ barrcode: barrcode }] },
+            data: { "NotFound": [{ barrcode: barrcode, id_user }] },
             signal: new AbortController().signal,
         });
         return mutationResult;
@@ -78,7 +80,7 @@ function PriceChecker() {
     }, [inputValue]);
 
     useEffect(() => {
-        const isBarcode = /^\d{12,13}$/.test(inputValueRef.current);
+        const isBarcode = /^\d{3,13}$/.test(inputValueRef.current);
         if (isBarcode && data && data.precios.length > 0) {
             const newProducts = data.precios.map((item: any) => {
                 const oferta = data.ofertas?.find((o: any) => o.articulo === item.cuenta);
@@ -93,7 +95,6 @@ function PriceChecker() {
                     } : undefined
                 };
             });
-            console.log(data);
 
             setDisplayData(newProducts);
             setProductNotFound(false);
@@ -102,7 +103,7 @@ function PriceChecker() {
             handleNotFound(inputValueRef.current);
         }
         resetCooldownTimer();
-    }, [data/* , inputValueRef.current, selectedSucursal */]);
+    }, [data]);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -114,6 +115,7 @@ function PriceChecker() {
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = e.target.value;
         setInputValue(newValue);
+
         resetCooldownTimer();
     };
     const handleSucursalChange = (e: CustomEvent) => {
@@ -130,10 +132,6 @@ function PriceChecker() {
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter') e.preventDefault();
     };
-    /*
-        070847036005
-        070847036005123
-    */
 
     return (
         <div className="mx-auto inset-0 z-20">

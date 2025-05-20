@@ -39,7 +39,7 @@ export default function UserPostulaciones({ onScroll }: PageProps) {
                         </div>
                     </header>
                     <MainForm
-                        actionType={'v2/insert/postulaciones'}
+                        actionType={'postulaciones'}
                         dataForm={PostulacionesField()}
                         aditionalData={{
                             date: new Date()

@@ -85,6 +85,7 @@ export const MainForm = ({ message_button, dataForm, actionType, aditionalData, 
 
     let combinedData: any = {};
     const formatData = new FormData();
+    console.log(submitData);
 
     if (Array.isArray(submitData.file)) {
       submitData.file.forEach((file: File) => {
@@ -99,7 +100,7 @@ export const MainForm = ({ message_button, dataForm, actionType, aditionalData, 
     if (aditionalData) combinedData = { ...sanitizedData, ...aditionalData };
     else combinedData = submitData;
 
-    formatData.append(actionType, combinedData);
+    formatData.append(actionType, JSON.stringify(combinedData));
     console.log(formatData);
 
     try {
