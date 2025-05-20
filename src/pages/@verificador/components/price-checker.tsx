@@ -5,6 +5,7 @@ import { IonItem, IonLabel, IonList, IonSpinner, IonSelect, IonSelectOption, Ion
 import { ScanBarcode, Search, ShoppingBasket } from "lucide-react";
 import { Product } from "@/utils/data/example-data";
 import { useGetArticulosQuery } from "@/hooks/reducers/api_int";
+import { usePostMutation } from "@/hooks/reducers/api";
 
 type Sucursal = {
     id: string;
@@ -47,6 +48,8 @@ function PriceChecker() {
         setProgress(0);
     };
 
+    const [postNotFound] = usePostMutation()
+
     const resetCooldownTimer = () => {
         if (timeoutRef.current) clearTimeout(timeoutRef.current);
         timeoutRef.current = setTimeout(resetStates, COOLDOWN_TIME);
@@ -60,6 +63,15 @@ function PriceChecker() {
         },
         { refetchOnMountOrArgChange: true, skip: inputValue.length < 3 }
     );
+
+    async function handleNotFound(barrcode: string) {
+        const mutationResult = await postNotFound({
+            url: "notfound",
+            data: { "NotFound": [{ barrcode: barrcode }] },
+            signal: new AbortController().signal,
+        });
+        return mutationResult;
+    }
 
     useEffect(() => {
         inputValueRef.current = inputValue;
@@ -84,12 +96,15 @@ function PriceChecker() {
 
             if (isBarcode && data.precios.length === 0) {
                 setProductNotFound(true);
+                handleNotFound(inputValueRef.current);
+
             } else {
                 setDisplayData(newProducts);
                 setProductNotFound(false);
             }
         } else {
             setProductNotFound(true);
+            handleNotFound(inputValueRef.current);
         }
         resetCooldownTimer();
     }, [data, inputValueRef.current, selectedSucursal]);
@@ -120,6 +135,10 @@ function PriceChecker() {
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter') e.preventDefault();
     };
+    /*
+        070847036005
+        070847036005123
+    */
 
     return (
         <div className="mx-auto inset-0 z-20">
@@ -134,7 +153,7 @@ function PriceChecker() {
                                 interface="popover"
                             >
                                 {sucursales.map((sucursal) => (
-                                    <IonSelectOption key={sucursal.id} value={sucursal.id}>
+                                    <IonSelectOption key={sucursal.id} className="ml-2" value={sucursal.id}>
                                         {sucursal.nombre}
                                     </IonSelectOption>
                                 ))}
