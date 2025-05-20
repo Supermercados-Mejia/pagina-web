@@ -78,8 +78,8 @@ function PriceChecker() {
     }, [inputValue]);
 
     useEffect(() => {
-        if (data && data.precios.length > 0) {
-            const isBarcode = /^\d{12,13}$/.test(inputValueRef.current);
+        const isBarcode = /^\d{12,13}$/.test(inputValueRef.current);
+        if (isBarcode && data && data.precios.length > 0) {
             const newProducts = data.precios.map((item: any) => {
                 const oferta = data.ofertas?.find((o: any) => o.articulo === item.cuenta);
                 return {
@@ -93,21 +93,16 @@ function PriceChecker() {
                     } : undefined
                 };
             });
+            console.log(data);
 
-            if (isBarcode && data.precios.length === 0) {
-                setProductNotFound(true);
-                handleNotFound(inputValueRef.current);
-
-            } else {
-                setDisplayData(newProducts);
-                setProductNotFound(false);
-            }
+            setDisplayData(newProducts);
+            setProductNotFound(false);
         } else {
             setProductNotFound(true);
             handleNotFound(inputValueRef.current);
         }
         resetCooldownTimer();
-    }, [data, inputValueRef.current, selectedSucursal]);
+    }, [data/* , inputValueRef.current, selectedSucursal */]);
 
     useEffect(() => {
         const interval = setInterval(() => {
