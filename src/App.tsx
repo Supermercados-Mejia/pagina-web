@@ -63,14 +63,14 @@ const App: React.FC = () => {
   const userToken = getLocalStorageItem("token");
   const reduxToken = useAppSelector((state: RootState) => state.auth?.mutations?.[0]?.data?.token);
 
-  const currentBranch = useMemo(() => { return userToken ?? reduxToken }, [reduxToken]);
+  const currentBranch = reduxToken ?? userToken;
 
   const checkRedirect = useCallback(() => {
     const currentPath = location.pathname;
 
     if (currentBranch && currentPath === '/') {
       // Usuario autenticado: redirigir desde raíz a dashboard');
-      history.replace('/dashboard');
+      history.replace('/layout');
     }
   }, [currentBranch, location.pathname, history]);
 
