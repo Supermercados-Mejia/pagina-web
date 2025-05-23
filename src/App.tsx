@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { Redirect, Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { useAppSelector } from './hooks/selector';
@@ -63,7 +63,7 @@ const App: React.FC = () => {
   const userToken = getLocalStorageItem("token");
   const reduxToken = useAppSelector((state: RootState) => state.auth?.mutations?.[0]?.data?.token);
 
-  const currentBranch = userToken ?? reduxToken;
+  const currentBranch = useMemo(() => { return userToken ?? reduxToken }, [reduxToken]);
 
   const checkRedirect = useCallback(() => {
     const currentPath = location.pathname;

@@ -35,7 +35,7 @@ export const api_landing = createApi({
             }),
             extraOptions: { maxRetries: 2 }
         }),
-        postLanding: builder.mutation({
+        postLandingJson: builder.mutation({
             query: ({ url, data, signal }) => ({
                 url: `v2/insert/${url}`,
                 method: "POST",
@@ -48,10 +48,23 @@ export const api_landing = createApi({
             }),
             extraOptions: { maxRetries: 2 }
         }),
+        postLanding: builder.mutation({
+            query: ({ url, data }) => ({
+                url: `v2/insert/${url}`,
+                method: "POST",
+                body: data,
+                headers: {}, // Elimina headers automáticos para FormData
+            }),
+            transformErrorResponse: (response: any) => ({
+                status: response.status,
+                message: response.error || "Error en el envío del formulario",
+            }),
+        }),
     }),
 });
 
 export const {
     useGetLandingMutation,
-    usePostLandingMutation,
+    usePostLandingJsonMutation,
+    usePostLandingMutation
 } = api_landing;

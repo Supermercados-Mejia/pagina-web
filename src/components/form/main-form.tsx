@@ -19,7 +19,7 @@ import { CheckboxGroupComponent as CheckboxGroup } from "./checkbox-group";
 import { CalendarComponent as Calendar } from "./calendar";
 import { DateRangeComponent as DateRange } from "./date-range";
 
-import { FileComponent as File } from "./file";
+import { FileComponent as FileInput } from "./file";
 import { ImgComponent as Image } from "./img";
 
 import { Rating } from "./rating";
@@ -29,9 +29,9 @@ import { TagInputComponent as TagInput } from "./tag-input"
 import { usePostUserLoginMutation } from "@/hooks/reducers/auth";
 import { Button } from "../button";
 import { Link } from "react-router-dom";
-import { usePostLandingMutation } from "@/hooks/reducers/api_landing";
+import { usePostLandingMutation, usePostLandingJsonMutation } from "@/hooks/reducers/api_landing";
 
-export const MainForm = ({ message_button, dataForm, actionType, aditionalData, action, valueAssign, onSuccess }: MainFormProps) => {
+export const MainForm = ({ message_button, dataForm, actionType, aditionalData, action, valueAssign, onSuccess, formName }: MainFormProps) => {
 
   const [page, setPage] = useState(0);
   const [formData, setFormData] = useState<any>({}); // Estado para guardar datos
@@ -50,20 +50,22 @@ export const MainForm = ({ message_button, dataForm, actionType, aditionalData, 
   } = useForm();
 
   const [postUserLogin] = usePostUserLoginMutation();
+  const [postLandingJson] = usePostLandingJsonMutation();
   const [postLanding] = usePostLandingMutation();
 
   async function getMutationFunction(actionType: string, data: any) {
+    const payload = formName ? { [formName]: data } : data;
+
     switch (actionType) {
       case "post-login":
-        const loginResult = await postUserLogin(data);
-        return loginResult;
+        return await postUserLogin(payload).unwrap();
       default:
-        const mutationResult = await postLanding({
+        const functionFetch = formName ? postLanding : postLandingJson;
+        return await functionFetch({
           url: actionType,
-          data: { [actionType.toLowerCase()]: [data] },
+          data: payload,
           signal: new AbortController().signal,
-        });
-        return mutationResult;
+        }).unwrap();
     }
   }
   // Efecto para restaurar los valores del formulario al cambiar de página
@@ -85,7 +87,6 @@ export const MainForm = ({ message_button, dataForm, actionType, aditionalData, 
 
     let combinedData: any = {};
     const formatData = new FormData();
-    console.log(submitData);
 
     if (Array.isArray(submitData.file)) {
       submitData.file.forEach((file: File) => {
@@ -94,20 +95,16 @@ export const MainForm = ({ message_button, dataForm, actionType, aditionalData, 
     } else if (submitData.file) {
       formatData.append("File", submitData.file);
     }
-
     const { file, ...sanitizedData } = submitData;
 
     if (aditionalData) combinedData = { ...sanitizedData, ...aditionalData };
-    else combinedData = submitData;
+    else combinedData = sanitizedData;
 
-    formatData.append(actionType, JSON.stringify(combinedData));
-    console.log(formatData);
+    formatData.append(formName ? formName : "JSON", combinedData);
 
     try {
       const result = await getMutationFunction(actionType, combinedData);
-      if (onSuccess) {
-        onSuccess(result, combinedData);
-      }
+      if (onSuccess) onSuccess(result, combinedData);
 
       if (action) {
         const cleanKey = (key: string) => key.replace(/^'|'$/g, '');
@@ -210,7 +207,7 @@ export function SwitchTypeInputRender(props: any) {
     case "CHECKBOX_GROUP":
       return <CheckboxGroup {...props} />;
     case "FILE":
-      return <File {...props} />;
+      return <FileInput {...props} />;
     case "IMG":
       return <Image {...props} />;
     case "SEARCH":

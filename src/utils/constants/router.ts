@@ -64,6 +64,12 @@ export const navigationDefault = [
     icon: Star,
     page: React.lazy(Pages.LayoutValoraciones),
   },
+  {
+    name: "Verificador",
+    href: "/verificador",
+    icon: ScanBarcode,
+    page: React.lazy(Pages.LayoutVerificador),
+  },
 ];
 
 export const navigationUser = [

@@ -44,6 +44,7 @@ export default function UserPostulaciones({ onScroll }: PageProps) {
                         aditionalData={{
                             date: new Date()
                         }}
+                        formName="PostulacionForm"
                         message_button="registrar"
                     />
                 </div>
