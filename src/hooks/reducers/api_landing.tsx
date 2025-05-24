@@ -58,9 +58,6 @@ export const api_landing = createApi({
             query: ({ url, data, signal }) => ({
                 url: `v2/insert/${url}`,
                 method: "POST",
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
                 body: data,
                 signal
             }),

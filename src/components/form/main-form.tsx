@@ -53,7 +53,7 @@ export const MainForm = ({ message_button, dataForm, actionType, aditionalData, 
   const [postLandingJson] = usePostLandingJsonMutation();
   const [postLanding] = usePostLandingMutation();
 
-  async function getMutationFunction(actionType: string, data: any) {
+  async function getMutationFunction(actionType: string, data: FormData | any) {
     const payload = formName ? data : { [actionType.toLowerCase()]: [data] };
 
     switch (actionType) {
@@ -98,10 +98,10 @@ export const MainForm = ({ message_button, dataForm, actionType, aditionalData, 
       ? { ...sanitizedData, ...aditionalData }
       : sanitizedData;
 
-    formName && formatData.append(formName, JSON.stringify([combinedData]));
+    formName && formatData.append(formName, JSON.stringify(combinedData));
 
     try {
-      const result = await getMutationFunction(actionType, formName ? formatData : combinedData);
+      const result = await getMutationFunction(actionType, formName && formatData ? formatData : combinedData);
       if (onSuccess) onSuccess(result, combinedData);
 
       if (action) {
