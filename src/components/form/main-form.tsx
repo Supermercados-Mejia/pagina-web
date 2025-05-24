@@ -1,5 +1,5 @@
 "use client";
-import { act, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { MainFormProps } from "@/utils/types/interfaces";
@@ -54,11 +54,11 @@ export const MainForm = ({ message_button, dataForm, actionType, aditionalData, 
   const [postLanding] = usePostLandingMutation();
 
   async function getMutationFunction(actionType: string, data: any) {
-    const payload = formName ? { [formName]: data } : data;
+    const payload = formName ? data : { [actionType.toLowerCase()]: [data] };
 
     switch (actionType) {
       case "post-login":
-        return await postUserLogin(payload).unwrap();
+        return await postUserLogin(data).unwrap();
       default:
         const functionFetch = formName ? postLanding : postLandingJson;
         return await functionFetch({
@@ -84,26 +84,24 @@ export const MainForm = ({ message_button, dataForm, actionType, aditionalData, 
 
   async function onSubmit(submitData: any) {
     setLoading(true);
-
-    let combinedData: any = {};
     const formatData = new FormData();
 
-    if (Array.isArray(submitData.file)) {
-      submitData.file.forEach((file: File) => {
+    submitData.file && Array.isArray(submitData.file) ?
+      submitData.file.forEach((file: any) => {
         formatData.append("File", file);
-      });
-    } else if (submitData.file) {
+      }) :
       formatData.append("File", submitData.file);
-    }
+
     const { file, ...sanitizedData } = submitData;
 
-    if (aditionalData) combinedData = { ...sanitizedData, ...aditionalData };
-    else combinedData = sanitizedData;
+    const combinedData: any = aditionalData
+      ? { ...sanitizedData, ...aditionalData }
+      : sanitizedData;
 
-    formatData.append(formName ? formName : "JSON", combinedData);
+    formName && formatData.append(formName, JSON.stringify([combinedData]));
 
     try {
-      const result = await getMutationFunction(actionType, combinedData);
+      const result = await getMutationFunction(actionType, formName ? formatData : combinedData);
       if (onSuccess) onSuccess(result, combinedData);
 
       if (action) {

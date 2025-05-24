@@ -1,6 +1,4 @@
 import MainForm from "@/components/form/main-form";
-import Pagination from "@/components/pagination";
-import DynamicTable from "@/components/table";
 import { PageProps } from "@/utils/types/page";
 import { IonContent, IonHeader, IonToolbar, IonTitle } from "@ionic/react";
 import { PostulacionesField } from "../utils/postulaciones-field";

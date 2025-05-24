@@ -12,7 +12,6 @@ export const api_landing = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: apiUrl,
         prepareHeaders: (headers, { }) => {
-            headers.set("Content-Type", "application/json");
             const token = getLocalStorageItem("token");
             if (token) {
                 headers.set("Authorization", `Bearer ${token}`);
@@ -27,6 +26,10 @@ export const api_landing = createApi({
                 method: "POST",
                 params: { sum, page, pageSize, distinct }, // Mejor práctica para parámetros
                 body: filters,
+
+                headers: {
+                    'Content-Type': 'application/json',
+                },
                 signal
             }),
             transformErrorResponse: (response: any) => ({
@@ -40,6 +43,9 @@ export const api_landing = createApi({
                 url: `v2/insert/${url}`,
                 method: "POST",
                 body: JSON.stringify(data),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
                 signal
             }),
             transformErrorResponse: (response: any) => ({
@@ -49,11 +55,14 @@ export const api_landing = createApi({
             extraOptions: { maxRetries: 2 }
         }),
         postLanding: builder.mutation({
-            query: ({ url, data }) => ({
+            query: ({ url, data, signal }) => ({
                 url: `v2/insert/${url}`,
                 method: "POST",
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
                 body: data,
-                headers: {}, // Elimina headers automáticos para FormData
+                signal
             }),
             transformErrorResponse: (response: any) => ({
                 status: response.status,
