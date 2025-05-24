@@ -1,6 +1,4 @@
-;
-
-import { Plus } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { useState } from "react";
 
 interface TagInputProps {
@@ -9,9 +7,8 @@ interface TagInputProps {
         placeholder?: string;
         label?: string;
         require: boolean;
+        jsonString?: boolean;
     };
-    control: any;
-    register: any;
     watch: any;
     setValue: any;
     errors: any;
@@ -19,28 +16,38 @@ interface TagInputProps {
 
 export const TagInputComponent = ({
     cuestion,
-    control,
-    register,
     watch,
     setValue,
-    errors,
+    errors
 }: TagInputProps) => {
     const [newTag, setNewTag] = useState("");
-    const tags = watch(cuestion.name) || [];
+    const watchedValue = watch(cuestion.name);
+    let tags: string[] = [];
 
-    const addTag = (e: any) => { // Recibir el evento
+    if (cuestion.jsonString) {
+        try {
+            tags = watchedValue ? JSON.parse(watchedValue) : [];
+        } catch (error) {
+            tags = [];
+        }
+    } else {
+        tags = watchedValue || [];
+    }
+
+    const addTag = (e: React.FormEvent) => {
         e.preventDefault();
         if (newTag.trim() && !tags.includes(newTag.trim())) {
-            setValue(cuestion.name, [...tags, newTag.trim()]);
+            const newTagsArray = [...tags, newTag.trim()];
+            const newValue = cuestion.jsonString ? JSON.stringify(newTagsArray) : newTagsArray;
+            setValue(cuestion.name, newValue);
             setNewTag("");
         }
     };
 
     const removeTag = (tagToRemove: string) => {
-        setValue(
-            cuestion.name,
-            tags.filter((tag: string) => tag !== tagToRemove)
-        );
+        const newTagsArray = tags.filter((tag: string) => tag !== tagToRemove);
+        const newValue = cuestion.jsonString ? JSON.stringify(newTagsArray) : newTagsArray;
+        setValue(cuestion.name, newValue);
     };
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -70,7 +77,7 @@ export const TagInputComponent = ({
                             onClick={() => removeTag(tag)}
                             className="ml-1 text-purple-500 hover:text-purple-700 dark:text-purple-300 dark:hover:text-purple-100"
                         >
-                            ×
+                            <X />
                         </button>
                     </span>
                 ))}

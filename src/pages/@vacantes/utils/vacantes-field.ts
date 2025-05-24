@@ -92,5 +92,14 @@ export function VacantesField(): Field[] {
       options: ["Remota", "Presencial"],
       placeholder: "Tipo de la vacante",
     },
+    {
+      id: 7,
+      type: "TAG_INPUT",
+      name: "requisitos",
+      label: "Requisitos",
+      require: false,
+      placeholder: "Requisitos de la vacante",
+      jsonString: true,
+    },
   ];
 }

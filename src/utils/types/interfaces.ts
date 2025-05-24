@@ -33,6 +33,7 @@ export interface Field {
   label?: string;
   placeholder?: string;
   require: boolean;
+  jsonString?: boolean;
   stars?: number[]; // For RATING
   elements?: Field[]; // For Flex type
   options?: string[] | SelectOption[]; // For CHECKBOX_GROUP and SELECT
