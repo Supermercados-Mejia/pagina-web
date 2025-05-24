@@ -39,9 +39,8 @@ export default function VacantesAdmin({ onScroll }: PageProps) {
                         actionType={'vacantes'}
                         dataForm={VacantesField()}
                         aditionalData={{
-                            date: new Date()
+                            fechaPublicacion: new Date()
                         }}
-                        formName="PostulacionForm"
                         message_button="registrar"
                     />
                 </div>
