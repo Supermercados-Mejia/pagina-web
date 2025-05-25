@@ -31,10 +31,10 @@ export default function UserPostulaciones({ onScroll }: PageProps) {
                 <div className="max-w-2xl mx-auto">
                     <header className="text-center mb-8">
                         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Postulacion</h1>
-                        <div className="space-y-1">
+                        <label className="space-y-1">
                             <p className="text-gray-600 text-lg">Se parte de la familia</p>
                             <p className="text-gray-600 text-lg">Crece con nosotros.</p>
-                        </div>
+                        </label>
                     </header>
                     <MainForm
                         actionType={'postulaciones'}

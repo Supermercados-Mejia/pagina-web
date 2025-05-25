@@ -40,10 +40,10 @@ export default function VacantesUser({ onScroll }: PageProps) {
                 <div className="max-w-6xl mx-auto">
                     <header className="text-center mb-8">
                         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Vacantes</h1>
-                        <div className="space-y-1">
+                        <label className="space-y-1">
                             <p className="text-gray-600 text-lg">En esta sección podrás ver las vacantes disponibles</p>
                             <p className="text-gray-600 text-lg">Sé parte de nuestra familia.</p>
-                        </div>
+                        </label>
                     </header>
 
                     <div className="max-w-2xl mx-auto mb-8">
