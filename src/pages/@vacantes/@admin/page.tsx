@@ -1,11 +1,39 @@
 import MainForm from "@/components/form/main-form";
 import { PageProps } from "@/utils/types/page";
-import { IonContent, IonHeader, IonToolbar, IonTitle } from "@ionic/react";
+import { IonContent, IonHeader, IonToolbar, IonTitle, IonLabel, IonSegment, IonSegmentButton } from "@ionic/react";
 import { VacantesField } from "../utils/vacantes-field";
 import Footer from "@/template/footer";
+import { useCallback, useEffect, useState } from "react";
+import { CardCandidato } from "../components/card-candidato";
+import { useGetLandingMutation } from "@/hooks/reducers/api_landing";
+import { loadDataFromAPI } from "@/utils/data/load-data";
 
 
 export default function VacantesAdmin({ onScroll }: PageProps) {
+    const [selectedType, setSelectedType] = useState<string>('crear');
+
+    const [data, setData] = useState<Record<string, any>[]>([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
+    const [getData, { isLoading }] = useGetLandingMutation();
+    const [error, setError] = useState<string | null>(null);
+
+    const handleLoadData = useCallback(async () => {
+        try {
+            const { newStates, inventario } = await loadDataFromAPI(getData, "select/vacantes", [], currentPage);
+            setData(newStates.dataTable);
+
+            setTotalPages(newStates.totalPages);
+
+        } catch (error: any) {
+            setError(error.message);
+        }
+    }, [getData, currentPage]);
+
+    useEffect(() => {
+        handleLoadData();
+    }, [handleLoadData]);
+
 
     return (
         <IonContent
@@ -31,21 +59,40 @@ export default function VacantesAdmin({ onScroll }: PageProps) {
                 <div className="max-w-2xl mx-auto">
                     <header className="text-center mb-8">
                         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Vacantes</h1>
-                        <div className="space-y-1">
+                        <label className="space-y-1">
                             <p className="text-gray-600 text-lg">Ingresa las caracteristicas de la vacante.</p>
-                        </div>
+                        </label>
                     </header>
-                    <MainForm
-                        actionType={'vacantes'}
-                        dataForm={VacantesField()}
-                        aditionalData={{
-                            fechaPublicacion: new Date()
-                        }}
-                        message_button="registrar"
-                    />
+
+                    <section className="max-w-2xl mx-auto mb-8">
+                        <IonSegment
+                            value={selectedType}
+                            onIonChange={(e: any) => setSelectedType(e.detail.value!)}
+                        >
+                            <IonSegmentButton value="crear">
+                                <IonLabel>Crear</IonLabel>
+                            </IonSegmentButton>
+                            <IonSegmentButton value="candidatos">
+                                <IonLabel>Candidatos</IonLabel>
+                            </IonSegmentButton>
+                        </IonSegment>
+                    </section>
+
+                    {selectedType === "crear" ? (
+                        <MainForm
+                            actionType={'vacantes'}
+                            dataForm={VacantesField()}
+                            aditionalData={{
+                                fechaPublicacion: new Date()
+                            }}
+                            message_button="registrar"
+                        />) :
+                        (<ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {data && data.map((item, index) => (<CardCandidato candidato={item} index={index} key={index} />))}
+                        </ul>)}
                 </div>
             </main>
             <Footer />
-        </IonContent>
+        </IonContent >
     );
 }
