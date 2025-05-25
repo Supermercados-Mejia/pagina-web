@@ -45,10 +45,10 @@ export default function PromocionesUser({ onScroll }: PageProps) {
                         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Promociones</h1>
                         <PromoBanner items={promoItems} autoPlay={true} interval={3000} showControls={true} showIndicators={true} />
 
-                        <div className="space-y-1">
+                        <label className="space-y-1">
                             <p className="text-gray-600 text-lg">Aprovecha nuestras ofertas y combos</p>
                             <p className="text-gray-600 text-lg">Conoce nuestro nuevo catalogo...</p>
-                        </div>
+                        </label>
                     </header>
 
                     <section className="m-auto w-fit pb-2">
