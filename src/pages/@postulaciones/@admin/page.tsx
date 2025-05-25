@@ -1,51 +1,10 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Pagination from "@/components/pagination";
 import { useGetLandingMutation } from "@/hooks/reducers/api_landing";
 import DynamicTable from "@/components/table";
-import { loadDataFromAPI } from "../utils/load-data";
+import { loadDataFromAPI } from "@/utils/data/load-data";
 import { PageProps } from "@/utils/types/page";
 import { IonContent, IonHeader, IonToolbar, IonTitle } from "@ionic/react";
-
-export interface DynamicTableItem {
-    id: string;
-    Nombre: string;
-    Almacen: string;
-    FechaEmision: string;
-    [key: string]: any;
-}
-export interface formatFilter {
-    key: string;
-    value: string;
-    operator: "like" | "=" | ">=" | "<=" | ">" | "<" | "<>" | ""; // Incluí "" como opción para el operador.
-}
-
-interface formatSuma {
-    key: string;
-}
-interface orderBy {
-    Key: string;
-    Direction: string;
-}
-
-export interface formatLoadDate {
-    filters: {
-        filtros: formatFilter[];
-        Selects?: formatSuma[];
-        sumaAs?: [
-            {
-                Key: "";
-                Alias: "";
-            }
-        ];
-        Order?: orderBy[];
-    };
-    url: string;
-    page: number;
-    pageSize?: number;
-    sum: boolean;
-    distinct?: boolean;
-    signal?: any;
-}
 
 export default function AdminPostulaciones({ onScroll }: PageProps) {
     const [data, setData] = useState<Record<string, any>[]>([]);
@@ -56,7 +15,7 @@ export default function AdminPostulaciones({ onScroll }: PageProps) {
 
     const handleLoadData = useCallback(async () => {
         try {
-            const { newStates, inventario } = await loadDataFromAPI(getData, [], currentPage);
+            const { newStates, inventario } = await loadDataFromAPI(getData, "select/postulaciones", [], currentPage);
             setData(newStates.dataTable);
 
             setTotalPages(newStates.totalPages);
@@ -69,6 +28,7 @@ export default function AdminPostulaciones({ onScroll }: PageProps) {
     useEffect(() => {
         handleLoadData();
     }, [handleLoadData]);
+
     return (
         <IonContent
             fullscreen
@@ -90,7 +50,11 @@ export default function AdminPostulaciones({ onScroll }: PageProps) {
                 </IonToolbar>
             </IonHeader>
             <div className="w-4/5 m-auto mt-10">
-                <DynamicTable data={data} />
+                {error ? (
+                    <label className="text-red-600 text-xl">
+                        Ocurrio un error al consultar los datos, intente mas tarde o contacte a soporte.
+                    </label>)
+                    : (<DynamicTable data={data} />)}
                 <Pagination totalPages={totalPages} currentPage={currentPage} setCurrentPage={setCurrentPage} loading={isLoading} />
             </div>
         </IonContent>
