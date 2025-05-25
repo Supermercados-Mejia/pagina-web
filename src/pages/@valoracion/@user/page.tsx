@@ -35,10 +35,10 @@ export default function UserValoraciones({ onScroll }: PageProps) {
                 <div className="max-w-2xl mx-auto">
                     <header className="text-center mb-8">
                         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">{selectedType === "valoracion" ? 'Valoracion' : "Evaluacion"}</h1>
-                        <div className="space-y-1">
+                        <label className="space-y-1">
                             <p className="text-gray-600 text-lg">Danos tu opinion</p>
                             <p className="text-gray-600 text-sm">Quejas y sugerencias seran bien recibidas y tomadas en cuenta.</p>
-                        </div>
+                        </label>
                     </header>
                     <div className="max-w-2xl mx-auto mb-8">
                         <IonSegment

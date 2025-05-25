@@ -28,10 +28,10 @@ export default function VerificadorUser({ onScroll }: PageProps) {
             <main className="w-full min-h-[75vh] px-4 sm:px-6 lg:px-8 pb-7">
                 <header className="text-center mb-8">
                     <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Verificador</h1>
-                    <div className="space-y-1">
+                    <label className="space-y-1">
                         <p className="text-gray-600 text-lg">Escanea tus productos</p>
                         <p className="text-gray-600 text-sm">Cualquier duda o aclaracion no dudes en acercarte al personal.</p>
-                    </div>
+                    </label>
                 </header>
                 <div className="max-w-2xl mx-auto mb-8">
                     <PriceChecker />
