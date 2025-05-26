@@ -40,7 +40,7 @@ export default function UserPostulaciones({ onScroll }: PageProps) {
                         actionType={'postulaciones'}
                         dataForm={PostulacionesField()}
                         aditionalData={{
-                            date: new Date()
+                            fecha_registro: new Date()
                         }}
                         formName="PostulacionForm"
                         message_button="registrar"

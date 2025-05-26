@@ -7,6 +7,7 @@ import { useCallback, useEffect, useState } from "react";
 import { CardCandidato } from "../components/card-candidato";
 import { useGetLandingMutation } from "@/hooks/reducers/api_landing";
 import { loadDataFromAPI } from "@/utils/data/load-data";
+import { cn } from "@/utils/functions/cn";
 
 
 export default function VacantesAdmin({ onScroll }: PageProps) {
@@ -20,11 +21,10 @@ export default function VacantesAdmin({ onScroll }: PageProps) {
 
     const handleLoadData = useCallback(async () => {
         try {
-            const { newStates, inventario } = await loadDataFromAPI(getData, "select/vacantes", [], currentPage);
+            const { newStates } = await loadDataFromAPI(getData, "select/postulaciones", [], currentPage);
             setData(newStates.dataTable);
 
             setTotalPages(newStates.totalPages);
-
         } catch (error: any) {
             setError(error.message);
         }
@@ -56,14 +56,14 @@ export default function VacantesAdmin({ onScroll }: PageProps) {
                 </IonToolbar>
             </IonHeader>
             <main className="w-full min-h-[77vh] px-4 sm:px-6 lg:px-8 pb-7">
-                <div className="max-w-2xl mx-auto">
+                <div className={cn(selectedType === "crear" ? "max-w-2xl" : "max-w-6xl", "mx-auto")}>
                     <header className="text-center mb-8">
                         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Vacantes</h1>
                         <label className="space-y-1">
                             <p className="text-gray-600 text-lg">
                                 {selectedType === "crear" ?
                                     "Ingresa las caracteristicas de la vacante." :
-                                    ""}
+                                    "Aquí podrás ver los candidatos que se han postulado a las vacantes disponibles."}
                             </p>
                         </label>
                     </header>
@@ -92,7 +92,12 @@ export default function VacantesAdmin({ onScroll }: PageProps) {
                             message_button="registrar"
                         />) :
                         (<ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {data && data.map((item, index) => (<CardCandidato candidato={item} index={index} key={index} />))}
+                            {data ?
+                                data.map(
+                                    (item, index) =>
+                                        (<CardCandidato candidato={item} index={index} key={index} />)
+                                ) :
+                                (<p>Actualmente no hay candidatos interesado.</p>)}
                         </ul>)}
                 </div>
             </main>
