@@ -1,5 +1,4 @@
 import { Field } from "@/utils/types/interfaces";
-
 export function PostulacionesField(): Field[] {
   return [
     {
@@ -77,6 +76,14 @@ export function PostulacionesField(): Field[] {
       name: "direccion_actual",
       label: "Dirección Actual",
       placeholder: "Dirección Actual",
+      require: true,
+    },
+    {
+      id: 7,
+      type: "TEXT_AREA",
+      name: "presentacion",
+      label: "Hablanos de ti",
+      placeholder: "presenetacion personal",
       require: true,
     },
     {
