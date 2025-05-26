@@ -60,7 +60,11 @@ export default function VacantesAdmin({ onScroll }: PageProps) {
                     <header className="text-center mb-8">
                         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Vacantes</h1>
                         <label className="space-y-1">
-                            <p className="text-gray-600 text-lg">Ingresa las caracteristicas de la vacante.</p>
+                            <p className="text-gray-600 text-lg">
+                                {selectedType === "crear" ?
+                                    "Ingresa las caracteristicas de la vacante." :
+                                    ""}
+                            </p>
                         </label>
                     </header>
 
