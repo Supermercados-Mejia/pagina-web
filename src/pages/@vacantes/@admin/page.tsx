@@ -8,6 +8,9 @@ import { CardCandidato } from "../components/card-candidato";
 import { useGetLandingMutation } from "@/hooks/reducers/api_landing";
 import { loadDataFromAPI } from "@/utils/data/load-data";
 import { cn } from "@/utils/functions/cn";
+import { CardVacante } from "../components/card-vacante";
+import { vacantes } from "../data/example";
+import { SwitchContentVacantesAdmin } from "../components/content-admin";
 
 
 export default function VacantesAdmin({ onScroll }: PageProps) {
@@ -20,10 +23,14 @@ export default function VacantesAdmin({ onScroll }: PageProps) {
     const [error, setError] = useState<string | null>(null);
 
     const handleLoadData = useCallback(async () => {
+        setData([]);
         try {
-            const { newStates } = await loadDataFromAPI(getData, "select/postulaciones", [], currentPage);
+            const { newStates } = await loadDataFromAPI(
+                getData,
+                "select/postulaciones",
+                [{ key: "vacante", value: "NULL", operator: "<>" }],
+                currentPage);
             setData(newStates.dataTable);
-
             setTotalPages(newStates.totalPages);
         } catch (error: any) {
             setError(error.message);
@@ -31,8 +38,14 @@ export default function VacantesAdmin({ onScroll }: PageProps) {
     }, [getData, currentPage]);
 
     useEffect(() => {
-        handleLoadData();
-    }, [handleLoadData]);
+        setError(null);
+        if (selectedType === "candidatos") {
+            setData([]);
+            handleLoadData();
+        } else if (selectedType === "existentes") {
+            setData(vacantes);
+        }
+    }, [selectedType, handleLoadData]);
 
 
     return (
@@ -76,32 +89,20 @@ export default function VacantesAdmin({ onScroll }: PageProps) {
                             <IonSegmentButton value="crear">
                                 <IonLabel>Crear</IonLabel>
                             </IonSegmentButton>
+                            <IonSegmentButton value="existentes">
+                                <IonLabel>Existentes</IonLabel>
+                            </IonSegmentButton>
                             <IonSegmentButton value="candidatos">
                                 <IonLabel>Candidatos</IonLabel>
                             </IonSegmentButton>
                         </IonSegment>
                     </section>
 
-                    {selectedType === "crear" ? (
-                        <MainForm
-                            actionType={'vacantes'}
-                            dataForm={VacantesField()}
-                            aditionalData={{
-                                fechaPublicacion: new Date()
-                            }}
-                            message_button="registrar"
-                        />) :
-                        (<ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {data ?
-                                data.map(
-                                    (item, index) =>
-                                        (<CardCandidato candidato={item} index={index} key={index} />)
-                                ) :
-                                (<p>Actualmente no hay candidatos interesado.</p>)}
-                        </ul>)}
+                    <SwitchContentVacantesAdmin type={selectedType} data={data} />
                 </div>
             </main>
             <Footer />
         </IonContent >
     );
 }
+

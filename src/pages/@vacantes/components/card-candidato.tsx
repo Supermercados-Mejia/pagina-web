@@ -1,8 +1,8 @@
-import { Calendar, BookMarked, X, Heart } from "lucide-react";
+import { Calendar, BookMarked, X, Heart, Building, Mail, MapPin, Megaphone, Phone, User } from "lucide-react";
 import {
     format
 } from "date-fns"
-import { es, se } from "date-fns/locale"
+import { es } from "date-fns/locale"
 import { useRef, useState } from "react";
 import ModalInfo from "./modal-info";
 export function CardCandidato({ candidato, index }: any) {
@@ -54,7 +54,7 @@ export function CardCandidato({ candidato, index }: any) {
                             </div>
                             <div className="flex items-center gap-2 text-gray-600">
                                 <Calendar className="w-4 h-4 text-gray-400" />
-                                <span>{format(candidato.fecha_registro, "dd MMMM yyyy", { locale: es })}</span>
+                                <span>{format(candidato.fecha_registro, "dd MMMM yyyy hh:mm", { locale: es })}</span>
                             </div>
                         </li>
 
@@ -70,6 +70,33 @@ export function CardCandidato({ candidato, index }: any) {
                     <p className="text-gray-600 mb-4">
                         {candidato.presentacion}
                     </p>
+
+                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-4 md:gap-x-8 gap-y-3 px-4 md:px-0 text-sm">
+                        {[
+                            { icon: Megaphone, label: "Cómo se enteró", value: candidato.como_se_entero_vacante },
+                            { icon: Building, label: "Sucursal", value: candidato.sucursal },
+                            { icon: User, label: "Edad", value: candidato.edad },
+                            { icon: Calendar, label: "Nacimiento", value: format(candidato.fecha_nacimiento, "dd MMMM yyyy", { locale: es }) },
+                            { icon: Mail, label: "Correo", value: candidato.correo_electronico },
+                            { icon: Phone, label: "Teléfono", value: candidato.numero_telefono },
+                            { icon: Heart, label: "Estado civil", value: candidato.estado_civil },
+                            { icon: MapPin, label: "Dirección", value: candidato.direccion_actual },
+                        ].map((item, index) => (
+                            <li key={index} className="flex items-start gap-2 md:gap-3">
+                                <item.icon className="size-4 text-gray-500 shrink-0 mt-0.5" />
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex flex-wrap md:flex-nowrap items-baseline gap-1.5">
+                                        <span className="text-gray-500 font-medium whitespace-nowrap basis-full md:basis-auto">
+                                            {item.label}:
+                                        </span>
+                                        <span className="text-gray-800 break-words md:break-normal">
+                                            {item.value}
+                                        </span>
+                                    </div>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
                 </section>
             </ModalInfo>
         </>
