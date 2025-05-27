@@ -77,7 +77,7 @@ export default function VacantesUser({ onScroll }: PageProps) {
                         <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {filteredVacantes.length ? filteredVacantes.map((item: any, index) => (
                                 <CardVacante vacante={item} index={index} key={index} />
-                            )) : (<li className="m-auto list-none col-span-3"> Actualmente no hay vacantes disponibles, vuelve en otro momento. </li>)}
+                            )) : (<li className="m-auto list-none col-span-3"> Actualmente no hay vacantes disponibles {selectedDepartment !== "todo" && "en esta area"}, vuelve en otro momento. </li>)}
                         </ul>
                     </section>
                 </div>
