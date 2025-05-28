@@ -14,7 +14,7 @@ export const SwitchContentVacantesAdmin: React.FC<SwitchContentVacantesAdminProp
             if (!data || data.length === 0) return <p>Actualmente no hay candidatos interesados.</p>;
             return (
                 <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {data.map((item: any, index: any) =>
+                    {data.map((item: any, index: any) => item.fecha_registro &&
                         (<CardCandidato candidato={item} index={index} key={index} />)
                     )}
                 </ul>
