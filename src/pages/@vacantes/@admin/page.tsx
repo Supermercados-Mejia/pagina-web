@@ -1,14 +1,10 @@
-import MainForm from "@/components/form/main-form";
 import { PageProps } from "@/utils/types/page";
 import { IonContent, IonHeader, IonToolbar, IonTitle, IonLabel, IonSegment, IonSegmentButton } from "@ionic/react";
-import { VacantesField } from "../utils/vacantes-field";
 import Footer from "@/template/footer";
 import { useCallback, useEffect, useState } from "react";
-import { CardCandidato } from "../components/card-candidato";
 import { useGetLandingMutation } from "@/hooks/reducers/api_landing";
 import { loadDataFromAPI } from "@/utils/data/load-data";
 import { cn } from "@/utils/functions/cn";
-import { CardVacante } from "../components/card-vacante";
 import { vacantes } from "../data/example";
 import { SwitchContentVacantesAdmin } from "../components/content-admin";
 
@@ -23,13 +19,13 @@ export default function VacantesAdmin({ onScroll }: PageProps) {
     const [error, setError] = useState<string | null>(null);
 
     const handleLoadData = useCallback(async () => {
-        setData([]);
         try {
             const { newStates } = await loadDataFromAPI(
                 getData,
                 "select/postulaciones",
                 [{ key: "vacante", value: "NULL", operator: "<>" }],
-                currentPage);
+                currentPage
+            );
             setData(newStates.dataTable);
             setTotalPages(newStates.totalPages);
         } catch (error: any) {
@@ -39,8 +35,9 @@ export default function VacantesAdmin({ onScroll }: PageProps) {
 
     useEffect(() => {
         setError(null);
+        setData([]); // Limpiar data inmediatamente al cambiar de tipo
+
         if (selectedType === "candidatos") {
-            setData([]);
             handleLoadData();
         } else if (selectedType === "existentes") {
             setData(vacantes);
