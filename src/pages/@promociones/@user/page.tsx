@@ -77,16 +77,18 @@ export default function PromocionesUser({ onScroll }: PageProps) {
                         <h2 id="promotions-heading" className="sr-only">Promociones y Combos</h2>
 
                         <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {filteredData.length ?
-                                filteredData.map((item: any, index) => (
-                                    item.nombreCombo ? // Detecta si es un combo
-                                        <ComboCard combo={item} index={index} key={index} />
-                                        : <ProductoCard promocion={item} index={index} key={index} />
+                            {filteredData.length > 0
+                                ? filteredData.map((item: any) => (
+                                    item.nombreCombo
+                                        ? <ComboCard combo={item} key={item.id || item.nombreCombo} />
+                                        : <ProductoCard promocion={item} key={item.id || item.nombre} />
                                 ))
                                 : (
-                                    <li className="m-auto list-none col-span-3">
-                                        Actualmente no hay promociones disponibles, vuelve en otro momento.
-                                    </li>
+                                    <div className="m-auto col-span-3 text-center py-8">
+                                        <p className="text-gray-500 italic">
+                                            Actualmente no hay promociones disponibles, vuelve en otro momento.
+                                        </p>
+                                    </div>
                                 )
                             }
                         </ul>

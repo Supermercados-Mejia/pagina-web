@@ -2,6 +2,7 @@ import MainForm from "@/components/form/main-form";
 import { VacantesField } from "../utils/vacantes-field";
 import { CardCandidato } from "./card-candidato";
 import { CardVacante } from "./card-vacante";
+import { IonList } from "@ionic/react";
 
 type SwitchContentVacantesAdminProps = {
     type: string;
@@ -13,19 +14,19 @@ export const SwitchContentVacantesAdmin: React.FC<SwitchContentVacantesAdminProp
         case "candidatos":
             if (!data || data.length === 0) return <p>Actualmente no hay candidatos interesados.</p>;
             return (
-                <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <IonList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {data.map((item: any, index: any) => item.fecha_registro &&
                         (<CardCandidato candidato={item} index={index} key={index} />)
                     )}
-                </ul>
+                </IonList>
             );
         case "existentes":
             return (
-                <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <IonList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {data.map((item: any, index: any) => (
                         <CardVacante vacante={item} index={index} key={index} />
                     ))}
-                </ul>
+                </IonList>
             );
         default:
             return (
