@@ -101,6 +101,7 @@ const AppMenu = () => {
                     <IonList lines="none">
                         {getNavigation().map((item: any) => {
                             const Icon = item.icon;
+                            if (!Icon) return
                             return (
                                 <IonItem
                                     key={item.href}

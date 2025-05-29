@@ -47,6 +47,11 @@ export const navigationDefault = [
     page: React.lazy(Pages.LayoutPromociones),
   },
   {
+    name: "Promociones",
+    href: "/promociones/:id" /* los que no cuenten con icono no aparecen en el menu */,
+    page: React.lazy(Pages.LayoutPromociones),
+  },
+  {
     name: "Vacantes",
     href: "/vacantes",
     icon: BookUser,
