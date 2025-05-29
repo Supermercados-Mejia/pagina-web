@@ -1,5 +1,5 @@
 import { PageProps } from "@/utils/types/page";
-import { IonContent, IonHeader, IonToolbar, IonTitle, IonLabel, IonSegment, IonSegmentButton } from "@ionic/react";
+import { IonContent, IonHeader, IonToolbar, IonTitle, IonLabel, IonSegment, IonSegmentButton, IonInfiniteScroll, IonInfiniteScrollContent } from "@ionic/react";
 import Footer from "@/template/footer";
 import { useCallback, useEffect, useState } from "react";
 import { useGetLandingMutation } from "@/hooks/reducers/api_landing";
@@ -7,7 +7,6 @@ import { loadDataFromAPI } from "@/utils/data/load-data";
 import { cn } from "@/utils/functions/cn";
 import { vacantes } from "../data/example";
 import { SwitchContentVacantesAdmin } from "../components/content-admin";
-
 
 export default function VacantesAdmin({ onScroll }: PageProps) {
     const [selectedType, setSelectedType] = useState<string>('crear');
@@ -17,8 +16,10 @@ export default function VacantesAdmin({ onScroll }: PageProps) {
     const [totalPages, setTotalPages] = useState(0);
     const [getData, { isLoading }] = useGetLandingMutation();
     const [error, setError] = useState<string | null>(null);
+    const [hasMore, setHasMore] = useState(true);
 
     const handleLoadData = useCallback(async () => {
+        if (selectedType !== "candidatos" || isLoading || !hasMore) return;
         try {
             const { newStates } = await loadDataFromAPI(
                 getData,
@@ -26,17 +27,16 @@ export default function VacantesAdmin({ onScroll }: PageProps) {
                 [{ key: "vacante", value: "NULL", operator: "<>" }],
                 currentPage
             );
-            setData(newStates.dataTable);
+            setData(prev => [...prev, ...newStates.dataTable]);
+            setHasMore(newStates.dataTable.length >= 10);
             setTotalPages(newStates.totalPages);
         } catch (error: any) {
             setError(error.message);
         }
-    }, [getData, currentPage]);
+    }, [getData, currentPage, selectedType, hasMore]);
 
     useEffect(() => {
         setError(null);
-        setData([]); // Limpiar data inmediatamente al cambiar de tipo
-
         if (selectedType === "candidatos") {
             handleLoadData();
         } else if (selectedType === "existentes") {
@@ -44,6 +44,12 @@ export default function VacantesAdmin({ onScroll }: PageProps) {
         }
     }, [selectedType, handleLoadData]);
 
+    const loadMore = useCallback(async (event: CustomEvent<void>) => {
+        if (hasMore && selectedType === "candidatos") {
+            setCurrentPage(prev => prev + 1);
+        }
+        (event.target as HTMLIonInfiniteScrollElement).complete();
+    }, [hasMore, isLoading]);
 
     return (
         <IonContent
@@ -96,6 +102,19 @@ export default function VacantesAdmin({ onScroll }: PageProps) {
                     </section>
 
                     <SwitchContentVacantesAdmin type={selectedType} data={data} />
+
+                    <IonInfiniteScroll
+                        onIonInfinite={loadMore}
+                        threshold="100px"
+                        disabled={!hasMore || isLoading}
+                    >
+                        <IonInfiniteScrollContent
+                            loadingText="Cargando más productos..."
+                            loadingSpinner="bubbles"
+                        />
+                    </IonInfiniteScroll>
+
+                    {selectedType === "candidatos" && (<span className="text-gray-500 text-sm mt-6">Pagina {currentPage} de {totalPages}</span>)}
                 </div>
             </main>
             <Footer />

@@ -24,17 +24,17 @@ export function ProductoCard({ promocion, index }: any) {
                 </header>
 
                 <ul className="flex flex-col mb-4 text-sm gap-2">
-                    <div className="flex items-center gap-2">
+                    <label className="flex items-center gap-2">
                         <ShoppingBag className="size-4 text-gray-400" />
                         <span className="text-gray-600 line-through">{promocion.precioOriginal}</span>
                         <strong className="text-lg text-green-600">{promocion.precioDescuento}</strong>
-                    </div>
+                    </label>
 
-                    <div className="flex items-center gap-2">
+                    <label className="flex items-center gap-2">
                         <Tag className="size-4 text-gray-400" />
                         <span className="font-medium">Código: </span>
                         <code className="bg-yellow-100 px-2 py-1 rounded">{promocion.codigoPromo}</code>
-                    </div>
+                    </label>
                 </ul>
 
                 <p className="text-gray-600 mb-4 flex-grow">{promocion.descripcion}</p>
@@ -65,33 +65,29 @@ export function ComboCard({ combo, index }: any) {
                     <p className="text-purple-600">Combo especial</p>
                 </header>
 
-                <div className="mb-4 flex-grow">
+                <section className="mb-4 flex-grow">
                     <p className="font-medium mb-2">Incluye:</p>
                     <ul className="list-disc pl-5 space-y-2 text-sm">
                         {combo.productos.map((producto: string, i: number) => (
                             <li key={i} className="text-gray-600">{producto}</li>
                         ))}
                     </ul>
-                </div>
+                </section>
 
-                <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-lg">
-                        <Tag className="size-5 text-purple-600" />
+                <article className="space-y-2">
+                    <label className="flex items-center gap-2">
+                        <ShoppingBag className="size-4 text-purple-500" />
                         <span className="font-bold text-gray-900">Precio total: </span>
-                        <span className="text-red-500 font-bold">{combo.precioTotal}</span>
-                    </div>
+                        <span className="text-gray-600 line-through">{combo.precioTotal}</span>{/* precio PrecioLista */}
+                        <strong className="text-lg text-green-600">{combo.ahorroTotal}</strong>{/* precio ofertaD */}
+                    </label>
 
-                    <div className="flex items-center gap-2">
-                        <span className="font-medium">Ahorro total:</span>
-                        <span className="text-green-600 font-bold">{combo.ahorroTotal}</span>
-                    </div>
-
-                    <div className="mt-3 bg-purple-100 p-2 rounded flex items-center gap-2">
+                    <label className="mt-3 bg-purple-100 p-2 rounded flex items-center gap-2">
                         <Tag className="size-4 text-purple-600" />
                         <span className="font-medium">Código combo: </span>
                         <code className="font-bold text-purple-800">{combo.codigoPromo}</code>
-                    </div>
-                </div>
+                    </label>
+                </article>
 
                 <footer className="mt-4">
                     <button className="text-purple-600 hover:text-purple-800 hover:underline font-medium text-sm">
