@@ -1,3 +1,4 @@
+import LayoutPromocionesId from "@/pages/@promociones/[id]/layout";
 import {
   House,
   Package,
@@ -24,6 +25,7 @@ const Pages = {
   LayoutValoraciones: () => import("@/pages/@valoracion/layout"),
   LayoutVacantes: () => import("@/pages/@vacantes/layout"),
   LayoutPromociones: () => import("@/pages/@promociones/layout"),
+  LayoutPromocionesId: () => import("@/pages/@promociones/[id]/layout"),
   // ... otros componentes
 };
 
@@ -49,7 +51,7 @@ export const navigationDefault = [
   {
     name: "Promociones",
     href: "/promociones/:id" /* los que no cuenten con icono no aparecen en el menu */,
-    page: React.lazy(Pages.LayoutPromociones),
+    page: React.lazy(Pages.LayoutPromocionesId),
   },
   {
     name: "Vacantes",
