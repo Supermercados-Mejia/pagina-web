@@ -11,7 +11,7 @@ export function ModalAddPromotion({ isOpen, setIsOpen, form }: any) {
         >
             <IonHeader>
                 <IonToolbar>
-                    <IonTitle className="font-sans">Modal</IonTitle>
+                    <IonTitle className="font-sans">Registrar promocion</IonTitle>
                     <IonButtons slot="start">
                         <IonButton fill="clear" onClick={() => setIsOpen(false)} color={"tertiary"}>
                             Cerrar
@@ -19,10 +19,13 @@ export function ModalAddPromotion({ isOpen, setIsOpen, form }: any) {
                     </IonButtons>
                 </IonToolbar>
             </IonHeader>
-            <IonContent className="ion-padding">
+            <IonContent className="ion-padding h-fit">
                 <MainForm
                     actionType="post-promociones"
                     dataForm={form}
+                    aditionalData={{
+                        Moneda: "Pesos"
+                    }}
                     message_button="Registrar"
                 />
             </IonContent>
