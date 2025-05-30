@@ -8,15 +8,18 @@ import {
     IonToolbar,
     IonTitle,
     IonButtons,
-    IonMenuButton
+    IonMenuButton,
+    IonBackButton
 } from '@ionic/react';
 
 interface HeaderProps {
     title: string;
     showMenuButton?: boolean;
     showSearchButton?: boolean;
+    showBackButton?: boolean;
     className?: string;
     isScrolled?: boolean;
+    defaultBack?: string;
 }
 
 const Header: React.FC<HeaderProps> = ({
@@ -24,7 +27,9 @@ const Header: React.FC<HeaderProps> = ({
     isScrolled = false,
     showMenuButton = true,
     showSearchButton = false,
-    className = ''
+    showBackButton = false,
+    className = '',
+    defaultBack
 }) => {
 
     // Obtener valores de forma correcta y tipada
@@ -38,15 +43,20 @@ const Header: React.FC<HeaderProps> = ({
                 className={cn(
                     `transition-all duration-300
                 ion-padding-horizontal safe-area-top`,
-                    isScrolled ? 'bg-white/70 border backdrop-blur-sm' : 'bg-transparent',
+                    showBackButton || isScrolled ? 'bg-white/70 border backdrop-blur-sm' : 'bg-transparent',
                     className
                 )}
             >
-                <IonToolbar className='p-2 flex items-center justify-between'>
+                <IonToolbar className='p-2 flex items-center '>
+                    {showBackButton && (
+                        <IonButtons slot="start">
+                            <IonBackButton defaultHref={defaultBack ?? "/"} className={'text-purple-700'} text="Atras" />
+                        </IonButtons>)}
+
                     <IonTitle
                         className={cn(
                             "text-xl font-light tracking-tight",
-                            isScrolled ? "text-purple-700" : "text-white",
+                            showBackButton || isScrolled ? "text-purple-700" : "text-white",
                             showSearchButton ? "text-left" : "",
                         )}
                     >
@@ -55,7 +65,7 @@ const Header: React.FC<HeaderProps> = ({
 
                     {showMenuButton && (
                         <IonButtons slot="end">
-                            <IonMenuButton className={cn(isScrolled ? 'text-purple-700' : 'text-white')} />
+                            <IonMenuButton className={cn(showBackButton || isScrolled ? 'text-purple-700' : 'text-white')} />
                         </IonButtons>
                     )}
                 </IonToolbar>

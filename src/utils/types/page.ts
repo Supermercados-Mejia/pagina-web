@@ -6,3 +6,14 @@ export interface PageProps {
   onClick?: () => void;
   onScroll?: (isScrolled: boolean) => void;
 }
+export interface Product {
+  id: string;
+  image?: string;
+  nombre: string;
+  descuento?: number;
+  categoria: string;
+  unidad: string;
+  precio: number;
+  precioRegular?: number;
+  factor?: number;
+}

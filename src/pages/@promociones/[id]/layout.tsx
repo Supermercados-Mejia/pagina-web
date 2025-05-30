@@ -6,14 +6,13 @@ import AppMenu from "@/template/menu";
 import PromocionesID from "./page";
 
 const LayoutPromocionesId: React.FC = () => {
-    const [isScrolled, setIsScrolled] = useState(false);
 
     return (
         <>
             <AppMenu />
             <IonPage id="main-content">
-                <Header title="Liz" isScrolled={isScrolled} showMenuButton />
-                <PromocionesID onScroll={(scrolled) => setIsScrolled(scrolled)} />
+                <Header title="Liz" showMenuButton showBackButton defaultBack="/promociones" />
+                <PromocionesID />
             </IonPage>
         </>
     );
