@@ -3,7 +3,7 @@ import { ShoppingBag, Tag } from "lucide-react";
 // Componente para promociones individuales
 export function ProductoCard({ promocion, index }: any) {
     return (
-        <a key={index} className="list-none" href="/promociones/123">
+        <a key={index} className="list-none" href="/promociones/P7501026000119">
             <article
                 aria-labelledby={`producto-${index}`}
                 className="bg-white border border-gray-200 rounded-xl p-6 transition-all
