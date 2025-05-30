@@ -8,6 +8,7 @@ import { ModalAddPromotion } from "../components/modal-add-promotion";
 import { Plus } from "lucide-react";
 import { combos, promociones } from "../data/example";
 import { ComboCard, ProductoCard } from "../components/card-promociones";
+import { combosField } from "../utils/combos-field";
 
 export default function PromocionesAdmin({ onScroll }: PageProps) {
     const [selectedType, setSelectedType] = useState<string>('combos');
@@ -18,6 +19,7 @@ export default function PromocionesAdmin({ onScroll }: PageProps) {
             ? combos
             : promociones;
 
+    const form = selectedType === "combos" ? combosField() : promocionesField()
     return (
         <IonContent
             fullscreen
@@ -90,7 +92,7 @@ export default function PromocionesAdmin({ onScroll }: PageProps) {
                             }
                         </ul>
                     </section>
-                    <ModalAddPromotion isOpen={isOpen} setIsOpen={setIsOpen} form={promocionesField()} />
+                    <ModalAddPromotion isOpen={isOpen} setIsOpen={setIsOpen} form={form} />
                 </div>
             </main>
 
