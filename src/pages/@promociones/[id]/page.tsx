@@ -1,6 +1,5 @@
-import Footer from "@/template/footer";
-import { PageProps, Product } from "@/utils/types/page";
-import { IonContent, IonHeader, IonToolbar, IonTitle, IonSegment, IonLabel, IonSegmentButton, IonButton, IonCol, IonGrid, IonRow, IonPage, IonBackButton, IonButtons } from "@ionic/react";
+import { PageProps } from "@/utils/types/page";
+import { IonContent, IonSegment, IonLabel, IonSegmentButton, IonButton, IonCol, IonGrid, IonRow, IonPage } from "@ionic/react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useGetArticulosQuery } from "@/hooks/reducers/api_int";
@@ -60,15 +59,6 @@ export default function PromocionesID({ onScroll }: PageProps) {
                 onScroll?.(isScrolled);
             }}
         >
-            {/* <IonHeader
-                collapse="condense"
-                className="custom-toolbar z-50 -top-16">
-                <IonToolbar>
-                    <IonButtons slot="start">
-                        <IonBackButton />
-                    </IonButtons>
-                </IonToolbar>
-            </IonHeader> */}
             <main className="w-full min-h-[77vh] px-4 sm:px-6 lg:px-8 pb-7">
 
                 <div className="max-w-6xl mx-auto">
@@ -215,7 +205,6 @@ export default function PromocionesID({ onScroll }: PageProps) {
                     </IonGrid>
                 </div>
             </main>
-            <Footer />
         </IonContent>
     )
 }

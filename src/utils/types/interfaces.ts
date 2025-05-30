@@ -45,6 +45,7 @@ export interface Field {
   valueDefined?: any;
   horas?: boolean; // For DATE_RANGE
   href?: string;
+  icon?: React.ReactNode;
 }
 
 export interface MainFormProps {
@@ -131,7 +132,7 @@ export interface SearchableSelectProps {
     valueDefined?: string;
     enableAutocomplete?: boolean;
     saveData?: boolean;
-  };
+  } & Field;
   handleSubmit: () => any;
   setValue: (name: string, value: string) => void;
   setError: (name: string, error: object) => void;

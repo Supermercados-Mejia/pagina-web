@@ -13,7 +13,9 @@ export function TextAreaComponent(props: InputFormProps) {
     return (
         <div className="flex flex-col">
             <label className="leading-loose flex items-center gap-2 dark:text-white">
-                <Briefcase className="w-4 h-4" />
+                <span className="w-4 h-4 flex items-center justify-center">
+                    {cuestion.icon ? cuestion.icon : <Briefcase className="w-4 h-4" />}
+                </span>
                 {cuestion.label}
             </label>
             <div className="relative">
