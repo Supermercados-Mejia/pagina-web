@@ -1,5 +1,5 @@
 import { Field } from "@/utils/types/interfaces";
-import { Package, Box, Tag } from "lucide-react"; // Importa los íconos
+import { Package, Box, Tag } from "lucide-react";
 
 export function promocionesField(): Field[] {
   return [

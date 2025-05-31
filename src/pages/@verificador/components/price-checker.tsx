@@ -1,5 +1,5 @@
 import type React from "react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { IonItem, IonLabel, IonList, IonSpinner, IonSelect, IonSelectOption, IonProgressBar } from "@ionic/react";
 import { ScanBarcode, Search, ShoppingBasket } from "lucide-react";
@@ -31,16 +31,18 @@ const Input = ({ className = "", ...props }: React.InputHTMLAttributes<HTMLInput
 
 const PAGE_SIZE = 5;
 const COOLDOWN_TIME = 5000;
+const DEBOUNCE_TIME = 500;
 
 function PriceChecker() {
     const id_user = getLocalStorageItem("user-id");
     const [displayData, setDisplayData] = useState<Product[]>([]);
     const [inputValue, setInputValue] = useState("");
+    const [debouncedInput, setDebouncedInput] = useState("");
     const [selectedSucursal, setSelectedSucursal] = useState(sucursales[2].id);
     const [productNotFound, setProductNotFound] = useState(false);
     const [getProgress, setProgress] = useState(0);
     const timeoutRef = useRef<NodeJS.Timeout>(null);
-    const inputValueRef = useRef(inputValue);
+    const inputValueRef = useRef<NodeJS.Timeout>(null);
 
     const resetStates = () => {
         setDisplayData([]);
@@ -60,10 +62,10 @@ function PriceChecker() {
     const { data, isLoading } = useGetArticulosQuery(
         {
             pageSize: PAGE_SIZE,
-            filtro: inputValue,
+            filtro: debouncedInput,
             listaPrecio: selectedSucursal,
         },
-        { refetchOnMountOrArgChange: true, skip: inputValue.length < 3 }
+        { refetchOnMountOrArgChange: true, skip: debouncedInput.length < 3 }
     );
 
     async function handleNotFound(barrcode: string) {
@@ -76,12 +78,19 @@ function PriceChecker() {
     }
 
     useEffect(() => {
-        inputValueRef.current = inputValue;
+        console.log("Input value changed:", inputValue);
+        inputValueRef.current = setTimeout(() => {
+            setDebouncedInput(inputValue);
+        }, DEBOUNCE_TIME);
+
+        return () => {
+            if (inputValueRef.current) clearTimeout(inputValueRef.current);
+        };
     }, [inputValue]);
 
-    useEffect(() => {
-        const isBarcode = /^\d{3,13}$/.test(inputValueRef.current);
-        if (isBarcode && data && data.precios.length > 0) {
+    const updateDisplayData = useCallback(() => {
+        if (!data) return;
+        if (data.precios && data.precios.length > 0) {
             const newProducts = data.precios.map((item: any) => {
                 const oferta = data.ofertas?.find((o: any) => o.articulo === item.cuenta);
                 return {
@@ -89,21 +98,29 @@ function PriceChecker() {
                     nombre: item.nombre,
                     precio: item.precio,
                     unidad: item.unidad,
-                    oferta: oferta ? {
-                        precio: parseFloat(oferta.precio),
-                        fechaHasta: new Date(oferta.fechaHasta).toLocaleDateString()
-                    } : undefined
+                    oferta: oferta
+                        ? {
+                            precio: parseFloat(oferta.precio),
+                            fechaHasta: new Date(oferta.fechaHasta).toLocaleDateString(),
+                        }
+                        : undefined,
                 };
             });
 
             setDisplayData(newProducts);
             setProductNotFound(false);
-        } else if (isBarcode) {
+        } else if (inputValue && data.precios) {
             setProductNotFound(true);
-            handleNotFound(inputValueRef.current);
+            handleNotFound(debouncedInput);
         }
         resetCooldownTimer();
-    }, [data]);
+    }, [data, debouncedInput]);
+
+    useEffect(() => {
+        if (debouncedInput && data) {
+            updateDisplayData();
+        }
+    }, [debouncedInput, data, updateDisplayData]);
 
     useEffect(() => {
         const interval = setInterval(() => {
