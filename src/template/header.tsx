@@ -1,8 +1,5 @@
 // components/Header.tsx
-import { useAppSelector } from '@/hooks/selector';
-import { RootState } from '@/hooks/store';
 import { cn } from '@/utils/functions/cn';
-import { getLocalStorageItem } from '@/utils/functions/local-storage';
 import {
     IonHeader,
     IonToolbar,
@@ -32,20 +29,20 @@ const Header: React.FC<HeaderProps> = ({
     defaultBack
 }) => {
 
-    // Obtener valores de forma correcta y tipada
-    const userToken = getLocalStorageItem("token");
-    const reduxToken = useAppSelector((state: RootState) => state.auth?.mutations?.[0]?.data?.token);
-    const currentBranch = userToken ?? reduxToken;
-
     return (
         <>
             <IonHeader
                 className={cn(
-                    `transition-all duration-300
-                ion-padding-horizontal safe-area-top`,
-                    showBackButton || isScrolled ? 'bg-white/70 border backdrop-blur-sm' : 'bg-transparent',
+                    `transition-all duration-300 safe-area-top`,
+                    showBackButton || isScrolled
+                        ? 'bg-white/70 border-b backdrop-blur-sm'
+                        : 'bg-transparent',
                     className
                 )}
+                style={{
+                    paddingTop: 'var(--ion-safe-area-top, 0)',
+                    minHeight: 'calc(56px + var(--ion-safe-area-top, 0px))'
+                }}
             >
                 <IonToolbar className='p-2 flex items-center '>
                     {showBackButton && (
