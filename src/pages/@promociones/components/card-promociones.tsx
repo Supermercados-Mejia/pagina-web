@@ -1,9 +1,11 @@
 import { ShoppingBag, Tag } from "lucide-react";
+import { useHistory } from "react-router";
 
 // Componente para promociones individuales
 export function ProductoCard({ promocion, index }: any) {
+    const history = useHistory();
     return (
-        <a key={index} className="list-none" href="/promociones/P7501026000119">
+        <li key={index} className="list-none">
             <article
                 aria-labelledby={`producto-${index}`}
                 className="bg-white border border-gray-200 rounded-xl p-6 transition-all
@@ -40,12 +42,12 @@ export function ProductoCard({ promocion, index }: any) {
                 <p className="text-gray-600 mb-4 flex-grow">{promocion.descripcion}</p>
 
                 <footer className="mt-auto">
-                    <button className="text-purple-600 hover:text-purple-800 hover:underline font-medium text-sm">
+                    <button onClick={() => history.push("/promociones/P7501026000119")} className="text-purple-600 hover:text-purple-800 hover:underline font-medium text-sm">
                         Ver oferta →
                     </button>
                 </footer>
             </article>
-        </a>
+        </li>
     )
 }
 
