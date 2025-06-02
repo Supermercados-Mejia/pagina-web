@@ -15,7 +15,7 @@ const LayoutVacantes: React.FC = () => {
     return (
         <>
             <AppMenu />
-            <IonPage id="main-content">
+            <IonPage id="main-content" className="ion-safe-area-top">
                 <Header title="Liz" isScrolled={isScrolled} showMenuButton />
                 {userRole === 'admin' ?
                     (<VacantesAdmin onScroll={(scrolled) => setIsScrolled(scrolled)} />)
