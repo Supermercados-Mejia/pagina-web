@@ -14,7 +14,7 @@ const LayoutVacantes: React.FC = () => {
     return (
         <>
             <AppMenu />
-            <IonPage id="main-content" className="ion-safe-area-top">
+            <IonPage id="main-content">
                 <Header title="Liz" isScrolled={isScrolled} showMenuButton />
                 <PageId onScroll={(scrolled) => setIsScrolled(scrolled)} />
             </IonPage>
