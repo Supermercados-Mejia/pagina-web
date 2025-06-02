@@ -1,6 +1,6 @@
 import { Network } from "@capacitor/network";
 
-const checkNetwork = async () => {
+export const checkNetwork = async () => {
   const status = await Network.getStatus();
   console.log(
     "Estado de la red:",
