@@ -53,7 +53,7 @@ export default function PromocionesUser({ onScroll }: PageProps) {
 
                     <section className="m-auto w-fit pb-2">
                         <IonButton color={"tertiary"} target="_blank" href="https://google.com">Descargar</IonButton>
-                        <IonButton color={"tertiary"} target="_blank" href="https://google.com" fill="clear">Ver</IonButton>
+                        <IonButton color={"tertiary"} target="_blank" href="catalogo.jpg" fill="clear">Ver</IonButton>
                     </section>
 
                     <section className="max-w-2xl mx-auto mb-8">
