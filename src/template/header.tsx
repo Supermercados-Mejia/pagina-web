@@ -39,10 +39,6 @@ const Header: React.FC<HeaderProps> = ({
                         : 'bg-transparent',
                     className
                 )}
-                style={{
-                    paddingTop: 'var(--ion-safe-area-top, 0)',
-                    minHeight: 'calc(56px + var(--ion-safe-area-top, 0px))'
-                }}
             >
                 <IonToolbar className='p-2 flex items-center '>
                     {showBackButton && (
