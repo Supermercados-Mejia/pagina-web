@@ -1,4 +1,4 @@
-export const cardFile = () => {
+export const CardFile = () => {
     return (
         <div className="card-file">
             <div className="card-file__header">
@@ -8,5 +8,6 @@ export const cardFile = () => {
             <div className="card-file__content">
                 <p>File content goes here...</p>
             </div>
-        </div>)
+        </div>
+    );
 }
