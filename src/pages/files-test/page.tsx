@@ -42,7 +42,7 @@ export default function FileUser({ onScroll }: PageProps) {
                     </section>
 
                     <section className="max-w-2xl mx-auto mb-8">
-                        <IonSegment>
+                        <IonSegment value={"todo"}>
                             <IonSegmentButton value="todo">
                                 <IonLabel>Todo</IonLabel>
                             </IonSegmentButton>

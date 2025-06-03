@@ -7,10 +7,10 @@ export function UserCard({ name, email, avatarUrl }: UserCardProps) {
     return (
         <div className="user-card">
             <img src={avatarUrl} alt={`${name}'s avatar`} className="user-card__avatar" />
-            <div className="user-card__info">
+            <label className="user-card__info">
                 <h2 className="user-card__name">{name}</h2>
                 <p className="user-card__email">{email}</p>
-            </div>
+            </label>
         </div>
     );
 };
