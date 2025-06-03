@@ -1,6 +1,7 @@
 import Footer from "@/template/footer";
 import { PageProps } from "@/utils/types/page";
 import { IonContent, IonHeader, IonToolbar, IonTitle, IonSegment, IonLabel, IonSegmentButton, IonButton } from "@ionic/react";
+import ViewFile from "./components/view-file";
 
 export default function FileUser({ onScroll }: PageProps) {
 
@@ -28,7 +29,11 @@ export default function FileUser({ onScroll }: PageProps) {
 
                 <div className="max-w-6xl mx-auto">
                     <header className="text-center">
-                        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Model</h1>
+                        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Archivos</h1>
+
+                        <label className="space-y-1">
+                            <p className="text-gray-600 text-lg">Gestion de archivo muerto</p>
+                        </label>
                     </header>
 
                     <section className="m-auto w-fit pb-2">
@@ -38,14 +43,14 @@ export default function FileUser({ onScroll }: PageProps) {
 
                     <section className="max-w-2xl mx-auto mb-8">
                         <IonSegment>
-                            <IonSegmentButton value="model1">
-                                <IonLabel>Model1</IonLabel>
+                            <IonSegmentButton value="todo">
+                                <IonLabel>Todo</IonLabel>
                             </IonSegmentButton>
-                            <IonSegmentButton value="model2">
-                                <IonLabel>Model2</IonLabel>
+                            <IonSegmentButton value="formatos">
+                                <IonLabel>Formatos</IonLabel>
                             </IonSegmentButton>
-                            <IonSegmentButton value="model3">
-                                <IonLabel>Model3</IonLabel>
+                            <IonSegmentButton value="recibidos">
+                                <IonLabel>Recibidos</IonLabel>
                             </IonSegmentButton>
                         </IonSegment>
                     </section>
@@ -54,7 +59,7 @@ export default function FileUser({ onScroll }: PageProps) {
                         <h2 id="promotions-heading" className="sr-only">Model</h2>
 
                         <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
+                            <ViewFile />
                         </ul>
                     </section>
                 </div>
