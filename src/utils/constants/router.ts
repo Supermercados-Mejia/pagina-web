@@ -14,6 +14,7 @@ import {
   Clock,
   TicketPercent,
   LayoutList,
+  ShieldUser,
 } from "lucide-react";
 import React from "react";
 
@@ -26,6 +27,7 @@ const Pages = {
   LayoutVacantes: () => import("@/pages/@vacantes/layout"),
   LayoutPromociones: () => import("@/pages/@promociones/layout"),
   LayoutPromocionesId: () => import("@/pages/@promociones/[id]/layout"),
+  LayoutFilesTest: () => import("@/pages/files-test/layout"),
   // ... otros componentes
 };
 
@@ -165,5 +167,11 @@ export const navigationAdmin = [
     href: "/verificador",
     icon: ScanBarcode,
     page: React.lazy(Pages.LayoutVerificador),
+  },
+  {
+    name: "Files Test",
+    href: "/files-test",
+    icon: ShieldUser,
+    page: React.lazy(Pages.LayoutFilesTest),
   },
 ];
