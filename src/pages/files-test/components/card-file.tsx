@@ -1,4 +1,4 @@
-export const CardFile = () => {
+export const CardFile = ({ selectFile }: any) => {
     return (
         <div className="card-file">
             <div className="card-file__header">

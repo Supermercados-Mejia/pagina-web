@@ -27,7 +27,7 @@ export default function FileUser({ onScroll }: PageProps) {
             </IonHeader>
             <main className="w-full min-h-[77vh] px-4 sm:px-6 lg:px-8 pb-7">
 
-                <div className="max-w-6xl mx-auto">
+                <div className="max-w-4xl mx-auto">
                     <header className="text-center">
                         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Archivos</h1>
 
@@ -58,9 +58,7 @@ export default function FileUser({ onScroll }: PageProps) {
                     <section aria-labelledby="promotions-heading" className="mt-6">
                         <h2 id="promotions-heading" className="sr-only">Model</h2>
 
-                        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <ViewFile />
-                        </ul>
+                        <ViewFile />
                     </section>
                 </div>
             </main>
