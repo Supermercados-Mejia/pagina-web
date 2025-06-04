@@ -1,16 +1,23 @@
 import { IonList } from "@ionic/react";
 import { CardFile } from "./card-file";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/utils/functions/cn";
 import { X } from "lucide-react";
+import { getDeviceInfo } from "@/hooks/divice/data";
 
 export default function ViewFile() {
     const [file, setFile] = useState<string | null>(null);
     const [previewError, setPreviewError] = useState(false);
-
+    async function PlataformLoader() {
+        const dataDivice = await getDeviceInfo()/* .then((data) => {console.log("Device Info:", data);}); */
+        console.log(dataDivice.platform);
+    }
     const handlePreviewError = () => {
         setPreviewError(true);
     };
+    useEffect(() => {
+        PlataformLoader();
+    }, []);
     return (
         <section className="flex flex-col md:flex-row items-center justify-center w-full h-full p-4 gap-4">
             <IonList className={cn("w-full max-w-sm", file && "hidden")}>
@@ -26,9 +33,9 @@ export default function ViewFile() {
                                 setFile(null);
                                 setPreviewError(false);
                             }}
-                            className="absolute z-50 bg-white rounded-full p-1 shadow-md -right-2 -top-2 hover:bg-gray-100 transition-colors"
+                            className="absolute z-50 bg-white/70 rounded-full p-1 shadow-md -right-2 -top-2 hover:bg-gray-100 transition-colors"
                         >
-                            <X className="text-gray-600 w-5 h-5" />
+                            <X className="text-red-600 w-5 h-5" />
                         </button>
 
                         <div
