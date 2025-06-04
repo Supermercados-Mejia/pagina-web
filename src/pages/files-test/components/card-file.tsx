@@ -1,5 +1,3 @@
-import { IonCard } from "@ionic/react";
-
 export const CardFile = ({ selectFile }: any) => {
     return (
         <article className="flex flex-col items-center justify-center p-4 border rounded-lg shadow-md bg-white hover:shadow-lg transition-shadow duration-300">
