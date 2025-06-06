@@ -9,11 +9,11 @@ export default function ViewFile() {
     const [file, setFile] = useState<string | null>(null);
     const [previewError, setPreviewError] = useState(false);
     async function PlataformLoader() {
-        const dataDivice = await getDeviceInfo()/* .then((data) => {console.log("Device Info:", data);}); */
+        const dataDivice = await getDeviceInfo()
         console.log(dataDivice.platform);
     }
     const handlePreviewError = () => {
-        setPreviewError(true);
+        setPreviewError(true)
     };
     useEffect(() => {
         PlataformLoader();
