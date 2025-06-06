@@ -24,10 +24,11 @@ export default function UserValoraciones({ onScroll }: PageProps) {
             className="custom-toolbar z-50 -top-16"
         >
                 <IonToolbar>
+
                     <IonTitle
                         size="large"
-                        className="text-white font-medium tracking-tight">
-                        <span className="text-6xl">Liz</span>
+                        className="text-white text-5xl p-2 font-medium h-full">
+                        Liz
                     </IonTitle>
                 </IonToolbar>
             </IonHeader>

@@ -1,9 +1,7 @@
-import LayoutPromocionesId from "@/pages/@promociones/[id]/layout";
 import {
   House,
   Package,
   Tag,
-  ClipboardList,
   List,
   Briefcase,
   Truck,
@@ -107,12 +105,6 @@ export const navigationAdmin = [
     name: "Pantalla Inicial",
     href: "/layout",
     icon: House,
-    page: React.lazy(Pages.Layout),
-  },
-  {
-    name: "Combos",
-    href: "/combos",
-    icon: Package,
     page: React.lazy(Pages.Layout),
   },
   {

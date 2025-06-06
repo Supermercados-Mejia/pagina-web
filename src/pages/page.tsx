@@ -32,8 +32,8 @@ const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
                 <IonToolbar>
                     <IonTitle
                         size="large"
-                        className="text-white font-medium tracking-tight">
-                        <span className="text-6xl">Liz</span>
+                        className="text-white text-5xl p-2 font-medium h-full">
+                        Liz
                     </IonTitle>
                 </IonToolbar>
             </IonHeader>
