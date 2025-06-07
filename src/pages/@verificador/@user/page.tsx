@@ -3,7 +3,6 @@ import PriceChecker from "../components/price-checker";
 import { IonContent, IonHeader, IonTitle, IonToolbar } from "@ionic/react";
 import Footer from "@/template/footer";
 
-
 export default function VerificadorUser({ onScroll }: PageProps) {
     return (
         <IonContent
