@@ -13,6 +13,7 @@ import {
   TicketPercent,
   LayoutList,
   ShieldUser,
+  Layout,
 } from "lucide-react";
 import React from "react";
 
@@ -26,6 +27,7 @@ const Pages = {
   LayoutPromociones: () => import("@/pages/@promociones/layout"),
   LayoutPromocionesId: () => import("@/pages/@promociones/[id]/layout"),
   LayoutFilesTest: () => import("@/pages/files-test/layout"),
+  LayoutEtiquetas: () => import("@/pages/@etiquetas/layout"),
   // ... otros componentes
 };
 
@@ -117,7 +119,7 @@ export const navigationAdmin = [
     name: "Etiquetas",
     href: "/etiquetas",
     icon: Tag,
-    page: React.lazy(Pages.Layout),
+    page: React.lazy(Pages.LayoutEtiquetas),
   },
   {
     name: "Valoracion",
