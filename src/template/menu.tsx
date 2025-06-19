@@ -1,7 +1,7 @@
 import MainForm from "@/components/form/main-form";
 import { usePostLogutMutation } from "@/hooks/reducers/auth";
 import { LogInField } from "@/utils/constants/forms/logIn";
-import { navigationAdmin, navigationDefault, navigationUser } from "@/utils/constants/router";
+import { navigationAdmin, navigationDefault, navigationSeguridad, navigationUser } from "@/utils/constants/router";
 import { getLocalStorageItem } from "@/utils/functions/local-storage";
 import {
     IonMenu,
@@ -45,7 +45,12 @@ const AppMenu = () => {
 
     const getNavigation = () => {
         if (!userRole) return navigationDefault;
-        return userRole === "admin" ? navigationAdmin : navigationUser;
+        const navigationMap: any = {
+            admin: navigationAdmin,
+            seguridad: navigationSeguridad,
+            // ... otros roles
+        };
+        return navigationMap[userRole] || navigationUser;
     };
 
     return (

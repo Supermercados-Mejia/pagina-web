@@ -28,6 +28,7 @@ const Pages = {
   LayoutPromocionesId: () => import("@/pages/@promociones/[id]/layout"),
   LayoutFilesTest: () => import("@/pages/files-test/layout"),
   LayoutEtiquetas: () => import("@/pages/@etiquetas/layout"),
+  LayoutInventario: () => import("@/pages/@inventario/layout"),
   // ... otros componentes
 };
 
@@ -101,7 +102,20 @@ export const navigationUser = [
     page: React.lazy(Pages.LayoutVerificador),
   },
 ];
-
+export const navigationSeguridad = [
+  {
+    name: "Pantalla Inicial",
+    href: "/layout",
+    icon: House,
+    page: React.lazy(Pages.Layout),
+  },
+  {
+    name: "Inventario",
+    href: "/inventario",
+    icon: ScanBarcode,
+    page: React.lazy(Pages.LayoutInventario),
+  },
+];
 export const navigationAdmin = [
   {
     name: "Pantalla Inicial",

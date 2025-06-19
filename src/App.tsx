@@ -11,7 +11,7 @@ import NotFound from './pages/NotFound';
 
 import Background from './template/background';
 
-import { navigationAdmin, navigationDefault, navigationUser } from './utils/constants/router';
+import { navigationAdmin, navigationDefault, navigationUser, navigationSeguridad } from './utils/constants/router';
 
 import './theme/variables.css';
 import '@ionic/react/css/core.css';
@@ -80,7 +80,12 @@ const App: React.FC = () => {
 
   const getNavigation = () => {
     if (!currentBranch) return navigationDefault;
-    return userRole === "admin" ? navigationAdmin : navigationUser;
+    const navigationMap: any = {
+      admin: navigationAdmin,
+      seguridad: navigationSeguridad,
+      // ... otros roles
+    };
+    return navigationMap[userRole] || navigationUser;
   };
 
   return (
