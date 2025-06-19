@@ -66,6 +66,26 @@ export const api_int = createApi({
             }),
             extraOptions: { maxRetries: 2 }
         }),
+        getArticulosInv: builder.query({
+            query: ({ page, pageSize, id, filtro, categoria, listaPrecio, signal }) => ({
+                url: `v1/pick-up`,
+                method: "GET",
+                params: {
+                    page,
+                    pageSize,
+                    listaPrecio,
+                    categoria,
+                    id,
+                    filtro// codigo de barras o nombre
+                },
+                signal
+            }),
+            transformErrorResponse: (response: any) => ({
+                status: response.status,
+                message: response.data?.message || 'Error fetching data',
+            }),
+            extraOptions: { maxRetries: 2 }
+        }),
     }),
 });
 
@@ -73,4 +93,5 @@ export const {
     useGetAllMutation,
     usePostMutation,
     useGetArticulosQuery,
+    useGetArticulosInvQuery
 } = api_int;
