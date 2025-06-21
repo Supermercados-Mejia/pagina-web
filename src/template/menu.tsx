@@ -16,6 +16,7 @@ import {
     IonAvatar,
     IonModal,
     IonButtons,
+    useIonAlert,
 } from "@ionic/react";
 import { X } from "lucide-react";
 import { useState } from "react";
@@ -24,6 +25,8 @@ import { Link } from "react-router-dom";
 const AppMenu = () => {
     // Obtener valores de forma correcta y tipada
     const [LogOutProces] = usePostLogutMutation();
+
+    const [presentAlert] = useIonAlert();
 
     const userRole = getLocalStorageItem("user-role");
     const userId = getLocalStorageItem("user-id");
@@ -159,9 +162,17 @@ const AppMenu = () => {
                                 actionType="post-login"
                                 dataForm={LogInField()}
                                 message_button="Iniciar Sesión"
-                                onSuccess={({ data }: any) => {
-                                    console.log("Login successful:", data);
-                                    setIsOpen(false);
+                                onSuccess={() => {
+                                    try {
+                                        setIsOpen(false);
+                                    } catch {
+                                        presentAlert({
+                                            header: 'Error al inicio de sesion',
+                                            subHeader: 'Datos recibidos pero no validados',
+                                            message: 'Intenta mas tarde, hay errores de validacion en este momento.',
+                                            buttons: ['Ok'],
+                                        })
+                                    }
                                 }}
                             />
                         </div>
