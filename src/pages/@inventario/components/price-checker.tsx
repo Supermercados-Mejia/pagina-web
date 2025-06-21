@@ -96,17 +96,17 @@ function PriceChecker() {
             const newProducts = data.data.map((item: any) => {
                 const oferta = data.ofertas?.find((o: any) => o.articulo === item.cuenta);
                 return {
-                    id: item.codigo,
-                    nombre: item.nombre,
-                    precio: item.precio,
-                    unidad: item.unidad,
+                    id: item.Codigo,
+                    nombre: item.Nombre,
+                    precio: item.PrecioRegular,
+                    unidad: item.Unidad,
                     TotalInventario: item.TotalInventario,
-                    oferta: oferta
+                    /* oferta: oferta
                         ? {
                             precio: parseFloat(oferta.precio),
                             fechaHasta: new Date(oferta.fechaHasta).toLocaleDateString(),
                         }
-                        : undefined,
+                        : undefined, */
                 };
             });
 
@@ -266,15 +266,17 @@ function PriceChecker() {
                                                                     </div>
                                                                     <span className="text-xs text-green-600">
                                                                         Válida hasta: {product.oferta.fechaHasta}
-                                                                    </span><label className="flex items-center text-sm gap-1">
-                                                                        <ScanBarcode className="h-4 w-4 fill-[#8B5CF6]" />
-                                                                        Codigo de barras:
-                                                                        <span className="text-[#8B5CF6]">{product.TotalInventario}</span>
-                                                                    </label>
+                                                                    </span>
                                                                 </div>
                                                             ) : (
                                                                 <span className="text-4xl font-semibold text-purple-700">
                                                                     ${product.precio.toLocaleString()}
+
+                                                                    <label className="flex items-center text-sm gap-1">
+                                                                        <ScanBarcode className="h-4 w-4 fill-[#8B5CF6]" />
+                                                                        Total Inventario:
+                                                                        <span className="text-[#8B5CF6]">{product.TotalInventario}</span>
+                                                                    </label>
                                                                 </span>
                                                             )}
 
