@@ -60,7 +60,7 @@ export const TagInputComponent = ({
     return (
         <div className="w-full">
             {cuestion.label && (
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+                <label className="flex gap-2 text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
                     {cuestion.label}
                     {cuestion.require && <span className="text-red-500">*</span>}
                 </label>
@@ -77,7 +77,7 @@ export const TagInputComponent = ({
                             onClick={() => removeTag(tag)}
                             className="ml-1 text-purple-500 hover:text-purple-700 dark:text-purple-300 dark:hover:text-purple-100"
                         >
-                            <X />
+                            <X size={15} />
                         </button>
                     </span>
                 ))}
