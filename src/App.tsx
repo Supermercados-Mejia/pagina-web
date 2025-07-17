@@ -27,6 +27,7 @@ import '@ionic/react/css/display.css';
 import '@ionic/react/css/palettes/dark.class.css';
 
 import "driver.js/dist/driver.css";
+import LayoutScanner from './pages/@scanner/layout';
 
 // Generar conjunto de todas las rutas válidas
 const allValidPaths = [...navigationAdmin, ...navigationUser].map((item: any) => item.page && item.href);
@@ -71,32 +72,34 @@ const App: React.FC = () => {
   return (
     <IonApp>
       <IonRouterOutlet>
-        <Background>
-          <Switch>
-            <Route exact path="/">
-              <Layout />
-            </Route>
+        <Switch>
+          <Route exact path="/scanner">
+            <LayoutScanner />
+          </Route>
+          <Route>
+            <Background>
+              <Switch>
+                {getNavigation().map((item: any) => {
+                  const Page = item.page;
+                  return (
+                    <Route
+                      key={item.href}
+                      exact
+                      path={item.href}
+                      component={Page}
+                    />
+                  );
+                })}
+                <Route exact path="/">
+                  <Layout />
+                </Route>
 
-            {getNavigation().map((item: any) => {
-              const Page = item.page;
-              return (
-                <Route
-                  key={item.href}
-                  exact
-                  path={item.href}
-                  component={Page}
-                />
-              );
-            })}
-
-            <Route exact path="/">
-              <Redirect to="/" />
-            </Route>
-
-            {/* Ruta 404 debe ser la última */}
-            <Route component={NotFound} />
-          </Switch>
-        </Background>
+              </Switch>
+            </Background>
+          </Route>
+          {/* Ruta 404 debe ser la última */}
+          <Route component={NotFound} />
+        </Switch>
       </IonRouterOutlet>
     </IonApp>
   );

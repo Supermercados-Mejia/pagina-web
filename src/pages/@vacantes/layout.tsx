@@ -3,9 +3,9 @@ import { useState } from "react";
 import { IonPage } from "@ionic/react";
 import Header from "@/template/header";
 import AppMenu from "@/template/menu";
-import VacantesUser from "./@user/page";
 import { getLocalStorageItem } from "@/utils/functions/local-storage";
 import VacantesAdmin from "./@admin/page";
+import VacantesUser from "./@user/page";
 
 const LayoutVacantes: React.FC = () => {
 
