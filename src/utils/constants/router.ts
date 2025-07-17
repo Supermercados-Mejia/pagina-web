@@ -29,6 +29,7 @@ const Pages = {
   LayoutFilesTest: () => import("@/pages/files-test/layout"),
   LayoutEtiquetas: () => import("@/pages/@etiquetas/layout"),
   LayoutInventario: () => import("@/pages/@inventario/layout"),
+  LayoutScanner: () => import("@/pages/@scanner/layout"),
   // ... otros componentes
 };
 
@@ -79,6 +80,12 @@ export const navigationDefault = [
     href: "/verificador",
     icon: ScanBarcode,
     page: React.lazy(Pages.LayoutVerificador),
+  },
+
+  {
+    name: "Scanner",
+    href: "/scanner",
+    icon: ScanBarcode,
   },
 ];
 
