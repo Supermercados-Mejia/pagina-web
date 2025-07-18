@@ -12,6 +12,7 @@ export const api = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: apiUrl,
         prepareHeaders: (headers, { }) => {
+            headers.set("Access-Control-Allow-Origin", "mercadoliz.com");
             headers.set("Content-Type", "application/json");
             const token = getLocalStorageItem("token");
             if (token) {
