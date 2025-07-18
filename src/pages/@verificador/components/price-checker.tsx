@@ -1,4 +1,4 @@
-import type React from "react";
+import React from "react";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { IonItem, IonLabel, IonList, IonSpinner, IonSelect, IonSelectOption, IonProgressBar } from "@ionic/react";
@@ -20,20 +20,55 @@ const sucursales: Sucursal[] = [
     { id: "(Precio 3)", nombre: "Testerazo" },
 ];
 
-const Input = ({ className = "", ...props }: React.InputHTMLAttributes<HTMLInputElement>) => {
-    return (
-        <input
-            className={`w-full px-3 py-2 border text-gray-500 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 ${className}`}
-            {...props}
-        />
-    );
-};
+const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
+    ({ className = "", ...props }, ref: any) => {
 
+        // Combinamos las refs (la recibida y la local)
+        const combinedRef = useCallback(
+            (element: HTMLInputElement) => {
+                // Asignamos a la ref local
+                (ref as React.MutableRefObject<HTMLInputElement | null>).current = element;
+
+                // Si la ref recibida es una función, la llamamos
+                if (typeof ref === "function") {
+                    ref(element);
+                } else if (ref) {
+                    // Si es un objeto ref mutable, asignamos
+                    (ref as React.MutableRefObject<HTMLInputElement | null>).current = element;
+                }
+            },
+            [ref]
+        );
+
+        useEffect(() => {
+            if (!ref) return;
+            // Forzar el foco inicial usando la ref local
+            if (ref.current) {
+                ref.current.focus();
+            }
+            ref ?? handleFocusLoss(ref);
+        }, [ref]);
+
+        return (
+            <input
+                ref={combinedRef}
+                className={`w-full px-3 py-2 border text-gray-500 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 ${className}`}
+                {...props}
+            />
+        );
+    }
+);
+const handleFocusLoss = (ref: React.RefObject<HTMLInputElement>) => {
+    if (ref.current) {
+        ref.current.focus();
+    }
+};
 const PAGE_SIZE = 5;
 const COOLDOWN_TIME = 5000;
 const DEBOUNCE_TIME = 500;
 
 function PriceChecker() {
+    const inputRef = useRef<HTMLInputElement>(null);
     const id_user = getLocalStorageItem("user-id");
     const [displayData, setDisplayData] = useState<Product[]>([]);
     const [inputValue, setInputValue] = useState("");
@@ -172,12 +207,15 @@ function PriceChecker() {
 
                         <div className="relative">
                             <Input
+                                ref={inputRef}
                                 type="text"
                                 placeholder="Escanear código o buscar..."
                                 value={inputValue}
                                 onChange={handleInputChange}
                                 onKeyDown={handleKeyDown}
                                 autoFocus
+                                autoComplete="off"
+                                spellCheck="false"
                                 className="pl-3 pr-9 text-sm rounded-lg bg-white font-medium text-center"
                             />
                             <div className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4">
