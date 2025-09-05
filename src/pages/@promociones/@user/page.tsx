@@ -44,7 +44,7 @@ export default function PromocionesUser({ onScroll }: PageProps) {
                 <div className="max-w-6xl mx-auto">
                     <header className="text-center">
                         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Promociones</h1>
-                        <PromoBanner items={promoItems} autoPlay={true} interval={3000} showControls={true} showIndicators={true} />
+                        {/* <PromoBanner items={promoItems} autoPlay={true} interval={3000} showControls={true} showIndicators={true} /> */}
 
                         <label className="space-y-1">
                             <p className="text-gray-600 text-lg">Aprovecha nuestras ofertas y combos</p>

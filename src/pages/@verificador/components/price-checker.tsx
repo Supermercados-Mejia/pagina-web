@@ -173,6 +173,7 @@ function PriceChecker() {
     const handleSucursalChange = (e: CustomEvent) => {
         setSelectedSucursal(e.detail.value);
         resetCooldownTimer();
+        inputRef ?? handleFocusLoss(inputRef);
     };
 
     useEffect(() => {
