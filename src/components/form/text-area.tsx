@@ -1,10 +1,15 @@
 import { InputFormProps } from "@/utils/types/interfaces";
 import { Briefcase } from "lucide-react";
+import { useEffect } from "react";
 
 export function TextAreaComponent(props: InputFormProps) {
     const { cuestion } = props;
     const currentValue = props.watch(cuestion.name) || "";
-
+    useEffect(() => {
+        if (cuestion.valueDefined) {
+            props.setValue(cuestion.name, cuestion.valueDefined);
+        }
+    }, [cuestion.valueDefined]);
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { value } = e.target;
 
@@ -22,8 +27,8 @@ export function TextAreaComponent(props: InputFormProps) {
                 <textarea
                     name="experience"
                     onChange={handleInputChange}
-                    className="bg-white field-sizing-content dark:bg-zinc-800 px-4 py-2 border focus:ring-purple-500 focus:border-purple-900 w-full sm:text-sm border-gray-300  dark:border-zinc-700 rounded-md focus:outline-none text-gray-600 dark:text-white
-[&:-webkit-autofill]:bg-white [&:-webkit-autofill]:text-gray-600 [&:-webkit-autofill]:dark:bg-zinc-800 [&:-webkit-autofill]:dark:text-white [&:-webkit-autofill]:transition-colors [&:-webkit-autofill]:duration-[999999s]"
+                    className="bg-white field-sizing-content dark:bg-zinc-800 px-4 py-2 border focus:ring-green-500 focus:border-green-900 w-full sm:text-sm border-gray-300  dark:border-zinc-700 rounded-md focus:outline-none text-gray-600 dark:text-gray-100 dark:text-white
+[&:-webkit-autofill]:bg-white [&:-webkit-autofill]:text-gray-600 dark:text-gray-100 [&:-webkit-autofill]:dark:bg-zinc-800 [&:-webkit-autofill]:dark:text-white [&:-webkit-autofill]:transition-colors [&:-webkit-autofill]:duration-[999999s]"
                     placeholder={cuestion.placeholder}
                     rows={3}
                     maxLength={cuestion.maxLength}

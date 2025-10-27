@@ -36,6 +36,7 @@
     "framer-motion": "^12.6.2",
     "ionicons": "^7.4.0",
     "jsbarcode": "^3.12.0",
+    "jsbarcode-react": "^0.2.5",
     "jspdf": "^3.0.1",
     "lucide-react": "^0.488.0",
     "path": "^0.12.7",
