@@ -1,6 +1,6 @@
 import { EnvConfig } from "@/utils/constants/env.config";
-import { getLocalStorageItem } from "@/utils/functions/local-storage";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { getLocalStorageItem } from "@/utils/functions/local-storage";
 
 const { api_int: apiUrl } = EnvConfig();
 
@@ -11,10 +11,9 @@ export const api_int = createApi({
     refetchOnMountOrArgChange: true, // Mejor control de refetch
     baseQuery: fetchBaseQuery({
         baseUrl: apiUrl,
-        prepareHeaders: (headers, { }) => {
-            headers.set("Access-Control-Allow-Origin", "mercadoliz.com");
+        prepareHeaders: async (headers, { }) => {
             headers.set("Content-Type", "application/json");
-            const token = getLocalStorageItem("token");
+            const token = getLocalStorageItem("token"); // <- usa cookie
             if (token) {
                 headers.set("Authorization", `Bearer ${token}`);
             }
@@ -22,32 +21,32 @@ export const api_int = createApi({
         },
     }),
     endpoints: (builder) => ({
-        getAll: builder.mutation({
+        get: builder.mutation({
             query: ({ url, filters, signal, page, pageSize, sum, distinct }) => ({
                 url: `v2/${url}`,
                 method: "POST",
                 params: { sum, page, pageSize, distinct }, // Mejor práctica para parámetros
                 body: filters,
-                signal
+                signal,
             }),
             transformErrorResponse: (response: any) => ({
                 status: response.status,
-                message: response.data?.message || 'Error fetching data',
+                message: response.data?.message || "Error fetching data",
             }),
-            extraOptions: { maxRetries: 2 }
+            extraOptions: { maxRetries: 2 },
         }),
         post: builder.mutation({
             query: ({ url, data, signal }) => ({
                 url: `v2/insert/${url}`,
                 method: "POST",
                 body: JSON.stringify(data),
-                signal
+                signal,
             }),
             transformErrorResponse: (response: any) => ({
                 status: response.status,
-                message: response.data?.message || 'Error fetching data',
+                message: response.data?.message || "Error fetching data",
             }),
-            extraOptions: { maxRetries: 2 }
+            extraOptions: { maxRetries: 2 },
         }),
         getArticulos: builder.query({
             query: ({ page, pageSize, filtro, listaPrecio, signal }) => ({
@@ -57,42 +56,40 @@ export const api_int = createApi({
                     page,
                     pageSize,
                     listaPrecio,
-                    filtro// codigo de barras o nombre
+                    filtro, // codigo de barras o nombre
                 },
-                signal
+                signal,
             }),
             transformErrorResponse: (response: any) => ({
                 status: response.status,
-                message: response.data?.message || 'Error fetching data',
+                message: response.data?.message || "Error fetching data",
             }),
-            extraOptions: { maxRetries: 2 }
+            extraOptions: { maxRetries: 2 },
         }),
-        getArticulosInv: builder.query({
-            query: ({ page, pageSize, id, filtro, categoria, listaPrecio, signal }) => ({
-                url: `v1/pick-up`,
-                method: "GET",
+        getWithFiltersGeneralInIntelisis: builder.mutation({
+            query: ({ table, page, pageSize, filtros, signal }) => ({
+                url: `/v1/consultar/filtros`,
+                method: "POST",
                 params: {
                     page,
+                    table, // tabla a consultar
                     pageSize,
-                    listaPrecio,
-                    categoria,
-                    id,
-                    filtro// codigo de barras o nombre
                 },
-                signal
+                body: filtros,
+                signal,
             }),
             transformErrorResponse: (response: any) => ({
                 status: response.status,
-                message: response.data?.message || 'Error fetching data',
+                message: response.data?.message || "Error fetching data",
             }),
-            extraOptions: { maxRetries: 2 }
+            extraOptions: { maxRetries: 2 },
         }),
     }),
 });
 
 export const {
-    useGetAllMutation,
+    useGetMutation,
     usePostMutation,
     useGetArticulosQuery,
-    useGetArticulosInvQuery
+    useGetWithFiltersGeneralInIntelisisMutation,
 } = api_int;

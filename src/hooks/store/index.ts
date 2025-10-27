@@ -7,6 +7,7 @@ import { api_landing } from "@/hooks/reducers/api_landing";
 import { auth } from "@/hooks/reducers/auth";
 import { EnvConfig } from "@/utils/constants/env.config";
 
+import dropDownReducer from "@/hooks/reducers/drop-down";
 import filterData from "@/hooks/reducers/filter";
 
 import cartReducer from "@/hooks/slices/cart";
@@ -15,6 +16,7 @@ import appReducer from "@/hooks/slices/app";
 const config = EnvConfig();
 export const store = configureStore({
   reducer: {
+    dropDownReducer,
     filterData,
     cart: cartReducer,
     app: appReducer,
