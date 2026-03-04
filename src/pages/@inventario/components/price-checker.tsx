@@ -5,7 +5,7 @@ import { IonItem, IonLabel, IonList, IonSpinner, IonSelect, IonSelectOption, Ion
 import { ScanBarcode, Search, ShoppingBasket } from "lucide-react";
 import { Product } from "@/utils/data/example-data";
 import { useGetArticulosInvQuery } from "@/hooks/reducers/api_int";
-import { usePostMutation } from "@/hooks/reducers/api";
+/* import { usePostMutation } from "@/hooks/reducers/api"; */
 import { getLocalStorageItem } from "@/utils/functions/local-storage";
 
 type Sucursal = {
@@ -47,12 +47,12 @@ function PriceChecker() {
     const resetStates = () => {
         setDisplayData([]);
         setInputValue("");
-        setSelectedSucursal(sucursales[2].id);
+        //setSelectedSucursal(sucursales[2].id);
         setProductNotFound(false);
         setProgress(0);
     };
 
-    const [postNotFound] = usePostMutation()
+    /* const [postNotFound] = usePostMutation() */
 
     const resetCooldownTimer = () => {
         if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -69,12 +69,12 @@ function PriceChecker() {
     );
 
     async function handleNotFound(barrcode: string) {
-        const mutationResult = await postNotFound({
+        /* const mutationResult = await postNotFound({
             url: "notfound",
             data: { "NotFound": [{ barrcode: barrcode, id_user }] },
             signal: new AbortController().signal,
         });
-        return mutationResult;
+        return mutationResult; */
     }
 
     useEffect(() => {

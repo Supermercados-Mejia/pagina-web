@@ -29,10 +29,6 @@ import '@ionic/react/css/palettes/dark.class.css';
 import "driver.js/dist/driver.css";
 import LayoutScanner from './pages/@scanner/layout';
 
-// Generar conjunto de todas las rutas válidas
-const allValidPaths = [...navigationAdmin, ...navigationUser].map((item: any) => item.page && item.href);
-const validPathsSet = new Set(allValidPaths);
-
 setupIonicReact({ mode: 'ios' });
 
 
