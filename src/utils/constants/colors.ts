@@ -36,7 +36,7 @@ export const colorClasses = {
   },
   gray: {
     bg: "bg-zinc-50",
-    text: "text-gray-600 dark:text-white",
+    text: "text-gray-600 dark:text-gray-100",
     ring: "ring-gray-500/10",
   },
   black: {
@@ -50,7 +50,44 @@ export const colorClasses = {
     ring: "ring-gray-300/10",
   },
 };
-
+export const buttonClasses = {
+  success: {
+    bg: "bg-green-600 border border-green-600 rounded-md",
+    hover: "hover:bg-green-100 hover:text-green-800 hover:border-green-700",
+    text: "text-green-50",
+    ring: "ring-green-500/10",
+  },
+  error: {
+    bg: "bg-red-600 border border-red-600 rounded-md",
+    hover: "hover:bg-red-100 hover:text-red-800 hover:border-red-700",
+    text: "text-red-50",
+    ring: "ring-red-500/10",
+  },
+  warning: {
+    bg: "bg-yellow-600 border border-yellow-600 rounded-md",
+    hover: "hover:bg-yellow-100 hover:text-yellow-800 hover:border-yellow-700",
+    text: "text-yellow-50",
+    ring: "ring-yellow-500/10",
+  },
+  completed: {
+    bg: "bg-blue-600 border border-blue-600 rounded-md",
+    hover: "hover:bg-blue-100 hover:text-blue-800 hover:border-blue-700",
+    text: "text-blue-50",
+    ring: "ring-blue-500/10",
+  },
+  info: {
+    bg: "bg-purple-600 border border-purple-600 rounded-md",
+    hover: "hover:bg-purple-100 hover:text-purple-800 hover:border-purple-700",
+    text: "text-purple-50",
+    ring: "ring-purple-500/10",
+  },
+  indigo: {
+    bg: "bg-indigo-600 border border-indigo-600 rounded-md",
+    hover: "hover:bg-indigo-100 hover:text-indigo-800 hover:border-indigo-700",
+    text: "text-indigo-50",
+    ring: "ring-indigo-500/10",
+  },
+};
 export const alertClasses = {
   success: {
     bg: "bg-green-50",
@@ -71,7 +108,6 @@ export const alertClasses = {
     ring: "ring-yellow-500/10",
   },
   completed: {
-    // Cambiado de "finish" a "completed" por claridad
     bg: "bg-blue-50",
     hover: "hover:bg-blue-500 hover:text-white",
     text: "text-blue-600",

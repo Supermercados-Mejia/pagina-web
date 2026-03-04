@@ -5,8 +5,6 @@ import { IonItem, IonLabel, IonList, IonSpinner, IonSelect, IonSelectOption, Ion
 import { ScanBarcode, Search, ShoppingBasket } from "lucide-react";
 import { Product } from "@/utils/data/example-data";
 import { useGetArticulosQuery } from "@/hooks/reducers/api_int";
-import { usePostMutation } from "@/hooks/reducers/api";
-import { getLocalStorageItem } from "@/utils/functions/local-storage";
 
 type Sucursal = {
     id: string;
@@ -69,7 +67,6 @@ const DEBOUNCE_TIME = 500;
 
 function PriceChecker() {
     const inputRef = useRef<HTMLInputElement>(null);
-    const id_user = getLocalStorageItem("user-id");
     const [displayData, setDisplayData] = useState<Product[]>([]);
     const [inputValue, setInputValue] = useState("");
     const [debouncedInput, setDebouncedInput] = useState("");
@@ -87,8 +84,6 @@ function PriceChecker() {
         setProgress(0);
     };
 
-    const [postNotFound] = usePostMutation()
-
     const resetCooldownTimer = () => {
         if (timeoutRef.current) clearTimeout(timeoutRef.current);
         timeoutRef.current = setTimeout(resetStates, COOLDOWN_TIME);
@@ -97,20 +92,12 @@ function PriceChecker() {
     const { data, isLoading } = useGetArticulosQuery(
         {
             pageSize: PAGE_SIZE,
+            page: 1,
             filtro: debouncedInput,
             listaPrecio: selectedSucursal,
         },
         { refetchOnMountOrArgChange: true, skip: debouncedInput.length < 3 }
     );
-
-    async function handleNotFound(barrcode: string) {
-        const mutationResult = await postNotFound({
-            url: "notfound",
-            data: { "NotFound": [{ barrcode: barrcode, id_user }] },
-            signal: new AbortController().signal,
-        });
-        return mutationResult;
-    }
 
     useEffect(() => {
         console.log("Input value changed:", inputValue);
@@ -126,7 +113,7 @@ function PriceChecker() {
     const updateDisplayData = useCallback(() => {
         if (!data) return;
         if (data.precios && data.precios.length > 0) {
-            const newProducts = data.precios.map((item: any) => {
+            const newProducts = data.precios.slice(-1).map((item: any) => {
                 const oferta = data.ofertas?.find((o: any) => o.articulo === item.cuenta);
                 return {
                     id: item.codigo,
@@ -146,7 +133,6 @@ function PriceChecker() {
             setProductNotFound(false);
         } else if (inputValue && data.precios) {
             setProductNotFound(true);
-            handleNotFound(debouncedInput);
         }
         resetCooldownTimer();
     }, [data, debouncedInput]);

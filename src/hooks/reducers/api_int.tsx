@@ -2,6 +2,7 @@ import { EnvConfig } from "@/utils/constants/env.config";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getLocalStorageItem } from "@/utils/functions/local-storage";
 
+const USER_DATA_KEY = "userData";
 const { api_int: apiUrl } = EnvConfig();
 
 export const api_int = createApi({
@@ -11,12 +12,26 @@ export const api_int = createApi({
     refetchOnMountOrArgChange: true, // Mejor control de refetch
     baseQuery: fetchBaseQuery({
         baseUrl: apiUrl,
-        prepareHeaders: async (headers, { }) => {
+        prepareHeaders: async (headers) => {
             headers.set("Content-Type", "application/json");
-            const token = getLocalStorageItem("token"); // <- usa cookie
+
+            // Obtener token de cookies primero
+            let token = await getLocalStorageItem("token");
+
+            // Si no hay token en cookies, buscar en localStorage
+            if (!token) {
+                const userData = getLocalStorageItem(USER_DATA_KEY);
+
+                // userData es un objeto, necesitamos extraer el token
+                if (userData && typeof userData === "object" && userData.token) {
+                    token = userData.token;
+                }
+            }
+
             if (token) {
                 headers.set("Authorization", `Bearer ${token}`);
             }
+
             return headers;
         },
     }),
@@ -35,11 +50,15 @@ export const api_int = createApi({
             }),
             extraOptions: { maxRetries: 2 },
         }),
-        post: builder.mutation({
-            query: ({ url, data, signal }) => ({
-                url: `v2/insert/${url}`,
+        postIntelisis: builder.mutation({
+            query: ({ table, data, signal }) => ({
+                url: `v1/register`,
                 method: "POST",
+                params: { table },
                 body: JSON.stringify(data),
+                headers: {
+                    "Content-Type": "application/json",
+                },
                 signal,
             }),
             transformErrorResponse: (response: any) => ({
@@ -50,7 +69,7 @@ export const api_int = createApi({
         }),
         getArticulos: builder.query({
             query: ({ page, pageSize, filtro, listaPrecio, signal }) => ({
-                url: `Precios`,
+                url: `v1/Precios`,
                 method: "GET",
                 params: {
                     page,
@@ -84,12 +103,53 @@ export const api_int = createApi({
             }),
             extraOptions: { maxRetries: 2 },
         }),
+        getMasivoWithFilters: builder.mutation({
+            query: ({ table, tag, page, pageSize, filtros, signal }) => ({
+                url: `/v2/masivo/consultar`,
+                method: "POST",
+                params: {
+                    page,
+                    table, // tabla a consultar
+                    pageSize,
+                },
+                body: filtros,
+                providesTags: [tag],
+                signal,
+            }),
+            transformErrorResponse: (response: any) => ({
+                status: response.status,
+                message: response.data?.message || "Error fetching data",
+            }),
+            extraOptions: { maxRetries: 2 },
+        }),
+        getArticulosInv: builder.query({
+            query: ({ page, pageSize, id, filtro, categoria, listaPrecio, signal }) => ({
+                url: `v1/pick-up`,
+                method: "GET",
+                params: {
+                    page,
+                    pageSize,
+                    listaPrecio,
+                    categoria,
+                    id,
+                    filtro// codigo de barras o nombre
+                },
+                signal
+            }),
+            transformErrorResponse: (response: any) => ({
+                status: response.status,
+                message: response.data?.message || 'Error fetching data',
+            }),
+            extraOptions: { maxRetries: 2 }
+        }),
     }),
 });
 
 export const {
     useGetMutation,
-    usePostMutation,
+    usePostIntelisisMutation,
     useGetArticulosQuery,
     useGetWithFiltersGeneralInIntelisisMutation,
+    useGetMasivoWithFiltersMutation,
+    useGetArticulosInvQuery,
 } = api_int;

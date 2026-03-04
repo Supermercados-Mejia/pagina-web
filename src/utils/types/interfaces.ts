@@ -55,6 +55,10 @@ export interface MainFormProps {
   aditionalData?: any;
   valueAssign?: any;
   formName?: string;
+  modelName?: string;
+  table?: string;
+  iconButton?: React.ReactNode;
+  showButton?: boolean;
   action?: (...args: any[]) => any;
   onSuccess?: (result: any, formData: any) => void;
 }
@@ -127,6 +131,7 @@ export interface SearchableSelectProps {
     placeholder?: string;
     label?: string;
     require?: boolean;
+    Search?: boolean;
     options: string[];
     multi?: boolean;
     valueDefined?: string;
@@ -139,7 +144,7 @@ export interface SearchableSelectProps {
   clearErrors: (name: string) => void;
   register: (
     name: string,
-    options: Record<string, unknown>
+    options: Record<string, unknown>,
   ) => Record<string, unknown>;
   errors: Record<string, { message?: string } | undefined>;
 }
@@ -163,11 +168,6 @@ export interface UserRoleRendererProps {
   loadingRole: boolean; // Indicador de si se está cargando el rol
   error: string | null; // Error al obtener el rol
 }
-export interface DashboardLayoutProps {
-  admin: React.ReactNode;
-  user: React.ReactNode;
-}
-
 export interface StarRatingProps {
   cuestion: {
     name: string;

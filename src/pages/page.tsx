@@ -73,7 +73,7 @@ const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
             <div className="lg:mb-16 mb-36">
                 <section
                     className="-mt-10">
-                    <BentoGrid>
+                    <BentoGrid cols={3}>
                         {/* Sección Nuestra Historia */}
                         <BentoItem
                             rowSpan={3}

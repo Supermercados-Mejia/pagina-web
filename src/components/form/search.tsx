@@ -1,7 +1,6 @@
-
 import { SearchableSelectProps } from "@/utils/types/interfaces";
 import { Search, Star, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import Badge from "../badge";
 import { searchData } from "@/hooks/reducers/filter";
 import { useAppDispatch } from "@/hooks/selector";
@@ -21,8 +20,17 @@ export function SearchComponent(props: SearchableSelectProps) {
         skills: []
     });
 
+    // Función para guardar datos optimizada con useCallback
+    const saveData = useCallback(() => {
+        if (cuestion.saveData && formData.skills.length) {
+            props.setValue(cuestion.name, formData.skills.join(', '));
+        } else {
+            props.setValue(cuestion.name, searchTerm);
+        }
+    }, [cuestion.saveData, formData.skills, cuestion.name, props.setValue, searchTerm]);
+
     // Ajuste en la función para simular "Enter" al seleccionar un elemento
-    const handleSkillToggle = async (skill: string) => {
+    const handleSkillToggle = useCallback(async (skill: string) => {
         if (cuestion.saveData) {
             if (skill.trim() !== "") {
                 setFormData(prev => ({
@@ -35,17 +43,17 @@ export function SearchComponent(props: SearchableSelectProps) {
             setSearchTerm(skill);
         };
         setShowSkillsDropdown(false);
-        await saveData();
         triggerFormSubmit();
-    };
-    const handleRemoveSkill = (skill: string) => {
+    }, [cuestion.saveData]);
+
+    const handleRemoveSkill = useCallback((skill: string) => {
         setFormData(prev => ({
             ...prev,
             skills: prev.skills.filter(s => s !== skill)
         }));
-    };
+    }, []);
 
-    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const handleKeyDown = useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === "Enter") {
             event.preventDefault();
             if (cuestion.saveData && searchTerm.trim() !== "") {
@@ -58,14 +66,9 @@ export function SearchComponent(props: SearchableSelectProps) {
             setShowSkillsDropdown(false);
             triggerFormSubmit();
         }
-    };
-    function saveData() {
-        if (cuestion.saveData && formData.skills.length) {
-            props.setValue(cuestion.name, formData.skills.join(', '));
-            return;
-        }
-        props.setValue(cuestion.name, searchTerm);
-    }
+    }, [cuestion.saveData, searchTerm]);
+
+    // Efecto para cerrar dropdown al hacer clic fuera
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
             if (skillsRef.current && !skillsRef.current.contains(e.target as Node)) {
@@ -76,9 +79,42 @@ export function SearchComponent(props: SearchableSelectProps) {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
+    // Efecto para sincronizar datos con react-hook-form
     useEffect(() => {
         saveData();
-    }, [cuestion.multi, cuestion.name, props, searchTerm, cuestion.saveData, formData, formData.skills]);
+    }, [saveData]); // Solo depende de saveData que está memoizado
+
+    // Efecto para inicializar skills si hay un valor por defecto
+    useEffect(() => {
+        if (cuestion.valueDefined && cuestion.saveData) {
+            try {
+                const skillsArray = typeof cuestion.valueDefined === 'string'
+                    ? cuestion.valueDefined.split(',').map(s => s.trim()).filter(Boolean)
+                    : Array.isArray(cuestion.valueDefined)
+                        ? cuestion.valueDefined
+                        : [];
+
+                if (skillsArray.length > 0) {
+                    setFormData(prev => ({
+                        ...prev,
+                        skills: [...prev.skills, ...skillsArray.filter(s => !prev.skills.includes(s))]
+                    }));
+                }
+            } catch (error) {
+                console.error('Error parsing valueDefined for skills:', error);
+            }
+        }
+    }, [cuestion.valueDefined, cuestion.saveData]);
+
+    // Función para filtrar opciones
+    const filteredOptions = cuestion.options?.filter((skill: any) => {
+        if (!searchTerm) return true;
+
+        const searchText = typeof skill === 'object' && skill !== null
+            ? skill.label
+            : skill.toString();
+        return searchText.toLowerCase().includes(searchTerm.toLowerCase());
+    }) || [];
 
     return (
         <div className="flex flex-col relative dark:text-white" ref={skillsRef}>
@@ -100,53 +136,51 @@ export function SearchComponent(props: SearchableSelectProps) {
                         setShowSkillsDropdown(true);
                     }}
                     onKeyDown={handleKeyDown}
+                    onFocus={() => setShowSkillsDropdown(true)}
                 />
             </div>
-            {cuestion.options && showSkillsDropdown && (
+
+            {cuestion.options && showSkillsDropdown && filteredOptions.length > 0 && (
                 <div className="absolute z-30 top-[4.6rem] w-full bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 mt-1 rounded-md shadow-lg">
                     <div className="p-2">
                         <ul className="max-h-60 overflow-y-auto">
-                            {cuestion.options
-                                .filter((skill: any) => {
-                                    const searchText = typeof skill === 'object' && skill !== null
-                                        ? skill.label
-                                        : skill.toString();
-                                    return searchText.toLowerCase().includes(searchTerm.toLowerCase());
-                                })
-                                .map((skill: any, key: number) => {
-                                    const isObject = typeof skill === 'object' && skill !== null;
-                                    const value = isObject ? skill.value.toString() : skill.toString();
-                                    const label = isObject ? skill.label : skill.toString();
+                            {filteredOptions.map((skill: any, key: number) => {
+                                const isObject = typeof skill === 'object' && skill !== null;
+                                const value = isObject ? skill.value.toString() : skill.toString();
+                                const label = isObject ? skill.label : skill.toString();
 
-                                    return (
-                                        <li
-                                            key={key}
-                                            className={`px-4 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-900 cursor-pointer ${searchTerm ? 'dark:bg-zinc-800' : ''}`}
-                                            onClick={() => handleSkillToggle(value)}
-                                        >
-                                            {label}
-                                        </li>
-                                    );
-                                })}
+                                return (
+                                    <li
+                                        key={key}
+                                        className={`px-4 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-900 cursor-pointer`}
+                                        onClick={() => handleSkillToggle(value)}
+                                    >
+                                        {label}
+                                    </li>
+                                );
+                            })}
                         </ul>
                     </div>
                 </div>
             )}
 
-            <div className="flex flex-wrap gap-2 mt-2 ">
-                {formData.skills.map(skill => (
-                    <div key={skill}>
-                        <Badge text={skill} color="green" />
-                        <button
-                            type="button"
-                            onClick={() => handleRemoveSkill(skill)}
-                            className="ml-1 text-blue-600 hover:text-blue-800"
-                        >
-                            <X className="w-4 h-4" />
-                        </button>
-                    </div>
-                ))}
-            </div>
+            {cuestion.saveData && formData.skills.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-2">
+                    {formData.skills.map(skill => (
+                        <div key={skill} className="flex items-center gap-1">
+                            <Badge text={skill} color="green" />
+                            <button
+                                type="button"
+                                onClick={() => handleRemoveSkill(skill)}
+                                className="text-red-600 hover:text-red-800 transition-colors"
+                                aria-label={`Remove ${skill}`}
+                            >
+                                <X className="w-3 h-3" />
+                            </button>
+                        </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 }
