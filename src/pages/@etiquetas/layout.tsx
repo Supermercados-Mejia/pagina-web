@@ -12,7 +12,7 @@ export default function EtiquetasLayout() {
         <>
             <AppMenu />
             <IonPage id="main-content">
-                <Header title="Liz" isScrolled={isScrolled} showMenuButton />
+                <Header isScrolled={isScrolled} showMenuButton />
                 <Etiquetas onScroll={(scrolled) => setIsScrolled(scrolled)} />
             </IonPage>
         </>

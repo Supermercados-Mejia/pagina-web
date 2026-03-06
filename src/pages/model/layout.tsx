@@ -16,7 +16,7 @@ const LayoutModel: React.FC = () => {
         <>
             <AppMenu />
             <IonPage id="main-content">
-                <Header title="Liz" isScrolled={isScrolled} showMenuButton />
+                <Header isScrolled={isScrolled} showMenuButton />
                 {userRole === 'admin' ?
                     (<ModelAdmin onScroll={(scrolled) => setIsScrolled(scrolled)} />)
                     :

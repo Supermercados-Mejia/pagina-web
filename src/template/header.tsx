@@ -1,5 +1,4 @@
-// components/Header.tsx
-import { IconLiz } from '@/components/ionc-liz';
+
 import { useAppSelector } from '@/hooks/selector';
 import { RootState } from '@/hooks/store';
 import { formatValue } from '@/utils/constants/format-values';
@@ -15,6 +14,7 @@ import {
 } from '@ionic/react';
 import { ShoppingCart } from 'lucide-react';
 import { useState } from 'react';
+import { IconLiz } from './icon-liz';
 
 interface HeaderProps {
     isScrolled?: boolean;
@@ -36,8 +36,6 @@ const Header: React.FC<HeaderProps> = ({
     mobileScreen
 }) => {
     const mobile = mobileScreen;
-    const [showSearchResults, setShowSearchResults] = useState(false);
-
     return (
         <>
             <IonHeader
@@ -62,12 +60,11 @@ const Header: React.FC<HeaderProps> = ({
 
                     <section slot="end" className='flex flex-1 justify-center items-center mt-2 absolute left-0 right-0 top-0 z-50'>
                         {isScrolled && (
-                            <a className='decoration-none cursor-pointer' href='/productos'>
+                            <a className='decoration-none cursor-pointer' href='/'>
                                 <IconLiz className='mx-auto' fill={"#7927F5"} width={35} />
                             </a>
                         )}
                     </section>
-
 
                     {!mobile && showMenuButton && (
                         <IonButtons slot="end">

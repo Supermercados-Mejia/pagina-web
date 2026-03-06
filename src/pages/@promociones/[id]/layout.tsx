@@ -10,7 +10,7 @@ const LayoutPromocionesId: React.FC = () => {
         <>
             <AppMenu />
             <IonPage id="main-content">
-                <Header title="Liz" showMenuButton showBackButton defaultBack="/promociones" />
+                <Header showMenuButton showBackButton defaultBack="/promociones" />
                 <PromocionesID />
             </IonPage>
         </>

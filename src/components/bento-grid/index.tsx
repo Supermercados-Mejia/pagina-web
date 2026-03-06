@@ -11,6 +11,8 @@ const colClasses: Record<number, string> = {
     4: "sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4",
     5: "sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5",
     6: "sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6",
+    7: "sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7",
+    8: "sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8",
     12: "sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-12",
 }
 
@@ -41,6 +43,7 @@ export function BentoGrid({ className, cols = 6, rows, children, loading = false
     if (loading) {
         return (
             <div className={cn(
+                "relative",
                 "grid gap-4 p-4",
                 "grid-cols-1",
                 colClasses[cols] ?? colClasses[6],
@@ -58,6 +61,7 @@ export function BentoGrid({ className, cols = 6, rows, children, loading = false
     return (
         <div
             className={cn(
+                "relative",
                 "grid gap-4 p-4",
                 "grid-cols-1", // fallback mobile
                 colClasses[cols] ?? colClasses[6],
@@ -123,7 +127,7 @@ export function BentoItem({
     return (
         <div
             className={cn(
-                "group relative overflow-hidden rounded-xl border border-gray-200 bg-[var(--background)] p-4 transition-all hover:shadow-md",
+                "group relative h-fit rounded-xl border border-gray-200 bg-[var(--background)] p-4 transition-all hover:shadow-md",
                 colSpanClasses[colSpan] ?? "sm:col-span-1",
                 rowSpanClasses[rowSpan] ?? "row-span-1",
                 className

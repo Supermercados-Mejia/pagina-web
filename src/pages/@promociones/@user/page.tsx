@@ -1,22 +1,308 @@
-import Footer from "@/template/footer";
+import { BentoGrid } from "@/components/bento-grid";
 import { PageProps } from "@/utils/types/page";
-import { IonContent, IonHeader, IonToolbar, IonTitle, IonSegment, IonLabel, IonSegmentButton, IonButton } from "@ionic/react";
-import { promociones, combos } from "../data/example"; // Asegúrate de importar combos
-import { useState } from "react";
-import { ProductoCard, ComboCard } from "../components/card-promociones"; // Importa ambos componentes
-import PromoBanner from "../components/banner-offers";
-import { promoItems } from "@/pages/@promociones/data/promo";
+import { IonContent, IonHeader, IonToolbar, IonList, IonInfiniteScroll, IonInfiniteScrollContent, IonBackButton } from "@ionic/react";
+import { useCallback, useEffect, useState, useRef } from "react";
+import { useGetWithFiltersGeneralInIntelisisMutation } from "@/hooks/reducers/api_int";
+import Card from "../components/card";
+import { getLocalStorageItem, setLocalStorageItem } from "@/utils/functions/local-storage";
+import { Producto } from "@/utils/types/page";
+import { useAppSelector } from "@/hooks/selector";
+import { RootState } from "@/hooks/store";
+import { IconLiz } from "@/template/icon-liz";
 
-export default function PromocionesUser({ onScroll }: PageProps) {
-    const [selectedType, setSelectedType] = useState<string>('todo');
+// Tipos
+interface Sucursal {
+    nombre: string;
+    precio: string;
+    direccion: string;
+    coordenadas: [number, number];
+}
 
-    // Filtrar datos según la selección
-    const filteredData =
-        selectedType === 'todo'
-            ? [...combos, ...promociones]
-            : selectedType === 'combos'
-                ? combos
-                : promociones;
+interface ApiResponse {
+    totalRecords: number;
+    totalPages: number;
+    pageSize: number;
+    page: number;
+    data: any[];
+}
+export const sucursalesfind: Sucursal[]
+    = [
+        { nombre: "Mayoreo", precio: "(Precio Lista)", direccion: "Calle Principal 123", coordenadas: [32.099733119103604, -116.5656031728404] },
+        { nombre: "Valle de guadalupe", precio: "(Precio 2)", direccion: "Avenida Norte 456", coordenadas: [32.0947939, -116.5735554] },
+        { nombre: "Valle de las palmas", precio: "(Precio 4)", direccion: "Boulevard Sur 789", coordenadas: [32.36670812592066, -116.61484440041006] },
+        { nombre: "Testerazo", precio: "(Precio 3)", direccion: "Boulevard Sur 789", coordenadas: [32.295697914465485, -116.53331677806355] },
+    ];
+
+// Claves para localStorage
+const SUCURSAL_KEY = 'sucursal_seleccionada';
+const LISTA_PRECIOS_KEY = 'lista_precios'; // Opcional, se deriva de la sucursal
+
+// Hook personalizado para manejar la sucursal
+const useSucursal = () => {
+    const [sucursal, setSucursal] = useState<Sucursal>(() => {
+        try {
+            const stored = getLocalStorageItem(SUCURSAL_KEY);
+            if (stored) {
+                const found = sucursalesfind.find(s => s.nombre === stored);
+                if (found) return found;
+            }
+        } catch { }
+        // Valor por defecto: la primera sucursal
+        return sucursalesfind[0];
+    });
+
+    const cambiarSucursal = useCallback((nombre: string) => {
+        const nueva = sucursalesfind.find(s => s.nombre === nombre);
+        if (nueva) {
+            setSucursal(nueva);
+            setLocalStorageItem(SUCURSAL_KEY, nueva.nombre);
+            // También guardamos la lista por separado si se necesita en otros lugares
+            setLocalStorageItem(LISTA_PRECIOS_KEY, nueva.precio);
+        }
+    }, []);
+
+    return { sucursal, cambiarSucursal };
+};
+
+// Hook para cargar ofertas (ahora recibe la lista de precios como parámetro)
+const useOfertas = (categoria: string, listaPrecios: string) => {
+    const [getData, { isLoading }] = useGetWithFiltersGeneralInIntelisisMutation();
+
+    const [items, setItems] = useState<Producto[]>([]);
+    const [hasMore, setHasMore] = useState(true);
+    const [totalRecords, setTotalRecords] = useState(1);
+    const [page, setPage] = useState(1);
+    const [isFetching, setIsFetching] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const currentCategoriaRef = useRef(categoria);
+    const currentListaRef = useRef(listaPrecios);
+
+    // Construcción de la tabla SQL con la lista actual
+    const buildTableQuery = useCallback((lista: string, cat: string) => {
+        return `
+            art
+                INNER JOIN ListaPreciosDUnidad AS lpu
+                    ON art.Articulo = lpu.Articulo
+                    AND lpu.Lista = '${lista}'
+                    AND lpu.Precio > 0
+                    ${cat && cat !== 'TODO' ? `AND art.Grupo = '${cat}'` : ''}
+                INNER JOIN ArtUnidad AS au
+                    ON art.Articulo = au.Articulo
+                    AND lpu.Unidad = au.Unidad
+                INNER JOIN ArtDisponible AS ad
+                    on art.Articulo = ad.Articulo
+                    AND ad.DispMenosApartado > 0
+                    AND (ad.DispMenosApartado / au.Factor) > 0
+                INNER JOIN (
+                    SELECT *, 
+                        ROW_NUMBER() OVER (PARTITION BY Articulo, Unidad ORDER BY id DESC) AS rn
+                    FROM OfertaD
+                ) AS ofrd
+                    ON ofrd.Articulo = art.Articulo
+                    AND ofrd.Unidad = art.Unidad
+                LEFT JOIN Oferta AS ofr
+                    ON ofr.ID = ofrd.ID
+                    AND ofr.FechaD < GETDATE()
+                    AND ofr.FechaA > GETDATE()
+        `;
+    }, []);
+
+    // Función para cargar ofertas
+    const loadOfertas = useCallback(async (currentPage: number, isNewCategory: boolean = false) => {
+        if (isFetching) return;
+
+        setIsFetching(true);
+        setError(null);
+
+        try {
+            const result = await getData({
+                table: buildTableQuery(listaPrecios, categoria),
+                pageSize: 10,
+                page: currentPage,
+                filtros: {
+                    Filtros: [
+                        { key: "ofrd.Precio", Operator: ">", Value: "0" },
+                        { key: "ofr.Estatus", Operator: "=", Value: "VIGENTE" }
+                    ],
+                    Selects: [
+                        { key: "art.Articulo" },
+                        { key: "art.Grupo" },
+                        { key: "art.Descripcion1" },
+                        { key: "lpu.Unidad" },
+                        { key: "art.Impuesto1" },
+                        { key: "art.Impuesto2" },
+                        { key: "art.TipoImpuesto1" },
+                        { key: "art.TipoImpuesto2" },
+                        { key: "lpu.Precio" },
+                        { key: "ofrd.Precio", alias: "Descuento" },
+                        { key: "au.Unidad", alias: "UnidadFactor" },
+                        { key: "au.Factor" },
+                    ],
+                    Agregaciones: [
+                        {
+                            Key: "ad.DispMenosApartado",
+                            Operation: "SUM",
+                            Alias: "Cantidad",
+                        },
+                    ],
+                    Order: [{ Key: "art.Descripcion1", Direction: "DESC" }],
+                },
+                signal: undefined,
+            });
+
+            if ('data' in result && result.data) {
+                const apiData: ApiResponse = result.data;
+
+                if (apiData.data && apiData.data.length > 0) {
+                    const mappedItems: Producto[] = apiData.data.map((item: any) => ({
+                        id: `${item.Articulo}-${item.Unidad}`,
+                        codigo: item.Codigo || "0000",
+                        articulo: item.Articulo || "Articulo",
+                        nombre: item.Descripcion1 || "Sin nombre",
+                        categoria: item.Grupo || "Sin categoría",
+                        unidad: item.Unidad || "Unidad",
+                        precio: item.Precio || 0,
+                        cantidad: item.Cantidad || 1,
+                        factor: item.Factor || 1,
+                        impuesto1: item.Impuesto1 || 0,
+                        impuesto2: item.Impuesto2 || 0,
+                        tipoImpuesto1: item.TipoImpuesto1 || 0,
+                        tipoImpuesto2: item.TipoImpuesto2 || 0,
+                        descuento: item.Descuento || 0,
+                    }));
+
+                    setTotalRecords(apiData.totalRecords);
+                    setItems(prev => currentPage === 1 || isNewCategory ? mappedItems : [...prev, ...mappedItems]);
+                    setHasMore(currentPage < apiData.totalPages);
+                } else {
+                    setHasMore(false);
+                }
+            }
+        } catch (err) {
+            console.error("Error al cargar ofertas:", err);
+            setError("Ocurrió un error al cargar los datos");
+            setHasMore(false);
+        } finally {
+            setIsFetching(false);
+        }
+    }, [categoria, listaPrecios, getData, buildTableQuery]);
+
+    // Resetear cuando cambia la categoría o la lista de precios
+    useEffect(() => {
+        if (currentCategoriaRef.current !== categoria || currentListaRef.current !== listaPrecios) {
+            setItems([]);
+            setPage(1);
+            setHasMore(true);
+            currentCategoriaRef.current = categoria;
+            currentListaRef.current = listaPrecios;
+            loadOfertas(1, true);
+        }
+    }, [categoria, listaPrecios, loadOfertas]);
+
+    // Carga inicial
+    useEffect(() => {
+        loadOfertas(1);
+    }, []);
+
+    // Cargar más cuando cambia la página
+    useEffect(() => {
+        if (page > 1) {
+            loadOfertas(page);
+        }
+    }, [page, loadOfertas]);
+
+    const loadMore = useCallback(() => {
+        if (!isFetching && hasMore) {
+            setPage(prev => prev + 1);
+        }
+    }, [isFetching, hasMore]);
+
+    return {
+        items,
+        hasMore,
+        totalRecords,
+        isLoading: isLoading || isFetching,
+        error,
+        loadMore,
+        reset: () => {
+            setItems([]);
+            setPage(1);
+            setHasMore(true);
+            loadOfertas(1, true);
+        }
+    };
+};
+
+const useFavorites = () => {
+    const [favorites, setFavorites] = useState<Producto[]>([]);
+    const [count, setCount] = useState(0);
+
+    const loadFavorites = useCallback(() => {
+        try {
+            const stored = getLocalStorageItem("favoritos");
+            const parsed = stored ? JSON.parse(stored) : [];
+            setFavorites(parsed);
+            setCount(parsed.length);
+        } catch {
+            setFavorites([]);
+            setCount(0);
+        }
+    }, []);
+
+    useEffect(() => {
+        loadFavorites();
+        const handleStorage = (e: StorageEvent) => {
+            if (e.key === "favoritos") loadFavorites();
+        };
+        window.addEventListener('storage', handleStorage);
+        return () => window.removeEventListener('storage', handleStorage);
+    }, [loadFavorites]);
+
+    return { favorites, count, refresh: loadFavorites };
+};
+
+const Ofertas: React.FC<PageProps> = ({ onScroll }) => {
+    const cat = useAppSelector((state: RootState) => state.filterData);
+    const categoria = cat?.key?.value || '';
+
+    const { sucursal, cambiarSucursal } = useSucursal();
+    const [activeSection, setActiveSection] = useState<string | null>(null);
+    const { favorites, count: favoriteCount, refresh: refreshFavorites } = useFavorites();
+
+    // Pasamos la lista de precios de la sucursal seleccionada al hook de ofertas
+    const { items: ofertasItems, hasMore, totalRecords, isLoading, error, loadMore, reset } = useOfertas(categoria, sucursal.precio);
+
+    const displayedItems = activeSection === 'favoritos' ? favorites : ofertasItems;
+
+    const handleSectionChange = useCallback((section: string) => {
+        const newSection = activeSection === section ? null : section;
+        setActiveSection(newSection);
+
+        if (newSection === 'favoritos') {
+            refreshFavorites();
+        } else if (activeSection === 'favoritos') {
+            reset();
+        }
+    }, [activeSection, refreshFavorites, reset]);
+
+    const handleInfiniteScroll = useCallback(async (event: any) => {
+        if (!hasMore || isLoading || activeSection === 'favoritos') {
+            event.target.complete();
+            if (!hasMore) event.target.disabled = true;
+            return;
+        }
+        loadMore();
+        event.target.complete();
+    }, [hasMore, isLoading, activeSection, loadMore]);
+
+    const handleSucursalChange = (nombre: string) => {
+        cambiarSucursal(nombre);
+        // Al cambiar sucursal, reiniciamos la vista de ofertas (si no estamos en favoritos)
+        if (activeSection !== 'favoritos') {
+            reset();
+        }
+    };
 
     return (
         <IonContent
@@ -27,76 +313,73 @@ export default function PromocionesUser({ onScroll }: PageProps) {
                 onScroll?.(isScrolled);
             }}
         >
-            <IonHeader
-                collapse="condense"
-                className="custom-toolbar z-50 -top-16">
+            <IonHeader collapse="condense" className="custom-toolbar h-fit absolute -top-0">
                 <IonToolbar>
-
-                    <IonTitle
-                        size="large"
-                        className="text-white text-5xl p-2 font-medium h-full">
-                        Liz
-                    </IonTitle>
+                    <a className='decoration-none cursor-pointer' href='/ofertas'>
+                        <IconLiz fill={onScroll ? "#FFF" : "#7927F5"} width={55} />
+                    </a>
                 </IonToolbar>
             </IonHeader>
-            <main className="w-full min-h-[77vh] px-4 sm:px-6 lg:px-8 pb-7">
+            <section className="flex my-4">
+                <IonBackButton color={"tertiary"} text={"Regresar"} defaultHref="/" />
+            </section>
+            <section className="px-4 py-4 max-w-6xl mx-auto">
+                {/* Barra superior con selector de sucursal y filtros */}
+                <section className="sticky top-2 flex flex-wrap items-center gap-2 z-50 bg-white/70 dark:bg-black/70 py-2 px-2 my-4 rounded-lg backdrop-blur-md border border-gray-200 dark:border-gray-700">
+                    {/* Selector de sucursal */}
+                    <select
+                        value={sucursal.nombre}
+                        onChange={(e) => handleSucursalChange(e.target.value)}
+                        className="bg-transparent border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    >
+                        {sucursalesfind.map(s => (
+                            <option key={s.nombre} value={s.precio}>{s.nombre}</option>
+                        ))}
+                    </select>
+                </section>
 
-                <div className="max-w-6xl mx-auto">
-                    <header className="text-center">
-                        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Promociones</h1>
-                        {/* <PromoBanner items={promoItems} autoPlay={true} interval={3000} showControls={true} showIndicators={true} /> */}
+                {error && (
+                    <div className="text-center py-4 text-red-500">
+                        <p>{error}</p>
+                        <button onClick={reset} className="underline mt-2">Reintentar</button>
+                    </div>
+                )}
 
-                        <label className="space-y-1">
-                            <p className="text-gray-600 text-lg">Aprovecha nuestras ofertas y combos</p>
-                            <p className="text-gray-600 text-lg">Conoce nuestro nuevo catalogo...</p>
-                        </label>
-                    </header>
+                <IonList className="bg-transparent">
+                    <BentoGrid cols={5}>
+                        {displayedItems.map((producto, index) => (
+                            <Card
+                                key={`${producto.id}-${index}`}
+                                producto={producto}
+                            />
+                        ))}
+                    </BentoGrid>
+                </IonList>
 
-                    <section className="m-auto w-fit pb-2">
-                        <IonButton color={"tertiary"} target="_blank" href="https://google.com">Descargar</IonButton>
-                        <IonButton color={"tertiary"} target="_blank" href="catalogo.jpg" fill="clear">Ver</IonButton>
-                    </section>
+                {isLoading && displayedItems.length === 0 && (
+                    <div className="text-center py-4">
+                        <p>Cargando ofertas...</p>
+                    </div>
+                )}
 
-                    <section className="max-w-2xl mx-auto mb-8">
-                        <IonSegment
-                            value={selectedType}
-                            onIonChange={(e: any) => setSelectedType(e.detail.value!)}
-                        >
-                            <IonSegmentButton value="todo">
-                                <IonLabel>Todo</IonLabel>
-                            </IonSegmentButton>
-                            <IonSegmentButton value="combos">
-                                <IonLabel>Combos</IonLabel>
-                            </IonSegmentButton>
-                            <IonSegmentButton value="promociones">
-                                <IonLabel>Promociones</IonLabel>
-                            </IonSegmentButton>
-                        </IonSegment>
-                    </section>
+                {!isLoading && displayedItems.length === 0 && (
+                    <div className="text-center py-8">
+                        <p>No se encontraron elementos</p>
+                    </div>
+                )}
 
-                    <section aria-labelledby="promotions-heading" className="mt-6">
-                        <h2 id="promotions-heading" className="sr-only">Promociones y Combos</h2>
-
-                        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {filteredData.length > 0
-                                ? filteredData.map((item: any) => (
-                                    item.nombreCombo
-                                        ? <ComboCard combo={item} key={item.id || item.nombreCombo} />
-                                        : <ProductoCard promocion={item} key={item.id || item.nombre} />
-                                ))
-                                : (
-                                    <div className="m-auto col-span-3 text-center py-8">
-                                        <p className="text-gray-500 italic">
-                                            Actualmente no hay promociones disponibles, vuelve en otro momento.
-                                        </p>
-                                    </div>
-                                )
-                            }
-                        </ul>
-                    </section>
-                </div>
-            </main>
-            <Footer />
+                <IonInfiniteScroll
+                    onIonInfinite={handleInfiniteScroll}
+                    threshold="100px"
+                    disabled={!hasMore || isLoading || activeSection === "favoritos"}
+                >
+                    <IonInfiniteScrollContent
+                        loadingText={hasMore ? "Cargando más ofertas..." : "No hay más ofertas"}
+                    />
+                </IonInfiniteScroll>
+            </section>
         </IonContent>
-    )
-}
+    );
+};
+
+export default Ofertas;

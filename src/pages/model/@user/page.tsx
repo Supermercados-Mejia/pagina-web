@@ -27,7 +27,7 @@ export default function ModelUser({ onScroll }: PageProps) {
                     </IonTitle>
                 </IonToolbar>
             </IonHeader>
-            <main className="w-full min-h-[77vh] px-4 sm:px-6 lg:px-8 pb-7">
+            <main className="w-full min-h-[77vh] px-4 sm:px-6 lg:px-8 py-7">
 
                 <div className="max-w-6xl mx-auto">
                     <header className="text-center">

@@ -32,7 +32,7 @@ export default function ModelAdmin({ onScroll }: PageProps) {
             <IonFabButton color={"tertiary"} onClick={() => setIsOpen(true)} size="small" className="size-12 fixed right-4 bottom-14 z-50 ">
                 <Plus />
             </IonFabButton>
-            <main className="w-full min-h-[77vh] px-4 sm:px-6 lg:px-8 pb-7">
+            <main className="w-full min-h-[77vh] px-4 sm:px-6 lg:px-8 py-7">
                 <div className="max-w-6xl mx-auto">
                     <header className="text-center">
                         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Model</h1>

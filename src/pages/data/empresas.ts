@@ -45,7 +45,7 @@ export const empresas = [
     loading: "lazy",
   },
   {
-    link: "https://grupopenafiel.com.mx/wp-content/uploads/2023/01/penafiel2.jpg",
+    link: "https://xn--peafielmx-m6a.com/wp-content/uploads/2022/11/penafiel-logo.png",
     alt: "Logo Logo Peñafiel",
     loading: "lazy",
   },
@@ -61,12 +61,12 @@ export const empresas = [
   },
   {
     link: "https://logoeps.com/wp-content/uploads/2013/04/nestle-chocolate-vector-logo.png",
-    alt: "Logo Nescle",
+    alt: "Logo Nestle",
     loading: "lazy",
   },
   {
-    link: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCvC_ZkhQZ9Sa9WFZ1oMcOI0nguyc1mCAlBQ&s",
-    alt: "Logo Grand chunk",
+    link: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuVscOqI-ppj5lCsfFpytBA4mOsQacchFsww&s",
+    alt: "Logo Grand Chunk",
     loading: "lazy",
   },
   {

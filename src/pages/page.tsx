@@ -11,6 +11,7 @@ import { cn } from "@/utils/functions/cn";
 import { chevronDown } from "ionicons/icons";
 import Footer from "@/template/footer";
 import { useHistory } from "react-router-dom";
+import { IconLiz } from "@/template/icon-liz";
 
 const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
     const duplicatedItems = [...empresas, ...empresas];
@@ -27,14 +28,12 @@ const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
         >
             <IonHeader
                 collapse="condense"
-                className="custom-toolbar z-50 -top-16"
+                className="custom-toolbar-clear h-fit absolute -top-0"
             >
                 <IonToolbar>
-                    <IonTitle
-                        size="large"
-                        className="text-white text-5xl p-2 font-medium h-full">
-                        Liz
-                    </IonTitle>
+                    <a className="cursor-pointer" href="/">
+                        <IconLiz fill={onScroll ? "#FFF" : "#7927F5"} width={55} />
+                    </a>
                 </IonToolbar>
             </IonHeader>
 
@@ -48,11 +47,7 @@ const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
             </section>
 
             <ul className="md:mt-[64vh] mt-[62vh] mb-28 bottom-0 left-0 z-50 flex w-full items-center justify-center gap-4 p-4 border-t border-t-gray-200">
-                <IonFab style={{ bottom: '15rem', left: '50%', transform: 'translate(-50%, -50%)' }}>
-                    <IonFabButton className="bg-purple-800 rounded-full text-white" color="#6000a0" >
-                        <IonIcon icon={chevronDown} />
-                    </IonFabButton>
-                </IonFab>
+
                 {socialLinks.map((link, index) => {
                     const IconComponent = link.icon;
                     return (
@@ -70,7 +65,7 @@ const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
                     );
                 })}
             </ul>
-            <div className="lg:mb-16 mb-36">
+            <div className="lg:mb-16 mb-36 max-w-6xl m-auto">
                 <section
                     className="-mt-10">
                     <BentoGrid cols={3}>
@@ -79,7 +74,6 @@ const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
                             rowSpan={3}
                             colSpan={2}
                             title="Nuestra historia"
-                            className="px-0 pl-4"
                             description="Conoce como empezó nuestra historia y como hemos crecido..."
                             icon={<HistoryIcon className="h-6 w-6 text-primary" />}
                         >
@@ -96,7 +90,9 @@ const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
                         {/* Sección Servicios */}
                         <BentoItem
                             rowSpan={3}
+                            colSpan={1}
                             title="Servicios"
+                            className="h-full"
                             description="Descubre nuestra variedad de servicios"
                             icon={<PackageSearch className="h-6 w-6 text-green-500" />}
                         >
@@ -104,7 +100,7 @@ const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
                                 {servicios.map((servicio, index) => (
                                     <li
                                         key={index}
-                                        className="group flex items-start gap-4 rounded-xl border border-gray-100 bg-white p-2 transition-all hover:border-purple-100 hover:bg-purple-50"
+                                        className="group cursor-pointer flex items-start gap-4 rounded-xl border border-gray-100 bg-white p-2 transition-all hover:border-purple-100 hover:bg-purple-50"
                                     >
                                         {servicio.icon && (
                                             <div
@@ -197,13 +193,13 @@ const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
                         </BentoItem>
                     </BentoGrid>
                 </section>
+            </div>
 
-                <h2 className="text-center font-bold text-">Marcas que nos acompañan</h2>
-                <div className="flex animate-infinite-scroll ">
-                    {duplicatedItems.map((data, key) => (
-                        <OffertCard key={key} avatarUrl={data.link} />
-                    ))}
-                </div>
+            <h2 className="text-center font-bold text-">Marcas que nos acompañan</h2>
+            <div className="flex animate-infinite-scroll mb-5">
+                {duplicatedItems.map((data, key) => (
+                    <OffertCard key={key} avatarUrl={data.link} />
+                ))}
             </div>
 
             <Footer />

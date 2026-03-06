@@ -15,7 +15,7 @@ const LayoutInventario: React.FC = () => {
         <>
             <AppMenu />
             <IonPage id="main-content">
-                <Header title="Liz" isScrolled={isScrolled} showMenuButton />
+                <Header isScrolled={isScrolled} showMenuButton />
                 <VerificadorSeguridad onScroll={(scrolled) => setIsScrolled(scrolled)} />
             </IonPage>
         </>
