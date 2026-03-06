@@ -69,8 +69,7 @@ export const api_int = createApi({
         }),
         getArticulos: builder.query({
             query: ({ page, pageSize, filtro, listaPrecio, signal }) => ({
-                url: `v1/Precios`,
-                method: "GET",
+                url: `v1/precios`,
                 params: {
                     page,
                     pageSize,

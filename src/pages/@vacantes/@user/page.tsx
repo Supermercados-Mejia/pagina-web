@@ -1,15 +1,24 @@
 import Footer from "@/template/footer";
 import { PageProps } from "@/utils/types/page";
-import { IonContent, IonHeader, IonToolbar, IonTitle, IonSegment, IonLabel, IonSegmentButton } from "@ionic/react";
+import { IonContent, IonHeader, IonToolbar, IonTitle, IonSegment, IonLabel, IonSegmentButton, IonBackButton, IonSpinner } from "@ionic/react";
 import { vacantes } from "../data/example";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CardVacante } from "../components/card-vacante";
+import { IconLiz } from "@/template/icon-liz";
 
 export default function VacantesUser({ onScroll }: PageProps) {
-
     const [selectedDepartment, setSelectedDepartment] = useState<string>('todo');
+    const [isLoading, setIsLoading] = useState(true);
 
-    // 2. Filtrar vacantes basado en la selección
+    // Simula un proceso de carga (por ejemplo, fetching de datos)
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setIsLoading(false);
+        }, 1000); // Tiempo de simulación de carga
+        return () => clearTimeout(timer);
+    }, []);
+
+    // Filtrar vacantes basado en la selección
     const filteredVacantes = vacantes.filter(item =>
         selectedDepartment === 'todo'
             ? true
@@ -27,16 +36,17 @@ export default function VacantesUser({ onScroll }: PageProps) {
         >
             <IonHeader
                 collapse="condense"
-                className="custom-toolbar z-50 -top-16">
+                className="custom-toolbar-clear h-fit absolute -top-0"
+            >
                 <IonToolbar>
-
-                    <IonTitle
-                        size="large"
-                        className="text-white text-5xl p-2 font-medium h-full">
-                        Liz
-                    </IonTitle>
+                    <a className="cursor-pointer" href="/">
+                        <IconLiz fill={onScroll ? "#FFF" : "#7927F5"} width={55} />
+                    </a>
                 </IonToolbar>
             </IonHeader>
+            <section className="flex my-4">
+                <IonBackButton color={"tertiary"} text={"Regresar"} defaultHref="/" />
+            </section>
             <main className="w-full min-h-[77vh] px-4 sm:px-6 lg:px-8 py-8">
                 <div className="max-w-6xl mx-auto">
                     <header className="text-center mb-8">
@@ -58,7 +68,6 @@ export default function VacantesUser({ onScroll }: PageProps) {
                             <IonSegmentButton value="sistemas">
                                 <IonLabel>Sistemas</IonLabel>
                             </IonSegmentButton>
-                            {/* 4. Corregir typo en seguridad */}
                             <IonSegmentButton value="seguridad">
                                 <IonLabel>Seguridad</IonLabel>
                             </IonSegmentButton>
@@ -71,18 +80,31 @@ export default function VacantesUser({ onScroll }: PageProps) {
                         </IonSegment>
                     </div>
 
-
                     <section aria-labelledby="job-openings-heading" className="mt-6">
                         <h2 id="job-openings-heading" className="sr-only">Posiciones Disponibles</h2>
 
-                        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {filteredVacantes.length ? filteredVacantes.map((item: any, index) => (
-                                <CardVacante vacante={item} index={index} key={index} />
-                            )) : (<li className="m-auto list-none col-span-3"> Actualmente no hay vacantes disponibles {selectedDepartment !== "todo" && "en esta area"}, vuelve en otro momento. </li>)}
-                        </ul>
+                        {isLoading ? (
+                            <div className="flex flex-col items-center justify-center py-12">
+                                <IonSpinner name="crescent" color="tertiary" style={{ width: '50px', height: '50px' }} />
+                                <p className="text-gray-600 mt-4">Cargando vacantes, por favor espera...</p>
+                            </div>
+                        ) : (
+                            <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {filteredVacantes.length ? (
+                                    filteredVacantes.map((item: any, index) => (
+                                        <CardVacante vacante={item} index={index} key={index} />
+                                    ))
+                                ) : (
+                                    <li className="m-auto list-none col-span-3">
+                                        Actualmente no hay vacantes disponibles {selectedDepartment !== "todo" && "en esta área"}, vuelve en otro momento.
+                                    </li>
+                                )}
+                            </ul>
+                        )}
                     </section>
                 </div>
             </main>
             <Footer />
-        </IonContent>)
+        </IonContent>
+    );
 }

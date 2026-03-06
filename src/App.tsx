@@ -27,7 +27,6 @@ import '@ionic/react/css/display.css';
 import '@ionic/react/css/palettes/dark.class.css';
 
 import "driver.js/dist/driver.css";
-import LayoutScanner from './pages/@scanner/layout';
 
 setupIonicReact({ mode: 'ios' });
 
@@ -69,9 +68,6 @@ const App: React.FC = () => {
     <IonApp>
       <IonRouterOutlet>
         <Switch>
-          <Route exact path="/scanner">
-            <LayoutScanner />
-          </Route>
           <Route>
             <Background>
               <Switch>

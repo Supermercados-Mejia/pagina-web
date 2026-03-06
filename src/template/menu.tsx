@@ -135,6 +135,16 @@ const AppMenu = () => {
                             </p>
                         </div>
                     )}
+                    {!user && (
+                        <div className="p-4 text-sm text-gray-500">
+                            <p>
+                                Ingresa a nuestra pagina de compras en linea:
+                                <a href="https://dev.mercadosliz.com" className="text-primary-600" target="_blank">
+                                    PickUp
+                                </a>
+                            </p>
+                        </div>
+                    )}
                 </IonContent>
                 <IonModal
                     isOpen={isOpen}

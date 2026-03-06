@@ -5,7 +5,7 @@ import Header from "@/template/header";
 import AppMenu from "@/template/menu";
 import PromocionesUser from "./@user/page";
 import { getLocalStorageItem } from "@/utils/functions/local-storage";
-import PromocionesAdmin from "./@admin/page";
+//import PromocionesAdmin from "./@admin/page";
 
 const LayoutPromociones: React.FC = () => {
 
@@ -16,12 +16,13 @@ const LayoutPromociones: React.FC = () => {
         <>
             <AppMenu />
             <IonPage id="main-content">
-                <Header title="Liz" isScrolled={isScrolled} showMenuButton />
-                {userRole === 'admin' ?
+                <Header isScrolled={isScrolled} showMenuButton />
+                <PromocionesUser onScroll={(scrolled) => setIsScrolled(scrolled)} />
+                {/* {userRole === 'admin' ?
                     (<PromocionesAdmin onScroll={(scrolled) => setIsScrolled(scrolled)} />)
                     :
                     (<PromocionesUser onScroll={(scrolled) => setIsScrolled(scrolled)} />)
-                }
+                } */}
             </IonPage>
         </>
     );

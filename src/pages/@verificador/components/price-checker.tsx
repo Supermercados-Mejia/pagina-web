@@ -79,7 +79,7 @@ function PriceChecker() {
     const resetStates = () => {
         setDisplayData([]);
         setInputValue("");
-        setSelectedSucursal(sucursales[2].id);
+        //setSelectedSucursal(sucursales[2].id);
         setProductNotFound(false);
         setProgress(0);
     };

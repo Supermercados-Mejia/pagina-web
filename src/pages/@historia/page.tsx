@@ -1,8 +1,9 @@
-import { IonContent, IonHeader, IonToolbar, IonTitle } from '@ionic/react';
+import { IonContent, IonHeader, IonToolbar, IonTitle, IonBackButton } from '@ionic/react';
 import style from './page.module.css';
 import { PageProps } from '@/utils/types/page';
 import { timelineEvents } from './data/json-default';
 import Footer from '@/template/footer';
+import { IconLiz } from '@/template/icon-liz';
 
 
 
@@ -16,14 +17,19 @@ const HistoriaPage = ({ onScroll }: PageProps) => {
                 onScroll?.(isScrolled);
             }}
         >
-            <IonHeader collapse="condense" className="custom-toolbar z-50 -top-16">
+            <IonHeader
+                collapse="condense"
+                className="custom-toolbar-clear h-fit absolute -top-0"
+            >
                 <IonToolbar>
-                    <IonTitle size="large" className="text-white font-medium tracking-tight">
-                        <span className="text-6xl">Liz</span>
-                    </IonTitle>
+                    <a className="cursor-pointer" href="/">
+                        <IconLiz fill={onScroll ? "#FFF" : "#7927F5"} width={55} />
+                    </a>
                 </IonToolbar>
             </IonHeader>
-
+            <section className="flex my-4">
+                <IonBackButton color={"tertiary"} text={"Regresar"} defaultHref="/" />
+            </section>
             <section className={style.timeline}>
                 {timelineEvents.map((event) => (
                     <div key={event.id} className={style["timeline-event"]}>

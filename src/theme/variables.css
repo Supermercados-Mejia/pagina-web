@@ -2,6 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0px !important;
+    padding: 0px !important;
+    font-size: inherit !important;
+    font-weight: 200;
+    line-height: 1.5 !important;
+}
 
 :root {
     --background: #fff;
@@ -18,12 +35,12 @@
 
     --border: #1f1e1e;
     --shadow: #00000048;
-    /* switsh */
+
     --switch-btn-bg: #fff;
     --switch-border-color: #3c3c434a;
     --switch-icon-color: #0f0f0f;
     --switch-bg-color: #f6f6f7;
-    /* switsh */
+
     --menu-border-bg: #e6e6e6;
 
     --ion-color-tertiary: #6822a6;
@@ -32,7 +49,7 @@
     --ion-color-tertiary-contrast-rgb: 255, 255, 255;
     --ion-color-tertiary-shade: #5c1e92;
     --ion-color-tertiary-tint: #7738af;
-    /* Animation timing variables */
+
     --switch-animation-duration: 0.3s;
     --switch-animation-easing: cubic-bezier(0.45, 0.05, 0.55, 0.95);
 }
@@ -52,7 +69,7 @@
 
     --border: #696969;
     --shadow: #ffffff1b;
-    /* switsh */
+
     --switch-btn-bg: #000;
     --switch-border-color: #525259ad;
     --switch-icon-color: #f2f2f2;
@@ -64,9 +81,10 @@
     --ion-color-tertiary-contrast-rgb: 255, 255, 255;
     --ion-color-tertiary-shade: #5c1e92;
     --ion-color-tertiary-tint: #7738af;
-    /* switsh */
+
     --menu-border-bg: #000;
 }
+
 .custom-tertiary {
     /* Estado normal */
     --background: linear-gradient(100deg, #5f05a8 0%, #9338e7 100%);
@@ -93,9 +111,21 @@
     transform: scale(1);
     transition: var(--transition);
 }
+
+.custom-search-barr {
+    --z-index: 10 !important;
+    /* Estado normal */
+    --background: linear-gradient(100deg, #cca7ff 0%, #982bffa9 100%);
+    --color: #ffffff;
+    --clear-button-color: #fff;
+    --button-color: #ffffff;
+    --border-color: #5c1e92;
+    --transition: all 0.2s ease-in-out;
+}
+
 .custom-default {
     /* Estado normal */
-    --background:#5f05a8;
+    --background: #5f05a8;
     --color: #ffffff;
     color: #ffffff;
     --border-color: #5c1e92;
@@ -119,6 +149,7 @@
     transform: scale(1);
     transition: var(--transition);
 }
+
 /* Efecto al pasar el mouse (hover) */
 .custom-tertiary:hover {
     transform: scale(1.05);
@@ -144,11 +175,11 @@
     --background-hover: #b91c1c;
     --color: white;
 }
+
 /* Estilos para WebKit */
 ::-webkit-scrollbar {
     background: var(--background-card);
     width: 10px;
-    z-index: 9999;
 }
 
 ::-webkit-scrollbar-track {
@@ -164,14 +195,17 @@
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
+
 /* Estilos para Firefox */
 html {
     scrollbar-width: thin;
     scrollbar-color: #888 #f1f1f1;
 }
+
 ion-content {
     --background: transparent;
 }
+
 ion-toolbar {
     --background: var(--background);
     --color: var(--text-primary);
@@ -181,6 +215,19 @@ ion-toolbar {
     font-family: 'Lobster';
     --box-shadow: 0px 0px 0px 1px var(--border-color) inset;
 }
+
+ion-tab-bar,
+ion-tab-button {
+    --background: var(--background);
+    --z-index: 10 !important;
+    z-index: 10 !important;
+    position: relative;
+}
+
+ion-tab-button {
+    --color-selected: var(--ion-color-tertiary);
+    --color: var(--text-secondary);
+}
 .section {
     background-image:
         linear-gradient(#69696948 0%, #f8f8f8b9 70%, #ffffff 100%),
@@ -188,22 +235,24 @@ ion-toolbar {
     background-size: cover;
     display: flex;
 }
-.custom-toolbar
-ion-toolbar {
-    --background: linear-gradient(100deg, #4d0488 0%, #7a2fc4 100%) !important;
+.custom-toolbar-clear ion-toolbar {
+    --background: linear-gradient(100deg, #9333ea 0%, #a855f7 100%, #4f46e5 100%) !important;
     --min-height: 64px;
-    --padding-top: 12px;
-    --padding-bottom: 12px;
-    z-index: 100;
-    --z-index: 100;
     position: relative;
     font-family: 'Lobster';
 }
 
-.custom-toolbar .header-collapse-condense-inactive
-{
+.custom-toolbar ion-toolbar {
+    --background: linear-gradient(100deg, #4d0488 0%, #7a2fc4 100%) !important;
+    --min-height: 64px;
+    position: relative;
+    font-family: 'Lobster';
+}
+
+.custom-toolbar .header-collapse-condense-inactive {
     opacity: 0;
 }
+
 /* Estilos para el modal */
 .login-modal {
     --width: auto;
@@ -234,6 +283,7 @@ ion-radio.ios::part(container) {
     border: 2px solid #ddd;
     border-radius: 4px;
 }
+
 ion-item {
     --background: transparent;
     --color: var(--text-primary);
@@ -243,9 +293,11 @@ ion-item {
     --padding-top: 0;
     --padding-bottom: 0;
 }
+
 .radio-checked.ios::part(container) {
     border-color: #6815ec;
 }
+
 .container-switch {
     display: flex;
     margin: 0;
@@ -470,7 +522,7 @@ ion-item {
     z-index: 10000;
     display: none;
     flex-direction: column;
-   /*  background: rgba(0, 0, 0, 0.9); */
+    /*  background: rgba(0, 0, 0, 0.9); */
 }
 
 .scanner-header {

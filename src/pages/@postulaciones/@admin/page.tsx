@@ -4,7 +4,8 @@ import { useGetLandingMutation } from "@/hooks/reducers/api_landing";
 import DynamicTable from "@/components/table";
 import { loadDataFromAPI } from "@/utils/data/load-data";
 import { PageProps } from "@/utils/types/page";
-import { IonContent, IonHeader, IonToolbar, IonTitle } from "@ionic/react";
+import { IonContent, IonHeader, IonToolbar, IonTitle, IonBackButton } from "@ionic/react";
+import { IconLiz } from "@/template/icon-liz";
 
 export default function AdminPostulaciones({ onScroll }: PageProps) {
     const [data, setData] = useState<Record<string, any>[]>([]);
@@ -39,17 +40,17 @@ export default function AdminPostulaciones({ onScroll }: PageProps) {
             }}
         ><IonHeader
             collapse="condense"
-            className="custom-toolbar z-50 -top-16"
+            className="custom-toolbar-clear h-fit absolute -top-0"
         >
                 <IonToolbar>
-
-                    <IonTitle
-                        size="large"
-                        className="text-white text-5xl p-2 font-medium h-full">
-                        Liz
-                    </IonTitle>
+                    <a className="cursor-pointer" href="/">
+                        <IconLiz fill={onScroll ? "#FFF" : "#7927F5"} width={55} />
+                    </a>
                 </IonToolbar>
             </IonHeader>
+            <section className="flex my-4">
+                <IonBackButton color={"tertiary"} text={"Regresar"} defaultHref="/" />
+            </section>
             <div className="w-4/5 m-auto mt-10">
                 {error ? (
                     <label className="text-red-600 text-xl">

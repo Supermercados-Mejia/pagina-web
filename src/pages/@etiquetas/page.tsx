@@ -28,6 +28,7 @@ import { format, addDays, addMonths, isValid, parseISO } from "date-fns"
 import { es } from "date-fns/locale"
 import { Field } from "@/utils/types/interfaces"
 import { openModalReducer, closeModalReducer } from "@/hooks/reducers/drop-down"
+import { IonBackButton } from "@ionic/react"
 
 // Interfaces
 interface Producto {
@@ -677,7 +678,9 @@ export default function GeneracionEtiquetas() {
                     Crea y personaliza etiquetas con código de barras para tus productos
                 </p>
             </header>
-
+            <section className="flex my-4">
+                <IonBackButton color={"tertiary"} text={"Regresar"} defaultHref="/" />
+            </section>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Panel de control */}
                 <div className="lg:col-span-1">

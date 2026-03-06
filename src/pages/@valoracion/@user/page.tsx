@@ -1,11 +1,12 @@
 import MainForm from "@/components/form/main-form";
 import { PageProps } from "@/utils/types/page";
-import { IonContent, IonHeader, IonToolbar, IonTitle, IonLabel, IonSegment, IonSegmentButton } from "@ionic/react";
+import { IonContent, IonHeader, IonToolbar, IonTitle, IonLabel, IonSegment, IonSegmentButton, IonBackButton } from "@ionic/react";
 
 import Footer from "@/template/footer";
 import { ValoracionesField } from "../utils/valorraciones-field";
 import { useState } from "react";
 import { EvaluacionField } from "../utils/evaluacion-field";
+import { IconLiz } from "@/template/icon-liz";
 
 
 export default function UserValoraciones({ onScroll }: PageProps) {
@@ -21,18 +22,18 @@ export default function UserValoraciones({ onScroll }: PageProps) {
             }}
         ><IonHeader
             collapse="condense"
-            className="custom-toolbar z-50 -top-16"
+            className="custom-toolbar-clear h-fit absolute -top-0"
         >
                 <IonToolbar>
-
-                    <IonTitle
-                        size="large"
-                        className="text-white text-5xl p-2 font-medium h-full">
-                        Liz
-                    </IonTitle>
+                    <a className="cursor-pointer" href="/">
+                        <IconLiz fill={onScroll ? "#FFF" : "#7927F5"} width={55} />
+                    </a>
                 </IonToolbar>
             </IonHeader>
-            <main className="w-full min-h-[75vh] px-4 sm:px-6 lg:px-8 pb-7">
+            <section className="flex my-4">
+                <IonBackButton color={"tertiary"} text={"Regresar"} defaultHref="/" />
+            </section>
+            <main className="w-full min-h-[75vh] px-4 sm:px-6 lg:px-8 py-7">
                 <div className="max-w-2xl mx-auto">
                     <header className="text-center mb-8">
                         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">{selectedType === "valoracion" ? 'Valoracion' : "Evaluacion"}</h1>
