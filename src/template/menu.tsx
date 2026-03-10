@@ -91,7 +91,7 @@ const AppMenu = () => {
                                 >
                                     Iniciar Sesión
                                 </IonButton>
-                                <IonButton
+                                {/* <IonButton
                                     color="light"
                                     expand="block"
                                     fill="outline"
@@ -99,7 +99,7 @@ const AppMenu = () => {
                                     className="font-semibold"
                                 >
                                     Registrarse
-                                </IonButton>
+                                </IonButton> */}
                             </div>
                         )}
                     </IonToolbar>
@@ -139,7 +139,7 @@ const AppMenu = () => {
                         <div className="p-4 text-sm text-gray-500">
                             <p>
                                 Ingresa a nuestra pagina de compras en linea:
-                                <a href="https://dev.mercadosliz.com" className="text-primary-600" target="_blank">
+                                <a href="https://dev.mercadosliz.com/productos" className="text-primary-600" target="_blank">
                                     PickUp
                                 </a>
                             </p>

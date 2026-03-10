@@ -1,7 +1,7 @@
 import { BentoGrid, BentoItem } from "@/components/bento-grid";
 import { PageProps } from "@/utils/types/page";
 import { IonButton, IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonTitle, IonToolbar } from "@ionic/react";
-import { ArrowRightIcon, BadgeDollarSign, Blocks, HistoryIcon, LocateIcon, Newspaper, PackageSearch } from "lucide-react";
+import { ArrowRightIcon, BadgeDollarSign, Blocks, HistoryIcon, LocateIcon, MoveRight, Newspaper, PackageSearch, ShoppingCart } from "lucide-react";
 import { empresas } from "./data/empresas";
 import { OffertCard } from "./components/cards";
 import { servicios } from "./data/servicios";
@@ -123,26 +123,24 @@ const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
                             </ul>
                         </BentoItem>
 
-                        {/* Sección Promociones */}
+                        {/* Sección Únete */}
                         <BentoItem
                             rowSpan={3}
-                            title="Promociones"
-                            description="Ofertas especiales esta semana"
-                            icon={<BadgeDollarSign className="h-6 w-6 text-green-500" />}
+                            className="h-full"
+                            title="Únete al equipo"
+                            description="Vacantes disponibles"
+                            icon={<Blocks className="h-6 w-6 text-purple-500" />}
                         >
-                            <div className="p-4">
-                                <div className="rounded-xl border p-4 hover:shadow-md">
-                                    <img src="/merc1.jpg" alt="Oferta" className="mb-2 h-32 w-full object-cover" />
-                                    <div className="text-center">
-                                        <p className="font-bold text-purple-600">-30%</p>
-                                        <p className="text-lg font-medium">$69.99</p>
-                                        <button className="mt-2 text-purple-600 hover:underline" onClick={() => history.push('/promociones')}>
-                                            Ver oferta <ArrowRightIcon className="ml-1 inline" />
-                                        </button>
-                                    </div>
-                                </div>
+                            <div className="flex flex-col p-4 text-center mt-[50%]">
+                                <button className="mb-2 block text-purple-600 hover:underline" onClick={() => history.push('/vacantes')}>
+                                    Ver vacantes <ArrowRightIcon className="ml-1 inline" />
+                                </button>
+                                <button className="text-purple-600 hover:underline" onClick={() => history.push('/postulaciones')}>
+                                    Postulate <ArrowRightIcon className="ml-1 inline" />
+                                </button>
                             </div>
                         </BentoItem>
+
 
                         {/* Sección Sucursales */}
                         <BentoItem
@@ -175,21 +173,20 @@ const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
                             </div>
                         </BentoItem>
 
-                        {/* Sección Únete */}
+
                         <BentoItem
                             rowSpan={3}
-                            title="Únete al equipo"
-                            description="Vacantes disponibles"
-                            icon={<Blocks className="h-6 w-6 text-purple-500" />}
+                            title="Promociones"
+                            description="Ofertas especiales esta semana"
+                            icon={<BadgeDollarSign className="h-6 w-6 text-green-500" />}
                         >
-                            <div className="flex flex-col p-4 text-center">
-                                <button className="mb-2 block text-purple-600 hover:underline" onClick={() => history.push('/vacantes')}>
-                                    Ver vacantes <ArrowRightIcon className="ml-1 inline" />
-                                </button>
-                                <button className="text-purple-600 hover:underline" onClick={() => history.push('/postulaciones')}>
-                                    Postulate <ArrowRightIcon className="ml-1 inline" />
-                                </button>
-                            </div>
+                            <a
+                                href="/promociones"
+                                className="group  bg-yellow-400 hover:bg-yellow-300 text-purple-900 font-bold px-8 py-4 rounded-2xl text-lg shadow-2xl shadow-yellow-500/25 transition-all hover:scale-105 hover:shadow-yellow-500/40 flex items-center gap-3 min-w-[200px] justify-center"
+                            >
+                                Ver oferta
+                                <MoveRight className="size-5 group-hover:translate-x-1 transition-transform" />
+                            </a>
                         </BentoItem>
                     </BentoGrid>
                 </section>
