@@ -1,4 +1,4 @@
-import Footer from "@/template/footer";
+/* import Footer from "@/template/footer";
 import { PageProps } from "@/utils/types/page";
 import { IonContent, IonHeader, IonToolbar, IonTitle, IonSegment, IonLabel, IonSegmentButton, IonBackButton, IonSpinner } from "@ionic/react";
 import { vacantes } from "../data/example";
@@ -102,6 +102,44 @@ export default function VacantesUser({ onScroll }: PageProps) {
                             </ul>
                         )}
                     </section>
+                </div>
+            </main>
+            <Footer />
+        </IonContent>
+    );
+} */
+import Footer from "@/template/footer";
+import { PageProps } from "@/utils/types/page";
+import { IonContent, IonHeader, IonToolbar, IonBackButton } from "@ionic/react";
+import { IconLiz } from "@/template/icon-liz";
+
+export default function VacantesUser({ onScroll }: PageProps) {
+    return (
+        <IonContent
+            fullscreen
+            scrollEvents
+            onIonScroll={(e) => {
+                const isScrolled = e.detail.scrollTop > 20;
+                onScroll?.(isScrolled);
+            }}
+        >
+            <IonHeader
+                collapse="condense"
+                className="custom-toolbar-clear h-fit absolute -top-0"
+            >
+                <IonToolbar>
+                    <a className="cursor-pointer" href="/">
+                        <IconLiz fill={onScroll ? "#FFF" : "#7927F5"} width={55} />
+                    </a>
+                </IonToolbar>
+            </IonHeader>
+            <section className="flex my-4">
+                <IonBackButton color={"tertiary"} text={"Regresar"} defaultHref="/" />
+            </section>
+            <main className="w-full min-h-[77vh] px-4 sm:px-6 lg:px-8 py-8 flex items-center justify-center">
+                <div className="text-center">
+                    <h2 className="text-3xl font-bold text-gray-700">Ventana en proceso</h2>
+                    <p className="text-gray-500 mt-2">Esta sección está siendo actualizada.</p>
                 </div>
             </main>
             <Footer />
