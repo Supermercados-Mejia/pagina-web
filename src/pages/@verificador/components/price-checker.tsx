@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { IonItem, IonLabel, IonList, IonSpinner, IonSelect, IonSelectOption, IonProgressBar } from "@ionic/react";
 import { ScanBarcode, Search, ShoppingBasket } from "lucide-react";
 import { Product } from "@/utils/data/example-data";
-import { useGetArticulosQuery } from "@/hooks/reducers/api_int";
+import { useGetWithFiltersGeneralInIntelisisMutation } from "@/hooks/reducers/api_int";
 
 type Sucursal = {
     id: string;
@@ -21,17 +21,12 @@ const sucursales: Sucursal[] = [
 const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
     ({ className = "", ...props }, ref: any) => {
 
-        // Combinamos las refs (la recibida y la local)
         const combinedRef = useCallback(
             (element: HTMLInputElement) => {
-                // Asignamos a la ref local
                 (ref as React.MutableRefObject<HTMLInputElement | null>).current = element;
-
-                // Si la ref recibida es una función, la llamamos
                 if (typeof ref === "function") {
                     ref(element);
                 } else if (ref) {
-                    // Si es un objeto ref mutable, asignamos
                     (ref as React.MutableRefObject<HTMLInputElement | null>).current = element;
                 }
             },
@@ -40,7 +35,6 @@ const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLI
 
         useEffect(() => {
             if (!ref) return;
-            // Forzar el foco inicial usando la ref local
             if (ref.current) {
                 ref.current.focus();
             }
@@ -56,12 +50,13 @@ const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLI
         );
     }
 );
+
 const handleFocusLoss = (ref: React.RefObject<HTMLInputElement>) => {
     if (ref.current) {
         ref.current.focus();
     }
 };
-const PAGE_SIZE = 5;
+
 const COOLDOWN_TIME = 5000;
 const DEBOUNCE_TIME = 500;
 
@@ -76,12 +71,16 @@ function PriceChecker() {
     const timeoutRef = useRef<NodeJS.Timeout>(null);
     const inputValueRef = useRef<NodeJS.Timeout>(null);
 
+    // Mutación para obtener datos
+    const [getData, { isLoading }] = useGetWithFiltersGeneralInIntelisisMutation();
+    const [fetchedItems, setFetchedItems] = useState<any[]>([]);
+
     const resetStates = () => {
         setDisplayData([]);
         setInputValue("");
-        //setSelectedSucursal(sucursales[2].id);
         setProductNotFound(false);
         setProgress(0);
+        setFetchedItems([]);
     };
 
     const resetCooldownTimer = () => {
@@ -89,18 +88,36 @@ function PriceChecker() {
         timeoutRef.current = setTimeout(resetStates, COOLDOWN_TIME);
     };
 
-    const { data, isLoading } = useGetArticulosQuery(
-        {
-            pageSize: PAGE_SIZE,
-            page: 1,
-            filtro: debouncedInput,
-            listaPrecio: selectedSucursal,
-        },
-        { refetchOnMountOrArgChange: true, skip: debouncedInput.length < 3 }
-    );
+    // Construcción de la consulta similar a la de page.tsx
+    const buildSearchQuery = useCallback((lista: string) => {
+        return `
+            art
+            INNER JOIN ListaPreciosDUnidad AS lpu
+                ON art.Articulo = lpu.Articulo
+                AND lpu.Lista = '${lista}'
+                AND lpu.Precio > 0
+            LEFT JOIN CB AS cb ON cb.Cuenta = art.Articulo
+            LEFT JOIN (
+                SELECT 
+                    ofrd.Articulo,
+                    ofrd.Unidad,
+                    ofrd.Precio AS OfertaPrecio,
+                    ofrd.Porcentaje,
+                    ofr.FechaA AS OfertaFechaHasta
+                FROM OfertaD ofrd
+                INNER JOIN Oferta ofr
+                    ON ofr.ID = ofrd.ID
+                    AND ofr.FechaD < GETDATE()
+                    AND ofr.FechaA > GETDATE()
+                    AND ofr.Estatus = 'VIGENTE'
+            ) AS ofr
+                ON ofr.Articulo = art.Articulo
+                AND ofr.Unidad = art.Unidad
+        `;
+    }, []);
 
+    // Efecto para debounce del input
     useEffect(() => {
-        console.log("Input value changed:", inputValue);
         inputValueRef.current = setTimeout(() => {
             setDebouncedInput(inputValue);
         }, DEBOUNCE_TIME);
@@ -110,39 +127,81 @@ function PriceChecker() {
         };
     }, [inputValue]);
 
-    const updateDisplayData = useCallback(() => {
-        if (!data) return;
-        if (data.precios && data.precios.length > 0) {
-            const newProducts = data.precios.slice(-1).map((item: any) => {
-                const oferta = data.ofertas?.find((o: any) => o.articulo === item.cuenta);
-                return {
-                    id: item.codigo,
-                    nombre: item.nombre,
-                    precio: item.precio,
-                    unidad: item.unidad,
-                    oferta: oferta
-                        ? {
-                            precio: parseFloat(oferta.precio),
-                            fechaHasta: new Date(oferta.fechaHasta).toLocaleDateString(),
-                        }
-                        : undefined,
-                };
-            });
-
-            setDisplayData(newProducts);
-            setProductNotFound(false);
-        } else if (inputValue && data.precios) {
-            setProductNotFound(true);
-        }
-        resetCooldownTimer();
-    }, [data, debouncedInput]);
-
+    // Efecto para realizar la búsqueda cuando cambia el input debounced o la sucursal
     useEffect(() => {
-        if (debouncedInput && data) {
-            updateDisplayData();
+        if (debouncedInput.length < 3) {
+            setFetchedItems([]);
+            setDisplayData([]);
+            return;
         }
-    }, [debouncedInput, data, updateDisplayData]);
 
+        const fetchProducts = async () => {
+            try {
+                const result = await getData({
+                    table: buildSearchQuery(selectedSucursal),
+                    pageSize: 1,
+                    page: 1,
+                    filtros: {
+                        Filtros: [
+                            { key: "cb.Codigo", Operator: "=", Value: `${debouncedInput}` }
+                        ],
+                        Selects: [
+                            { key: "cb.Codigo", alias: "codigo" },
+                            { key: "art.Descripcion1", alias: "nombre" },
+                            { key: "lpu.Unidad", alias: "unidad" },
+                            { key: "lpu.Precio", alias: "precio" },
+                            { key: "ofr.OfertaPrecio", alias: "ofertaPrecio" },
+                            { key: "ofr.Porcentaje", alias: "porcentaje" },
+                            { key: "ofr.OfertaFechaHasta", alias: "ofertaFechaHasta" },
+                        ],
+                        Order: [{ Key: "art.Descripcion1", Direction: "ASC" }],
+                    },
+                    signal: undefined,
+                });
+
+                if ('data' in result && result.data?.data) {
+                    setFetchedItems(result.data.data);
+                } else {
+                    setFetchedItems([]);
+                }
+            } catch (error) {
+                console.error("Error fetching products:", error);
+                setFetchedItems([]);
+            }
+        };
+
+        fetchProducts();
+        resetCooldownTimer();
+    }, [debouncedInput, selectedSucursal, getData, buildSearchQuery]);
+
+    // Actualizar displayData cuando se obtienen nuevos items
+    useEffect(() => {
+        if (fetchedItems.length > 0) {
+            // Tomamos el último elemento (como en la implementación original)
+            const lastItem = fetchedItems[fetchedItems.length - 1];
+            const producto: Product = {
+                id: lastItem.codigo,
+                nombre: lastItem.nombre || "Sin nombre",
+                precio: lastItem.precio || 0,
+                unidad: lastItem.unidad || "Unidad",
+                categoria: lastItem.categoria || "Sin categoría",
+                oferta: lastItem.ofertaPrecio ? {
+                    precio: lastItem.Porcentaje ? lastItem.Precio - ((lastItem.Porcentaje / 100) * lastItem.ofertaPrecio) : lastItem.ofertaPrecio,
+                    fechaHasta: lastItem.ofertaFechaHasta
+                        ? new Date(lastItem.ofertaFechaHasta).toLocaleDateString()
+                        : "",
+                } : undefined,
+            };
+            setDisplayData([producto]);
+            setProductNotFound(false);
+        } else if (debouncedInput && fetchedItems.length === 0 && !isLoading) {
+            setProductNotFound(true);
+        } else {
+            setProductNotFound(false);
+        }
+    }, [fetchedItems, debouncedInput, isLoading]);
+
+    // Barra de progreso
     useEffect(() => {
         const interval = setInterval(() => {
             setProgress(prev => prev >= 1 ? 1 : prev + 1 / 100);
@@ -153,9 +212,9 @@ function PriceChecker() {
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = e.target.value;
         setInputValue(newValue);
-
         resetCooldownTimer();
     };
+
     const handleSucursalChange = (e: CustomEvent) => {
         setSelectedSucursal(e.detail.value);
         resetCooldownTimer();

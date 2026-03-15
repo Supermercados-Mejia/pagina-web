@@ -127,6 +127,7 @@ const useOfertas = (categoria: string, listaPrecios: string) => {
                         { key: "art.TipoImpuesto2" },
                         { key: "lpu.Precio" },
                         { key: "ofrd.Precio", alias: "Descuento" },
+                        { key: "ofrd.Porcentaje" },
                         { key: "au.Unidad", alias: "UnidadFactor" },
                         { key: "au.Factor" },
                     ],
@@ -141,6 +142,8 @@ const useOfertas = (categoria: string, listaPrecios: string) => {
             if ('data' in result && result.data) {
                 const apiData: ApiResponse = result.data;
                 if (apiData.data && apiData.data.length > 0) {
+                    console.log(apiData.data);
+
                     const mappedItems: Producto[] = apiData.data.map((item: any) => ({
                         id: `${item.Articulo}-${item.Unidad}`,
                         codigo: item.Codigo || "0000",
@@ -155,7 +158,7 @@ const useOfertas = (categoria: string, listaPrecios: string) => {
                         impuesto2: item.Impuesto2 || 0,
                         tipoImpuesto1: item.TipoImpuesto1 || 0,
                         tipoImpuesto2: item.TipoImpuesto2 || 0,
-                        descuento: item.Descuento || 0,
+                        descuento: item.Porcentaje ? item.Precio - ((item.Porcentaje / 100) * item.Precio) : item.Descuento || 0,
                     }));
                     setTotalRecords(apiData.totalRecords);
                     setItems(prev => currentPage === 1 || isNewCategory ? mappedItems : [...prev, ...mappedItems]);
@@ -320,7 +323,7 @@ const Ofertas: React.FC<PageProps> = ({ onScroll }) => {
                     {/* Botón de Ordenamiento */}
                     <button
                         onClick={toggleSort}
-                        className="flex items-center gap-1 bg-purple-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md px-3 py-1 text-sm font-medium hover:bg-purple-600 dark:hover:bg-gray-700 transition-colors"
+                        className="flex items-center gap-1 bg-purple-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md px-3 py-1 text-sm font-medium hover:bg-purple-200 dark:hover:bg-gray-700 transition-colors"
                     >
                         <span>Precio</span>
                         {sortOrder === 'asc' ? ' ↑' : sortOrder === 'desc' ? ' ↓' : ' ↕'}
