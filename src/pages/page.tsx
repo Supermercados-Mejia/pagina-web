@@ -1,14 +1,13 @@
 import { BentoGrid, BentoItem } from "@/components/bento-grid";
 import { PageProps } from "@/utils/types/page";
 import { IonButton, IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonTitle, IonToolbar } from "@ionic/react";
-import { ArrowRightIcon, BadgeDollarSign, Blocks, HistoryIcon, LocateIcon, MoveRight, Newspaper, PackageSearch, ShoppingCart } from "lucide-react";
+import { ArrowRightIcon, BadgeDollarSign, BellRing, HistoryIcon, LocateIcon, MoveRight, Newspaper, PackageSearch, ShoppingCart } from "lucide-react";
 import { empresas } from "./data/empresas";
 import { OffertCard } from "./components/cards";
 import { servicios } from "./data/servicios";
 import Sucursales from "./components/sucursales";
 import { socialLinks } from "./data/enlaces";
 import { cn } from "@/utils/functions/cn";
-import { chevronDown } from "ionicons/icons";
 import Footer from "@/template/footer";
 import { useHistory } from "react-router-dom";
 import { IconLiz } from "@/template/icon-liz";
@@ -66,25 +65,39 @@ const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
                 })}
             </ul>
             <div className="lg:mb-16 mb-36 max-w-6xl m-auto">
+
                 <section
                     className="-mt-10">
                     <BentoGrid cols={3}>
-                        {/* Sección Nuestra Historia */}
+                        {/* Area Oferta y Pickup */}
                         <BentoItem
-                            rowSpan={3}
-                            colSpan={2}
-                            title="Nuestra historia"
-                            description="Conoce como empezó nuestra historia y como hemos crecido..."
-                            icon={<HistoryIcon className="h-6 w-6 text-primary" />}
+                            rowSpan={1}
+                            title="Promociones"
+                            description="Ofertas especiales esta semana"
+                            icon={<BadgeDollarSign className="h-6 w-6 text-green-500" />}
                         >
-                            <div className="relative h-[32vh]">
-                                <div className="float-right -right-4 h-[30vh] md:w-[70%] rounded-s-full inset-0 bg-[#f2f2f7]">
-                                    <img src="/historia.png" className="h-full w-full object-cover rounded-s-lg shadow-md" />
-                                </div>
-                                <a href="/historia" className="absolute bottom-0 m-4 inline-flex items-center text-purple-600">
-                                    Ver más <ArrowRightIcon />
-                                </a>
-                            </div>
+                            <a
+                                href="/promociones"
+                                className="group  bg-yellow-400 hover:bg-yellow-300 text-purple-900 font-bold px-8 py-4 rounded-2xl text-lg shadow-2xl shadow-yellow-500/25 transition-all hover:scale-105 hover:shadow-yellow-500/40 flex items-center gap-3 min-w-[200px] justify-center"
+                            >
+                                Ver oferta
+                                <MoveRight className="size-5 group-hover:translate-x-1 transition-transform" />
+                            </a>
+                        </BentoItem>
+
+                        <BentoItem
+                            rowSpan={0}
+                            title="Servicio Pick up "
+                            description="Haz tu pedido en línea y recogerlo en la tienda"
+                            icon={<ShoppingCart className="h-6 w-6 text-purple-600" />}
+                        >
+                            <a
+                                href="https://dev.mercadosliz.com/home"
+                                className="group  bg-purple-300 hover:bg-purple-300 text-purple-900 font-bold px-8 py-4 rounded-2xl text-lg shadow-2xl shadow-purple-500/25 transition-all hover:scale-105 hover:shadow-purple-500/40 flex items-center gap-3 min-w-[200px] justify-center"
+                            >
+                                Pick up
+                                <MoveRight className="size-5 group-hover:translate-x-1 transition-transform" />
+                            </a>
                         </BentoItem>
 
                         {/* Sección Servicios */}
@@ -100,12 +113,12 @@ const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
                                 {servicios.map((servicio, index) => (
                                     <li
                                         key={index}
-                                        className="group cursor-pointer flex items-start gap-4 rounded-xl border border-gray-100 bg-white p-2 transition-all hover:border-purple-100 hover:bg-purple-50"
+                                        className=" flex gap-4 rounded-xl border border-gray-100 bg-white p-2 transition-all hover:border-purple-100 "
                                     >
                                         {servicio.icon && (
                                             <div
                                                 className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-purple-600 transition-colors"
-                                                aria-hidden="true">
+                                                /* aria-hidden="true" */>
                                                 <servicio.icon className="h-6 w-6" />
                                             </div>
                                         )}
@@ -123,25 +136,6 @@ const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
                             </ul>
                         </BentoItem>
 
-                        {/* Sección Únete */}
-                        <BentoItem
-                            rowSpan={3}
-                            className="h-full"
-                            title="Únete al equipo"
-                            description="Vacantes disponibles"
-                            icon={<Blocks className="h-6 w-6 text-purple-500" />}
-                        >
-                            <div className="flex flex-col p-4 text-center mt-[50%]">
-                                <button className="mb-2 block text-purple-600 hover:underline" onClick={() => history.push('/vacantes')}>
-                                    Ver vacantes <ArrowRightIcon className="ml-1 inline" />
-                                </button>
-                                <button className="text-purple-600 hover:underline" onClick={() => history.push('/postulaciones')}>
-                                    Postulate <ArrowRightIcon className="ml-1 inline" />
-                                </button>
-                            </div>
-                        </BentoItem>
-
-
                         {/* Sección Sucursales */}
                         <BentoItem
                             rowSpan={3}
@@ -149,14 +143,32 @@ const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
                             title="Sucursales"
                             description="Encuéntranos en estas ubicaciones"
                             icon={<LocateIcon className="h-6 w-6 text-orange-500" />}
-                        >
+                        >  
                             <Sucursales />
+                        </BentoItem>
+
+                        {/* Sección Nuestra Historia */}
+                        <BentoItem
+                            rowSpan={3}
+                            colSpan={2}
+                            title="Nuestra historia"
+                            description="Conoce como empezó nuestra historia"
+                            icon={<HistoryIcon className="h-6 w-6 text-primary" />}
+                        >
+                            <div className="overflow-hidden rounded-s-lg shadow-md group">
+                                <img
+                                    src="/historia.png"
+                                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                />
+
+                            </div>
+                            <a href="/historia" className="absolute bottom-0 m-4 inline-flex items-center text-purple-600"> Ver más <ArrowRightIcon /> </a>
                         </BentoItem>
 
                         {/* Sección Newsletter */}
                         <BentoItem
-                            rowSpan={3}
-                            colSpan={2}
+                            rowSpan={1}
+                            colSpan={1}
                             title="Mantente informado"
                             description="Suscríbete a nuestras novedades"
                             icon={<Newspaper className="h-6 w-6 text-red-500" />}
@@ -168,26 +180,11 @@ const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
                                     className="mb-3 w-full rounded-lg border p-3"
                                 />
                                 <button className="text-purple-600 hover:underline">
-                                    Suscribir <ArrowRightIcon className="ml-1 inline" />
+                                    <BellRing className="ml-1 inline" />  Suscribirme
                                 </button>
                             </div>
                         </BentoItem>
 
-
-                        <BentoItem
-                            rowSpan={3}
-                            title="Promociones"
-                            description="Ofertas especiales esta semana"
-                            icon={<BadgeDollarSign className="h-6 w-6 text-green-500" />}
-                        >
-                            <a
-                                href="/promociones"
-                                className="group  bg-yellow-400 hover:bg-yellow-300 text-purple-900 font-bold px-8 py-4 rounded-2xl text-lg shadow-2xl shadow-yellow-500/25 transition-all hover:scale-105 hover:shadow-yellow-500/40 flex items-center gap-3 min-w-[200px] justify-center"
-                            >
-                                Ver oferta
-                                <MoveRight className="size-5 group-hover:translate-x-1 transition-transform" />
-                            </a>
-                        </BentoItem>
                     </BentoGrid>
                 </section>
             </div>
