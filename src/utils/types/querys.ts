@@ -27,7 +27,7 @@ export interface formatLoadDate {
       {
         Key: "";
         Alias: "";
-      }
+      },
     ];
     Order?: orderBy[];
   };
