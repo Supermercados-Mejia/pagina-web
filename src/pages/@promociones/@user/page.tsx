@@ -35,9 +35,8 @@ export const sucursalesfind: Sucursal[]
 
 // Claves para localStorage
 const SUCURSAL_KEY = 'sucursal_seleccionada';
-const LISTA_PRECIOS_KEY = 'lista_precios'; // Opcional, se deriva de la sucursal
+const LISTA_PRECIOS_KEY = 'lista_precios';
 
-// Hook personalizado para manejar la sucursal
 const useSucursal = () => {
     const [sucursal, setSucursal] = useState<Sucursal>(() => {
         try {
@@ -47,7 +46,6 @@ const useSucursal = () => {
                 if (found) return found;
             }
         } catch { }
-        // Valor por defecto: la primera sucursal
         return sucursalesfind[0];
     });
 
@@ -56,7 +54,6 @@ const useSucursal = () => {
         if (nueva) {
             setSucursal(nueva);
             setLocalStorageItem(SUCURSAL_KEY, nueva.nombre);
-            // También guardamos la lista por separado si se necesita en otros lugares
             setLocalStorageItem(LISTA_PRECIOS_KEY, nueva.precio);
         }
     }, []);
@@ -64,10 +61,8 @@ const useSucursal = () => {
     return { sucursal, cambiarSucursal };
 };
 
-// Hook para cargar ofertas (ahora recibe la lista de precios como parámetro)
 const useOfertas = (categoria: string, listaPrecios: string) => {
     const [getData, { isLoading }] = useGetWithFiltersGeneralInIntelisisMutation();
-
     const [items, setItems] = useState<Producto[]>([]);
     const [hasMore, setHasMore] = useState(true);
     const [totalRecords, setTotalRecords] = useState(1);
@@ -78,7 +73,6 @@ const useOfertas = (categoria: string, listaPrecios: string) => {
     const currentCategoriaRef = useRef(categoria);
     const currentListaRef = useRef(listaPrecios);
 
-    // Construcción de la tabla SQL con la lista actual
     const buildTableQuery = useCallback((lista: string, cat: string) => {
         return `
             art
@@ -108,13 +102,10 @@ const useOfertas = (categoria: string, listaPrecios: string) => {
         `;
     }, []);
 
-    // Función para cargar ofertas
     const loadOfertas = useCallback(async (currentPage: number, isNewCategory: boolean = false) => {
         if (isFetching) return;
-
         setIsFetching(true);
         setError(null);
-
         try {
             const result = await getData({
                 table: buildTableQuery(listaPrecios, categoria),
@@ -140,11 +131,7 @@ const useOfertas = (categoria: string, listaPrecios: string) => {
                         { key: "au.Factor" },
                     ],
                     Agregaciones: [
-                        {
-                            Key: "ad.DispMenosApartado",
-                            Operation: "SUM",
-                            Alias: "Cantidad",
-                        },
+                        { Key: "ad.DispMenosApartado", Operation: "SUM", Alias: "Cantidad" },
                     ],
                     Order: [{ Key: "art.Descripcion1", Direction: "DESC" }],
                 },
@@ -153,7 +140,6 @@ const useOfertas = (categoria: string, listaPrecios: string) => {
 
             if ('data' in result && result.data) {
                 const apiData: ApiResponse = result.data;
-
                 if (apiData.data && apiData.data.length > 0) {
                     const mappedItems: Producto[] = apiData.data.map((item: any) => ({
                         id: `${item.Articulo}-${item.Unidad}`,
@@ -171,7 +157,6 @@ const useOfertas = (categoria: string, listaPrecios: string) => {
                         tipoImpuesto2: item.TipoImpuesto2 || 0,
                         descuento: item.Descuento || 0,
                     }));
-
                     setTotalRecords(apiData.totalRecords);
                     setItems(prev => currentPage === 1 || isNewCategory ? mappedItems : [...prev, ...mappedItems]);
                     setHasMore(currentPage < apiData.totalPages);
@@ -180,7 +165,6 @@ const useOfertas = (categoria: string, listaPrecios: string) => {
                 }
             }
         } catch (err) {
-            console.error("Error al cargar ofertas:", err);
             setError("Ocurrió un error al cargar los datos");
             setHasMore(false);
         } finally {
@@ -188,7 +172,6 @@ const useOfertas = (categoria: string, listaPrecios: string) => {
         }
     }, [categoria, listaPrecios, getData, buildTableQuery]);
 
-    // Resetear cuando cambia la categoría o la lista de precios
     useEffect(() => {
         if (currentCategoriaRef.current !== categoria || currentListaRef.current !== listaPrecios) {
             setItems([]);
@@ -200,12 +183,10 @@ const useOfertas = (categoria: string, listaPrecios: string) => {
         }
     }, [categoria, listaPrecios, loadOfertas]);
 
-    // Carga inicial
     useEffect(() => {
         loadOfertas(1);
     }, []);
 
-    // Cargar más cuando cambia la página
     useEffect(() => {
         if (page > 1) {
             loadOfertas(page);
@@ -219,13 +200,7 @@ const useOfertas = (categoria: string, listaPrecios: string) => {
     }, [isFetching, hasMore]);
 
     return {
-        items,
-        hasMore,
-        totalRecords,
-        isLoading: isLoading || isFetching,
-        error,
-        loadMore,
-        reset: () => {
+        items, hasMore, totalRecords, isLoading: isLoading || isFetching, error, loadMore, reset: () => {
             setItems([]);
             setPage(1);
             setHasMore(true);
@@ -268,17 +243,21 @@ const Ofertas: React.FC<PageProps> = ({ onScroll }) => {
 
     const { sucursal, cambiarSucursal } = useSucursal();
     const [activeSection, setActiveSection] = useState<string | null>(null);
-    const { favorites, count: favoriteCount, refresh: refreshFavorites } = useFavorites();
+    const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | null>(null);
+    const { favorites, refresh: refreshFavorites } = useFavorites();
 
-    // Pasamos la lista de precios de la sucursal seleccionada al hook de ofertas
-    const { items: ofertasItems, hasMore, totalRecords, isLoading, error, loadMore, reset } = useOfertas(categoria, sucursal.precio);
+    const { items: ofertasItems, hasMore, isLoading, error, loadMore, reset } = useOfertas(categoria, sucursal.precio);
 
-    const displayedItems = activeSection === 'favoritos' ? favorites : ofertasItems;
+    // Lógica de ordenamiento aplicada a los items mostrados
+    const baseItems = activeSection === 'favoritos' ? favorites : ofertasItems;
+    const displayedItems = [...baseItems].sort((a, b) => {
+        if (!sortOrder) return 0;
+        return sortOrder === 'asc' ? a.precio - b.precio : b.precio - a.precio;
+    });
 
     const handleSectionChange = useCallback((section: string) => {
         const newSection = activeSection === section ? null : section;
         setActiveSection(newSection);
-
         if (newSection === 'favoritos') {
             refreshFavorites();
         } else if (activeSection === 'favoritos') {
@@ -298,10 +277,13 @@ const Ofertas: React.FC<PageProps> = ({ onScroll }) => {
 
     const handleSucursalChange = (nombre: string) => {
         cambiarSucursal(nombre);
-        // Al cambiar sucursal, reiniciamos la vista de ofertas (si no estamos en favoritos)
         if (activeSection !== 'favoritos') {
             reset();
         }
+    };
+
+    const toggleSort = () => {
+        setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
     };
 
     return (
@@ -324,18 +306,25 @@ const Ofertas: React.FC<PageProps> = ({ onScroll }) => {
                 <IonBackButton color={"tertiary"} text={"Regresar"} defaultHref="/" />
             </section>
             <section className="px-4 py-4 max-w-6xl mx-auto">
-                {/* Barra superior con selector de sucursal y filtros */}
                 <section className="sticky top-2 flex flex-wrap items-center gap-2 z-50 bg-white/70 dark:bg-black/70 py-2 px-2 my-4 rounded-lg backdrop-blur-md border border-gray-200 dark:border-gray-700">
-                    {/* Selector de sucursal */}
                     <select
                         value={sucursal.nombre}
                         onChange={(e) => handleSucursalChange(e.target.value)}
                         className="bg-transparent border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
                     >
                         {sucursalesfind.map(s => (
-                            <option key={s.nombre} value={s.precio}>{s.nombre}</option>
+                            <option key={s.nombre} value={s.nombre}>{s.nombre}</option>
                         ))}
                     </select>
+
+                    {/* Botón de Ordenamiento */}
+                    <button
+                        onClick={toggleSort}
+                        className="flex items-center gap-1 bg-purple-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md px-3 py-1 text-sm font-medium hover:bg-purple-600 dark:hover:bg-gray-700 transition-colors"
+                    >
+                        <span>Precio</span>
+                        {sortOrder === 'asc' ? ' ↑' : sortOrder === 'desc' ? ' ↓' : ' ↕'}
+                    </button>
                 </section>
 
                 {error && (
