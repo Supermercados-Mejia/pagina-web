@@ -1,6 +1,6 @@
 import { BentoGrid, BentoItem } from "@/components/bento-grid";
 import { PageProps } from "@/utils/types/page";
-import { IonButton, IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonTitle, IonToolbar } from "@ionic/react";
+import { IonButton, IonContent,  IonHeader, IonIcon,IonToolbar } from "@ionic/react";
 import { ArrowRightIcon, BadgeDollarSign, BellRing, HistoryIcon, LocateIcon, MoveRight, Newspaper, PackageSearch, ShoppingCart } from "lucide-react";
 import { empresas } from "./data/empresas";
 import { OffertCard } from "./components/cards";
@@ -11,9 +11,46 @@ import { cn } from "@/utils/functions/cn";
 import Footer from "@/template/footer";
 import { useHistory } from "react-router-dom";
 import { IconLiz } from "@/template/icon-liz";
+import { useManagmentWeb } from "@/hooks/classes/api-inicial";
+import { RequestPayload } from "@/hooks/classes/api";
+import { useEffect, useState } from "react";
 
+export interface TableData {
+    [key: string]: any;
+}
 const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
     const duplicatedItems = [...empresas, ...empresas];
+    const manager = useManagmentWeb();
+
+    const [currentPage, setCurrentPage] = useState(1)
+    const [pageSize, setPageSize] = useState(10)
+
+    const [redes, setRedes] = useState<TableData[]>([])
+
+    async function getDataWeb() {
+        const payload: RequestPayload = {
+            table: "redes_sociales",
+            filtros: {
+                selects: [{ Key: "url" }, { Key: "icon" }],
+            },
+            page: currentPage,
+            pageSize: pageSize,
+        };
+        const { promise } = manager.execute(payload);
+        const response = await promise;
+
+        console.log("Respuesta de getDataWeb:", response);
+        if (response.error) {
+            console.error("Error en getDataWeb:", response.error);
+        } else {
+
+            setRedes(response.data?.data || []);
+        }
+    }
+    useEffect(() => {
+        getDataWeb();
+    }, [pageSize, currentPage])
+    
 
     const history = useHistory();
     return (
@@ -45,25 +82,24 @@ const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
                 </div>
             </section>
 
-            <ul className="md:mt-[64vh] mt-[62vh] mb-28 bottom-0 left-0 z-50 flex w-full items-center justify-center gap-4 p-4 border-t border-t-gray-200">
-
-                {socialLinks.map((link, index) => {
-                    const IconComponent = link.icon;
-                    return (
-                        <li key={index}>
-                            <a href={link.href} target={link.target}>
-                                <IonButton
-                                    shape="round"
-                                    fill="clear"
-                                    color={link.color}
-                                >
-                                    <IonIcon icon={IconComponent} className={cn("h-6 w-6", link.className)} />
-                                </IonButton>
-                            </a>
-                        </li>
-                    );
-                })}
-            </ul>
+                <ul className="md:mt-[64vh] mt-[62vh] mb-28 bottom-0 left-0 z-50 flex w-full items-center justify-center gap-4 p-4 border-t border-t-gray-200">
+                    {socialLinks.map((link, index) => {
+                        const IconComponent = link.icon;
+                        return (
+                            <li key={index}>
+                                <a href={link.href} target={link.target}>
+                                    <IonButton
+                                        shape="round"
+                                        fill="clear"
+                                        color={link.color}
+                                    >
+                                        <IonIcon icon={IconComponent} className={cn("h-6 w-6", link.className)} />
+                                    </IonButton>
+                                </a>
+                            </li>
+                        );
+                    })}
+                </ul>
             <div className="lg:mb-16 mb-36 max-w-6xl m-auto">
 
                 <section
@@ -107,13 +143,13 @@ const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
                             title="Servicios"
                             className="h-full"
                             description="Descubre nuestra variedad de servicios"
-                            icon={<PackageSearch className="h-6 w-6 text-green-500" />}
+                            icon={<PackageSearch className="h-6 w-6 text-green-500 " />}
                         >
-                            <ul className="grid gap-2 md:grid-row-3">
+                            <ul className="grid gap-2 md:grid-row-3 h-full">
                                 {servicios.map((servicio, index) => (
                                     <li
                                         key={index}
-                                        className=" flex gap-4 rounded-xl border border-gray-100 bg-white p-2 transition-all hover:border-purple-100 "
+                                        className="flex gap-4 rounded-xl border border-gray-100 bg-white p-2 transition-all hover:border-purple-100 "
                                     >
                                         {servicio.icon && (
                                             <div
@@ -138,18 +174,18 @@ const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
 
                         {/* Sección Sucursales */}
                         <BentoItem
-                            rowSpan={3}
+                            rowSpan={2}
                             colSpan={2}
                             title="Sucursales"
                             description="Encuéntranos en estas ubicaciones"
                             icon={<LocateIcon className="h-6 w-6 text-orange-500" />}
-                        >  
+                        >
                             <Sucursales />
                         </BentoItem>
 
                         {/* Sección Nuestra Historia */}
                         <BentoItem
-                            rowSpan={3}
+                            rowSpan={2}
                             colSpan={2}
                             title="Nuestra historia"
                             description="Conoce como empezó nuestra historia"
@@ -167,13 +203,14 @@ const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
 
                         {/* Sección Newsletter */}
                         <BentoItem
-                            rowSpan={1}
+                            rowSpan={2}
                             colSpan={1}
                             title="Mantente informado"
                             description="Suscríbete a nuestras novedades"
-                            icon={<Newspaper className="h-6 w-6 text-red-500" />}
+                            icon={<Newspaper className="h-6 w-6 text-red-500 " />}
+                            className="h-full"
                         >
-                            <div className="p-4 text-center">
+                            <div className="p-4 text-center ">
                                 <input
                                     type="email"
                                     placeholder="Tu email"
