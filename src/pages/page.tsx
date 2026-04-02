@@ -1,6 +1,6 @@
 import { BentoGrid, BentoItem } from "@/components/bento-grid";
 import { PageProps } from "@/utils/types/page";
-import { IonButton, IonContent,  IonHeader, IonIcon,IonToolbar } from "@ionic/react";
+import { IonButton, IonContent, IonHeader, IonIcon, IonToolbar } from "@ionic/react";
 import { ArrowRightIcon, BadgeDollarSign, BellRing, HistoryIcon, LocateIcon, MoveRight, Newspaper, PackageSearch, ShoppingCart } from "lucide-react";
 import { empresas } from "./data/empresas";
 import { OffertCard } from "./components/cards";
@@ -28,29 +28,74 @@ const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
     const [redes, setRedes] = useState<TableData[]>([])
 
     async function getDataWeb() {
-        const payload: RequestPayload = {
+        // 1. Obtener el MAX(id) por red_social
+        const payload1: RequestPayload = {
             table: "redes_sociales",
             filtros: {
-                selects: [{ Key: "url" }, { Key: "icon" }],
+                selects: [{ Key: "red_social" }],
+                agregaciones: [{ Key: "id", Operation: "MAX", Alias: "max_id" }],
+                Order: [{ Key: "red_social", Direction: "ASC" }],
             },
             page: currentPage,
             pageSize: pageSize,
         };
-        const { promise } = manager.execute(payload);
-        const response = await promise;
 
-        console.log("Respuesta de getDataWeb:", response);
-        if (response.error) {
-            console.error("Error en getDataWeb:", response.error);
-        } else {
+        const { promise: p1 } = manager.execute(payload1);
+        const res1 = await p1;
 
-            setRedes(response.data?.data || []);
+        if (res1.error) {
+            console.error("Error:", res1.error);
+            return;
         }
+
+        const maxIds: number[] = (res1.data?.data || []).map((item: any) => item.max_id);
+
+        if (!maxIds.length) return;
+
+        // 2. Traer los registros completos filtrando por esos IDs
+        const payload2: RequestPayload = {
+            table: "redes_sociales",
+            filtros: {
+                selects: [
+                    { Key: "id" },
+                    { Key: "red_social" },
+                    { Key: "fecha" },
+                    { Key: "icon" },
+                    { Key: "url" },
+                ],
+
+                Filtros: [{
+                    Key: "id",
+                    Operator: "IN",
+                    Value: `${maxIds.join(",")}`,
+                }],
+
+
+                Order: [{ Key: "id", Direction: "DESC" }],
+            },
+            page: currentPage,
+            pageSize: pageSize,
+        };
+
+        const { promise: p2 } = manager.execute(payload2);
+        const res2 = await p2;
+
+        if (res2.error) {
+            console.error("Error:", res2.error);
+            return;
+        }
+
+        const mappedData = (res2.data?.data || []).map((item: any) => {
+            const link = socialLinks[item.red_social];
+            return { ...link, url: item.url, fecha: item.fecha };
+        });
+
+        setRedes(mappedData);
     }
     useEffect(() => {
         getDataWeb();
     }, [pageSize, currentPage])
-    
+
 
     const history = useHistory();
     return (
@@ -82,24 +127,24 @@ const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
                 </div>
             </section>
 
-                <ul className="md:mt-[64vh] mt-[62vh] mb-28 bottom-0 left-0 z-50 flex w-full items-center justify-center gap-4 p-4 border-t border-t-gray-200">
-                    {socialLinks.map((link, index) => {
-                        const IconComponent = link.icon;
-                        return (
-                            <li key={index}>
-                                <a href={link.href} target={link.target}>
-                                    <IonButton
-                                        shape="round"
-                                        fill="clear"
-                                        color={link.color}
-                                    >
-                                        <IonIcon icon={IconComponent} className={cn("h-6 w-6", link.className)} />
-                                    </IonButton>
-                                </a>
-                            </li>
-                        );
-                    })}
-                </ul>
+            <ul className="md:mt-[64vh] mt-[62vh] mb-28 bottom-0 left-0 z-50 flex w-full items-center justify-center gap-4 p-4 border-t border-t-gray-200">
+                {redes.map((link, index) => {
+                    const IconComponent = link.icon;
+                    return (
+                        <li key={index}>
+                            <a href={link.url} target="_blank" rel="noopener noreferrer">
+                                <IonButton
+                                    shape="round"
+                                    fill="clear"
+                                    color={link.color}
+                                >
+                                    <IonIcon icon ={IconComponent} className={cn("h-6 w-6", link.className)} />
+                                </IonButton> 
+                            </a>
+                        </li>
+                    );
+                })}
+            </ul> 
             <div className="lg:mb-16 mb-36 max-w-6xl m-auto">
 
                 <section

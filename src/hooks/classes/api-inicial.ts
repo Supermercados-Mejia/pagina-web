@@ -3,7 +3,7 @@ import { useRef, useEffect } from "react";
 import { safeCall } from "@/hooks/use-debounce";
 import { v4 as uuidv4 } from "uuid";
 import { ApiResponse } from "@/utils/types/consultas";
-import { useGetWithFiltersMutation } from "../reducers/api";
+import { useGetMasivoMutation } from "../reducers/api";
 import { GetDataFunction, RequestPayload } from "./api";
 
 /**
@@ -74,7 +74,7 @@ export class ManagmentWeb {
 }
 
 export function useManagmentWeb(): ManagmentWeb {
-  const [getData] = useGetWithFiltersMutation();
+  const [getData] = useGetMasivoMutation();
   const managerRef = useRef<ManagmentWeb | null>(null);
 
   if (!managerRef.current) {
