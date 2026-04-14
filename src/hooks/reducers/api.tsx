@@ -93,7 +93,7 @@ export const api = createApi({
                 url: `${url}/consultar/${id}`,
                 method: "GET",
                 signal,
-            }),
+            }), 
             transformErrorResponse: (response: any) => ({
                 status: response.status,
                 message: response.data?.message || "Error fetching data",
@@ -101,13 +101,33 @@ export const api = createApi({
             extraOptions: { maxRetries: 2 },
         }),
         getWithFilters: builder.mutation({
-            query: ({ url, page, pageSize, filtros, signal }) => ({
-                url: `${url}/consultar/filtros`,
+            query: ({ table, page, pageSize, filtros, signal }) => ({
+                url: `v1/consultar/filtros`,
                 method: "POST",
 
                 params: {
                     page,
                     pageSize,
+                    table, // tabla a consultar
+                },
+                body: filtros,
+                signal,
+            }),
+            transformErrorResponse: (response: any) => ({
+                status: response.status,
+                message: response.data?.message || "Error fetching data",
+            }),
+            extraOptions: { maxRetries: 2 },
+        }),
+        getMasivo: builder.mutation({
+            query: ({ table, page, pageSize, filtros, signal }) => ({
+                url: `v2/masivo/consultar`,
+                method: "POST",
+
+                params: {
+                    page,
+                    pageSize,
+                    table, // tabla a consultar
                 },
                 body: filtros,
                 signal,
@@ -266,6 +286,7 @@ export const {
     useGetGeneralQuery,
     useGetPerIdsQuery,
     useGetWithFiltersMutation,
+    useGetMasivoMutation,
     useGetWithFiltersGeneralMutation,
     usePostGeneralMutation,
     usePutMutation,
