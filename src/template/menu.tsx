@@ -13,7 +13,6 @@ import {
     IonItem,
     IonLabel,
     IonButton,
-    IonAvatar,
     IonModal,
     IonButtons,
     useIonAlert,
@@ -63,13 +62,6 @@ const AppMenu = () => {
                     <IonToolbar>
                         {user ? (
                             <div className="p-4 text-center">
-                                {/* <IonAvatar className="mx-auto mb-3">
-                                    <img
-                                        src={user.avatar || "/default-avatar.png"}
-                                        alt="Avatar"
-                                    />
-                                </IonAvatar>
-                                <IonTitle>{user.name}</IonTitle> */}
                                 <IonButton
                                     expand="block"
                                     fill="solid"
@@ -91,15 +83,6 @@ const AppMenu = () => {
                                 >
                                     Iniciar Sesión
                                 </IonButton>
-                                {/* <IonButton
-                                    color="light"
-                                    expand="block"
-                                    fill="outline"
-                                    routerLink="/register"
-                                    className="font-semibold"
-                                >
-                                    Registrarse
-                                </IonButton> */}
                             </div>
                         )}
                     </IonToolbar>

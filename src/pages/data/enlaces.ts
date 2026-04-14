@@ -1,33 +1,54 @@
-import { logoFacebook, logoWhatsapp, mailSharp } from "ionicons/icons";
+import {
+  logoFacebook,
+  logoInstagram,
+  logoTwitter,
+  logoTiktok,
+  logoLinkedin,
+  logoWhatsapp,
+} from "ionicons/icons";
 
 interface socialLinksProps {
-  className?: string;
-  href?: string;
-  description?: string;
-  target?: string;
+  label: string;
   color?: string;
-  icon?: any;
+  icon: string;
+  className: string;
 }
 
-export const socialLinks: socialLinksProps[] = [
-  {
-    href: "https://www.facebook.com/share/1WZv93NVER/",
-    target: "_blank",
-    color: undefined,
+interface socialLinksData {
+  [key: string]: socialLinksProps;
+}
+export const socialLinks: socialLinksData = {
+  facebook: {
+    label: "Facebook",
     icon: logoFacebook,
     className: "text-blue-600",
   },
-  {
-    href: "https://wa.me/526462087706",
-    target: "_blank",
-    color: "success",
+
+  instagram: {
+    label: "Instagram",
+    icon: logoInstagram,
+    className: "text-pink-500",
+  },
+  x: {
+    label: "x",
+    icon: logoTwitter,
+    className: "text-sky-500",
+  },
+
+  tikTok: {
+    label: "TikTok",
+    icon: logoTiktok,
+    className: "text-black",
+  },
+
+  linkedIn: {
+    label: "LinkedIn",
+    icon: logoLinkedin,
+    className: "text-blue-700",
+  },
+  whatsapp: {
+    label: "WhatsApp",
     icon: logoWhatsapp,
     className: "text-green-500",
   },
-  {
-    href: "https://mail.google.com/mail/?view=cm&to=atncliente@mercadosliz.com&su=Consulta%20sobre%20servicio%20y%20más%20información&body=Hola,%20quisiera%20saber%20más%20información%20sobre%20sus%20productos%20y%20servicios%20que%20ofrecen.%0AGracias",
-    target: "_blank",
-    icon: mailSharp,
-    className: "text-purple-800",
-  },
-];
+};
