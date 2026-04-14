@@ -1,9 +1,14 @@
 ;
 import { EnvConfig } from "@/utils/constants/env.config";
-import { getLocalStorageItem, removeFromLocalStorage, setLocalStorageItem } from "@/utils/functions/local-storage";
+import { clearLocalStorage, getLocalStorageItem, removeFromLocalStorage, setLocalStorageItem } from "@/utils/functions/local-storage";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const { api: apiUrl } = EnvConfig();
+
+// Constantes para evitar errores de escritura
+const TOKEN_KEY = "token";
+const USER_ROLE_KEY = "user-role";
+const USER_ID_KEY = "user-id";
 
 export const auth = createApi({
     reducerPath: "auth",
@@ -28,41 +33,40 @@ export const auth = createApi({
             }),
         }),
         postUserLogin: builder.mutation({
-            query: (data) => ({
-                url: "v1/users/login",
+            query: (credentials) => ({
+                url: "Auth/login",
                 method: "POST",
-                body: data,
+                body: credentials,
             }),
-            onQueryStarted: async (_, { queryFulfilled }) => {
+            onQueryStarted: async (_, { queryFulfilled, dispatch }) => {
                 try {
                     const { data: responseData } = await queryFulfilled;
-                    // Verifica si la respuesta contiene un token
+
                     if (responseData.token) {
-                        // Guardar el token en localStorage
-                        setLocalStorageItem("user-role", responseData.role.trimEnd());
-                        setLocalStorageItem("user-id", responseData.userId);
-                        setLocalStorageItem("token", responseData.token);
+                        // Almacenar en localStorage para fácil acceso del cliente
+                        setLocalStorageItem(TOKEN_KEY, responseData.token);
+                        setLocalStorageItem(USER_ROLE_KEY, responseData.rol);
+                        setLocalStorageItem(USER_ID_KEY, responseData.id);
                     }
                 } catch (error) {
-                    console.log("Error al hacer login:", error);
+                    console.error("Error during login:", error);
+                    // Podrías dispatchar una acción de error aquí si es necesario
                 }
             },
         }),
         postLogut: builder.mutation({
-            query: (userId) => ({
-                url: `v1/users/logout`,
+            query: () => ({
+                url: `Auth/logout`,
                 method: "POST",
-                params: { id: userId },
+                responseHandler: (response) => response.text(),
             }),
             onQueryStarted: async (_, { queryFulfilled }) => {
                 try {
                     await queryFulfilled;
-                    // Eliminar todos los datos relacionados con la sesión
-                    removeFromLocalStorage("user-role");
-                    removeFromLocalStorage("user-id");
-                    removeFromLocalStorage("token");
+                    // Limpiar localStorage
+                    clearLocalStorage();
                 } catch (error) {
-                    console.log("Error al hacer logout:", error);
+                    console.error("Error during logout:", error);
                 }
             },
         }),
