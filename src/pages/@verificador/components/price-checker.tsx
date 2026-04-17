@@ -9,13 +9,15 @@ import { useGetWithFiltersGeneralInIntelisisMutation } from "@/hooks/reducers/ap
 type Sucursal = {
     id: string;
     nombre: string;
+    almacen: string;
+    sucursal: string;
 };
 
 const sucursales: Sucursal[] = [
-    { id: "(Precio Lista)", nombre: "Mayoreo" },
-    { id: "(Precio 4)", nombre: "Palmas" },
-    { id: "(Precio 2)", nombre: "Liz" },
-    { id: "(Precio 3)", nombre: "Testerazo" },
+    { id: "(Precio Lista)", nombre: "Mayoreo", almacen: "ALMMAYO", sucursal: "4" },
+    { id: "(Precio 4)", nombre: "Palmas", almacen: "ALMPALM", sucursal: "3" },
+    { id: "(Precio 2)", nombre: "Liz", almacen: "ALMVGPE", sucursal: "1" },
+    { id: "(Precio 3)", nombre: "Testerazo", almacen: "ALMTEST", sucursal: "2" },
 ];
 
 const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
@@ -65,7 +67,7 @@ function PriceChecker() {
     const [displayData, setDisplayData] = useState<Product[]>([]);
     const [inputValue, setInputValue] = useState("");
     const [debouncedInput, setDebouncedInput] = useState("");
-    const [selectedSucursal, setSelectedSucursal] = useState(sucursales[2].id);
+    const [selectedSucursal, setSelectedSucursal] = useState(sucursales[2]);
     const [productNotFound, setProductNotFound] = useState(false);
     const [getProgress, setProgress] = useState(0);
     const timeoutRef = useRef<number>(null);
@@ -89,8 +91,8 @@ function PriceChecker() {
     };
 
     // Construcción de la consulta similar a la de page.tsx
-    const buildSearchQuery = useCallback((lista: string) => {
-        return `art INNER JOIN CB AS cb ON art.Articulo = cb.Cuenta AND cb.Unidad = art.Unidad INNER JOIN ListaPreciosDUnidad AS lpu ON art.Articulo = lpu.Articulo AND art.Unidad = lpu.Unidad AND lpu.Lista = '${lista}' AND lpu.Precio > 0 INNER JOIN ArtUnidad AS au ON art.Articulo = au.Articulo AND lpu.Unidad = au.Unidad INNER JOIN ArtDisponible AS ad on art.Articulo = ad.Articulo AND ad.DispMenosApartado > 0 AND ad.Almacen = 'ALMMAYO' AND (ad.DispMenosApartado / au.Factor) > 0 LEFT JOIN Oferta AS ofr ON ofr.Estatus = 'VIGENTE' AND ofr.FechaD < GETDATE() AND ofr.FechaA > GETDATE() LEFT JOIN OfertaD AS ofrd ON ofr.ID = ofrd.ID AND  ofrd.Articulo = art.Articulo AND ofrd.Unidad = art.Unidad  AND ofrd.Sucursal = '4'  AND ofrd.Precio > 0`;
+    const buildSearchQuery = useCallback((lista: any) => {
+        return `art INNER JOIN ListaPreciosDUnidad AS lpu ON art.Articulo = lpu.Articulo AND lpu.Lista = '${lista.id}' AND lpu.Precio > 0 LEFT JOIN CB AS cb ON cb.Cuenta = art.Articulo LEFT JOIN (SELECT ofrd.Articulo, ofrd.Unidad, ofrd.Precio AS OfertaPrecio, ofrd.Porcentaje, ofr.FechaA AS OfertaFechaHasta FROM OfertaD ofrd INNER JOIN Oferta ofr ON ofr.ID = ofrd.ID AND ofr.FechaD < GETDATE() AND ofr.FechaA > GETDATE() AND ofr.Estatus = 'VIGENTE' ) AS ofr ON ofr.Articulo = art.Articulo AND ofr.Unidad = art.Unidad`;
     }, []);
 
     // Efecto para debounce del input
@@ -127,10 +129,10 @@ function PriceChecker() {
                             { key: "art.Descripcion1" },
                             { key: "lpu.Unidad" },
                             { key: "lpu.Precio"},
-                            { key: "ofrd.Precio", Alias: "Descuento" },
-                            { key: "ofrd.Porcentaje" },
-                            { key: "ofr.FechaA" },
-                        ],
+                            { key: "ofr.OfertaPrecio", alias: "ofertaPrecio" },
+                            { key: "ofr.Porcentaje", alias: "porcentaje" },
+                            { key: "ofr.OfertaFechaHasta", alias: "ofertaFechaHasta" },
+                       ],
                         Order: [{ Key: "Descripcion1", Direction: "ASC" }],
                     },
                     signal: undefined,
@@ -162,10 +164,10 @@ function PriceChecker() {
                 precio: lastItem.Precio || 0,
                 unidad: lastItem.Unidad || "Unidad",
                 categoria: lastItem.Grupo || "Sin categoría",
-                oferta: lastItem.Descuento ? {
-                    precio: lastItem.Porcentaje ? lastItem.Precio - ((lastItem.Porcentaje / 100) * lastItem.Descuento) : lastItem.Descuento,
-                    fechaHasta: lastItem.FechaA
-                        ? new Date(lastItem.FechaA).toLocaleDateString()
+                oferta: lastItem.ofertaPrecio ? {
+                    precio: lastItem.Porcentaje ? lastItem.Precio - ((lastItem.Porcentaje / 100) * lastItem.ofertaPrecio) : lastItem.ofertaPrecio,
+                    fechaHasta: lastItem.ofertaFechaHasta
+                        ? new Date(lastItem.ofertaFechaHasta).toLocaleDateString()
                         : "",
                 } : undefined,
             };
@@ -221,7 +223,7 @@ function PriceChecker() {
                                 interface="popover"
                             >
                                 {sucursales.map((sucursal) => (
-                                    <IonSelectOption key={sucursal.id} className="ml-2" value={sucursal.id}>
+                                    <IonSelectOption key={sucursal.id} className="ml-2" value={sucursal}>
                                         {sucursal.nombre}
                                     </IonSelectOption>
                                 ))}

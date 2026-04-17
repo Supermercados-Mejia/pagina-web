@@ -74,7 +74,7 @@ const useOfertas = (categoria: string, listaPrecios: string) => {
     const currentListaRef = useRef(listaPrecios);
 
     const buildTableQuery = useCallback((lista: string, cat: string) => {
-        return `art INNER JOIN ListaPreciosDUnidad AS lpu ON art.Articulo = lpu.Articulo AND lpu.Lista = '${lista}' AND lpu.Precio > 0 ${cat && cat !== 'TODO' ? `AND art.Grupo = '${cat}'` : ''} INNER JOIN ArtUnidad AS au ON art.Articulo = au.Articulo AND lpu.Unidad = au.Unidad INNER JOIN ArtDisponible AS ad on art.Articulo = ad.Articulo AND ad.DispMenosApartado > 0 AND (ad.DispMenosApartado / au.Factor) > 0 INNER JOIN ( SELECT *,  ROW_NUMBER() OVER (PARTITION BY Articulo, Unidad ORDER BY id DESC) AS rn FROM OfertaD ) AS ofrd ON ofrd.Articulo = art.Articulo AND ofrd.Unidad = art.Unidad  LEFT JOIN Oferta AS ofr ON ofr.ID = ofrd.ID AND ofr.FechaD < GETDATE() AND ofr.FechaA > GETDATE()`;
+        return `art INNER JOIN ListaPreciosDUnidad AS lpu ON art.Articulo = lpu.Articulo AND lpu.Lista = '${lista}' AND lpu.Precio > 0 ${cat && cat !== 'TODO' ? `AND art.Grupo = '${cat}'` : ''} INNER JOIN ArtUnidad AS au ON art.Articulo = au.Articulo AND lpu.Unidad = au.Unidad INNER JOIN ArtDisponible AS ad on art.Articulo = ad.Articulo AND ad.DispMenosApartado > 0 AND (ad.DispMenosApartado / au.Factor) > 0 INNER JOIN ( SELECT *,  ROW_NUMBER() OVER (PARTITION BY Articulo, Unidad ORDER BY id DESC) AS rn FROM OfertaD ) AS ofrd ON ofrd.Articulo = art.Articulo AND ofrd.Unidad = art.Unidad LEFT JOIN Oferta AS ofr ON ofr.ID = ofrd.ID AND ofr.FechaD < GETDATE() AND ofr.FechaA > GETDATE()`;
     }, []);
 
     const loadOfertas = useCallback(async (currentPage: number, isNewCategory: boolean = false) => {
