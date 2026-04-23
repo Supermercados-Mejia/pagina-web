@@ -20,7 +20,7 @@ import React from "react";
 const Pages = {
   Layout: () => import("@/pages/Layout"),
   LayoutVerificador: () => import("@/pages/@verificador/layout"),
-  LayoutPostulaciones: () => import("@/pages/@postulaciones/layout"),
+  /* LayoutPostulaciones: () => import("@/pages/@postulaciones/layout"), */
   LayoutHistoria: () => import("@/pages/@historia/layout"),
   LayoutValoraciones: () => import("@/pages/@valoracion/layout"),
   LayoutVacantes: () => import("@/pages/@vacantes/layout"),
@@ -56,7 +56,7 @@ export const navigationDefault = [
     href: "/promociones/:id" /* los que no cuenten con icono no aparecen en el menu */,
     page: React.lazy(Pages.LayoutPromocionesId),
   },
-  {
+/*   {
     name: "Vacantes",
     href: "/vacantes",
     icon: BookUser,
@@ -67,7 +67,7 @@ export const navigationDefault = [
     href: "/postulaciones",
     icon: Briefcase,
     page: React.lazy(Pages.LayoutPostulaciones),
-  },
+  }, */
   {
     name: "Valoracion",
     href: "/valoracion",
@@ -141,7 +141,7 @@ export const navigationAdmin = [
     icon: Star,
     page: React.lazy(Pages.LayoutValoraciones),
   },
-  {
+ /*  {
     name: "Vacantes",
     href: "/vacantes",
     icon: UserPlus,
@@ -152,7 +152,7 @@ export const navigationAdmin = [
     href: "/postulaciones",
     icon: Briefcase,
     page: React.lazy(Pages.LayoutPostulaciones),
-  },
+  }, */
   {
     name: "Promociones",
     href: "/promociones",
