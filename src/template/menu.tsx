@@ -60,7 +60,8 @@ const AppMenu = () => {
             <IonMenu contentId="main-content" side="end" className="">
                 <IonHeader className="custom-toolbar">
                     <IonToolbar>
-                        {user ? (
+                        <IonTitle className="text-lg font-medium font-sans text-white">Menú</IonTitle>
+                        {/*  {user ? (
                             <div className="p-4 text-center">
                                 <IonButton
                                     expand="block"
@@ -84,7 +85,7 @@ const AppMenu = () => {
                                     Iniciar Sesión
                                 </IonButton>
                             </div>
-                        )}
+                        )} */}
                     </IonToolbar>
                 </IonHeader>
 
@@ -108,17 +109,6 @@ const AppMenu = () => {
                         })}
                     </IonList>
 
-                    {!user && (
-                        <div className="p-4 text-sm text-gray-500">
-                            <p>
-                                ¿Eres proveedor?
-                                <Link to="/proveedor-login" className="text-primary-600">
-                                    Acceso proveedores
-                                </Link>
-                            </p>
-                        </div>
-                    )}
-                    
                 </IonContent>
                 <IonModal
                     isOpen={isOpen}
