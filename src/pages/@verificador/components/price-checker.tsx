@@ -15,8 +15,8 @@ type Sucursal = {
 
 const sucursales: Sucursal[] = [
     { id: "(Precio Lista)", nombre: "Mayoreo", almacen: "ALMMAYO", sucursal: "4" },
-    { id: "(Precio 4)", nombre: "Palmas", almacen: "ALMPALM", sucursal: "3" },
-    { id: "(Precio 2)", nombre: "Liz", almacen: "ALMVGPE", sucursal: "1" },
+    { id: "(Precio 4)", nombre: "Valle de las Palmas", almacen: "ALMPALM", sucursal: "3" },
+    { id: "(Precio 2)", nombre: " Valle de Guadalupe Liz", almacen: "ALMVGPE", sucursal: "1" },
     { id: "(Precio 3)", nombre: "Testerazo", almacen: "ALMTEST", sucursal: "2" },
 ];
 
