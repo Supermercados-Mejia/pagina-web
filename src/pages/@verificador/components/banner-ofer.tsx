@@ -45,11 +45,9 @@ function OffersBanner({
     const containerWidthRef = useRef(window.innerWidth);
     const pageRef = useRef(page);
     const totalPagesRef = useRef(totalPages);
-
-    const speed = 4;
+    const speed = 2;
     const itemWidth = 276; // 260px + gap de 16px
-
-    // Mantener las refs actualizadas sin provocar reinicio de la animación
+    // Reflejar cambios de estado en refs sin reiniciar la animación
     useEffect(() => {
         pageRef.current = page;
     }, [page]);
@@ -57,8 +55,7 @@ function OffersBanner({
     useEffect(() => {
         totalPagesRef.current = totalPages;
     }, [totalPages]);
-
-    // Medir ancho del contenedor
+    // Medir el ancho real del contenedor
     useEffect(() => {
         const container = containerRef.current;
         if (!container) return;
@@ -70,32 +67,37 @@ function OffersBanner({
         observer.observe(container);
         return () => observer.disconnect();
     }, []);
-
-    // Reiniciar bloqueo cuando lleguen nuevos datos
+    // Liberar bloqueo de petición cuando los datos cambien
     useEffect(() => {
         fetchingRef.current = false;
     }, [ofertas.length]);
 
     const animate = useCallback(() => {
         const track = trackRef.current;
-        if (!track) {
+        if (!track || ofertas.length === 0) {
             rafRef.current = requestAnimationFrame(animate);
             return;
         }
 
         if (!paused) {
+            const currentTotalWidth = ofertas.length * itemWidth; // ancho del conjunto real de datos
             posRef.current += speed;
 
-            const currentTotalWidth = ofertas.length * itemWidth;
+            // --- REINICIO CIRCULAR SUAVE ---
+            if (posRef.current >= currentTotalWidth) {
+                posRef.current -= currentTotalWidth;
+            }
+
+            const realPos = posRef.current; // posición relativa dentro de los datos sin duplicar
             const containerWidth = containerWidthRef.current;
 
-            // Solicitar siguiente página cuando el scroll se acerque al final
+            // Cargar siguiente página si nos acercamos al final y aún hay datos
             if (
                 containerWidth > 0 &&
                 pageRef.current < totalPagesRef.current &&
                 !isLoading &&
                 !fetchingRef.current &&
-                posRef.current > currentTotalWidth - containerWidth - 100
+                realPos > currentTotalWidth - containerWidth - 100
             ) {
                 fetchingRef.current = true;
                 setPage((prev) => prev + 1);
@@ -105,7 +107,7 @@ function OffersBanner({
         }
 
         rafRef.current = requestAnimationFrame(animate);
-    }, [paused, isLoading, setPage, ofertas]); // Dependencias controladas, sin page/totalPages directas
+    }, [paused, isLoading, setPage, ofertas]);
 
     useEffect(() => {
         rafRef.current = requestAnimationFrame(animate);
@@ -115,6 +117,8 @@ function OffersBanner({
     }, [animate]);
 
     if (ofertas.length === 0) return null;
+    // Renderizar los elementos duplicados para crear el efecto infinito
+    const doubledItems = [...ofertas, ...ofertas];
 
     return (
         <div className="w-full mb-3">
@@ -127,10 +131,10 @@ function OffersBanner({
                     className="flex gap-4 w-max"
                     style={{ willChange: "transform" }}
                 >
-                    {ofertas.map((item, idx) => (
+                    {doubledItems.map((item, idx) => (
                         <div
                             key={idx}
-                            className="flex flex-col justify-between min-w-[260px] max-w-[260px] bg-white border border-purple-400 rounded-xl px-4 py-3 gap-1 select-none"
+                            className="flex flex-col justify-between min-w-[260px] max-w-[260px] bg-purple-50 border border-purple-400 rounded-xl px-4 py-3 gap-1 select-none"
                         >
                             <span className="inline-block text-[10px] font-medium px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 w-fit">
                                 OFERTA
@@ -151,7 +155,7 @@ function OffersBanner({
                             </div>
                             <div>
                                 <div className="text-[10px] font-medium text-gray-600 leading-tight">
-                                    Valida hasta{item.hasta}
+                                    Valida hasta {item.hasta}
                                 </div>
                             </div>
                         </div>
@@ -173,9 +177,7 @@ function BannerChecker() {
         return `art INNER JOIN ListaPreciosDUnidad AS lpu ON art.Articulo = lpu.Articulo AND art.Unidad = lpu.Unidad AND lpu.Lista = '${lista.id}' AND lpu.Precio > 0 INNER JOIN ArtUnidad AS au ON art.Articulo = au.Articulo AND lpu.Unidad = au.Unidad INNER JOIN ArtDisponible AS ad on art.Articulo = ad.Articulo AND ad.Almacen = '${lista.almacen}' AND ad.DispMenosApartado > 0 AND (ad.DispMenosApartado / au.Factor) > 0 INNER JOIN Oferta AS ofr ON ofr.Estatus = 'VIGENTE' AND ofr.FechaD <= GETDATE() AND ofr.FechaA >= GETDATE() INNER JOIN OfertaD AS ofrd ON ofr.ID = ofrd.ID AND ofrd.Articulo = art.Articulo AND ofrd.Unidad = art.Unidad AND ofrd.Precio > 0`;
     }, []);
 
-    // Carga de datos controlada solo por cambios en "page"
     useEffect(() => {
-        // Evitar doble carga en StrictMode
         if (!mountedRef.current) {
             mountedRef.current = true;
         }
@@ -222,9 +224,8 @@ function BannerChecker() {
                 console.error("Error cargando ofertas para banner:", e);
             }
         };
-
         fetchData();
-    }, [page]); // Solo se vuelve a ejecutar cuando page cambia
+    }, [page]); // Se ejecuta solo cuando page cambia
 
     return (
         <div className="mx-auto inset-0 z-20">
