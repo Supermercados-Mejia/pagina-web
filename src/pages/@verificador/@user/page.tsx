@@ -3,18 +3,10 @@ import PriceChecker from "../components/price-checker";
 import { IonBackButton, IonContent, IonHeader, IonToolbar } from "@ionic/react";
 import Footer from "@/template/footer";
 import { IconLiz } from "@/template/icon-liz";
-import { useState } from "react";
 import { ScanBarcode } from "lucide-react";
 import BannerChecker from "../components/banner-ofer";
 
 export default function VerificadorUser({ onScroll }: PageProps) {
-    /* 
-    
-        const [currentTime, setCurrentTime] = useState(new Date())
-        const interval = setInterval(() => {
-            setCurrentTime(new Date());
-        }, 1000);
-     */
     return (
         <IonContent
             fullscreen
@@ -55,19 +47,6 @@ export default function VerificadorUser({ onScroll }: PageProps) {
                     </div>
                     <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
                         <span className="w-1 h-1 rounded-full bg-muted-foreground" />
-                        {/* <span>
-                            {currentTime.toLocaleDateString("es-MX", {
-                                weekday: "long",
-                                day: "numeric",
-                                month: "long",
-                            })}
-                        </span>
-                        <span>
-                            {currentTime.toLocaleTimeString("es-MX", {
-                                hour: "2-digit",
-                                minute: "2-digit",
-                            })}
-                        </span> */}
                     </div>
                 </header>
             </main>
