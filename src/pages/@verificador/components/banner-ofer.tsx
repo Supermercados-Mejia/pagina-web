@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useGetWithFiltersGeneralInIntelisisMutation } from "@/hooks/reducers/api_int";
-import Page from "@/pages/page";
 
 type Sucursal = {
     id: string;
@@ -24,50 +23,140 @@ type OfertaBanner = {
     hasta?: string;
 };
 
-function OffersBanner({ ofertas }: { ofertas: OfertaBanner[] }) {
+function OffersBanner({
+    ofertas,
+    page,
+    totalPages,
+    setPage,
+    isLoading,
+}: {
+    ofertas: OfertaBanner[];
+    page: number;
+    totalPages: number;
+    setPage: React.Dispatch<React.SetStateAction<number>>;
+    isLoading: boolean;
+}) {
     const trackRef = useRef<HTMLDivElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
     const [paused, setPaused] = useState(false);
     const posRef = useRef(0);
     const rafRef = useRef<number>(null);
-    const speed = 0.9;
+    const fetchingRef = useRef(false);
+    const containerWidthRef = useRef(window.innerWidth);
+    const pageRef = useRef(page);
+    const totalPagesRef = useRef(totalPages);
+    const speed = 2;
+    const itemWidth = 276; // 260px + gap de 16px
+    // Reflejar cambios de estado en refs sin reiniciar la animación
+    useEffect(() => {
+        pageRef.current = page;
+    }, [page]);
 
-    const items = [...ofertas, ...ofertas];
+    useEffect(() => {
+        totalPagesRef.current = totalPages;
+    }, [totalPages]);
+    // Medir el ancho real del contenedor
+    useEffect(() => {
+        const container = containerRef.current;
+        if (!container) return;
+        const observer = new ResizeObserver((entries) => {
+            for (const entry of entries) {
+                containerWidthRef.current = entry.contentRect.width;
+            }
+        });
+        observer.observe(container);
+        return () => observer.disconnect();
+    }, []);
+    // Liberar bloqueo de petición cuando los datos cambien
+    useEffect(() => {
+        fetchingRef.current = false;
+    }, [ofertas.length]);
 
     const animate = useCallback(() => {
         const track = trackRef.current;
-        if (!track) { rafRef.current = requestAnimationFrame(animate); return; }
+        if (!track || ofertas.length === 0) {
+            rafRef.current = requestAnimationFrame(animate);
+            return;
+        }
+
         if (!paused) {
-            const halfWidth = track.scrollWidth / 1;
+            const currentTotalWidth = ofertas.length * itemWidth; // ancho del conjunto real de datos
             posRef.current += speed;
-            if (posRef.current >= halfWidth) posRef.current = 0;
+
+            // --- REINICIO CIRCULAR SUAVE ---
+            if (posRef.current >= currentTotalWidth) {
+                posRef.current -= currentTotalWidth;
+            }
+
+            const realPos = posRef.current; // posición relativa dentro de los datos sin duplicar
+            const containerWidth = containerWidthRef.current;
+
+            // Cargar siguiente página si nos acercamos al final y aún hay datos
+            if (
+                containerWidth > 0 &&
+                pageRef.current < totalPagesRef.current &&
+                !isLoading &&
+                !fetchingRef.current &&
+                realPos > currentTotalWidth - containerWidth - 100
+            ) {
+                fetchingRef.current = true;
+                setPage((prev) => prev + 1);
+            }
+
             track.style.transform = `translateX(-${posRef.current}px)`;
         }
+
         rafRef.current = requestAnimationFrame(animate);
-    }, [paused]);
+    }, [paused, isLoading, setPage, ofertas]);
 
     useEffect(() => {
         rafRef.current = requestAnimationFrame(animate);
-        return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
+        return () => {
+            if (rafRef.current) cancelAnimationFrame(rafRef.current);
+        };
     }, [animate]);
+
     if (ofertas.length === 0) return null;
+    // Renderizar los elementos duplicados para crear el efecto infinito
+    const doubledItems = [...ofertas, ...ofertas];
 
     return (
         <div className="w-full mb-3">
-            <div className="flex items-center gap-2 px-1 pb-2">
-                <span className="w-2 h-2 rounded-full bg-red-500 inline-block" />
-                <span className="text-[16px] font-medium text-gray-900">Ofertas del día</span>
-            </div>
-            <div className="overflow-hidden w-full  rounded-xl  py-3">
-                <div ref={trackRef} className="flex gap-4 w-max" style={{ willChange: "transform" }}>
-                    {items.map((item, idx) => (
+            <div
+                ref={containerRef}
+                className="overflow-hidden w-full rounded-xl py-3"
+            >
+                <div
+                    ref={trackRef}
+                    className="flex gap-4 w-max"
+                    style={{ willChange: "transform" }}
+                >
+                    {doubledItems.map((item, idx) => (
                         <div
                             key={idx}
-                            className="flex flex-col justify-between min-w-[260px] max-w-[260px] bg-white border border-purple-400 rounded-xl px-4 py-3 gap-1 select-none">
-                            <span className="inline-block text-[10px] font-medium px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 w-fit"> OFERTA </span>
-                            <div className="text-[13px] font-medium text-gray-900 leading-tight">{item.nombre}</div>
+                            className="flex flex-col justify-between min-w-[260px] max-w-[260px] bg-purple-50 border border-purple-400 rounded-xl px-4 py-3 gap-1 select-none"
+                        >
+                            <span className="inline-block text-[10px] font-medium px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 w-fit">
+                                OFERTA
+                            </span>
+                            <div className="text-[13px] font-medium text-gray-900 leading-tight">
+                                {item.nombre}
+                            </div>
+                            <div className="text-[13px] font-medium text-gray-600 leading-tight">
+                                {item.unidad}
+                            </div>
                             <div>
-                                <div className="text-[13px] text-red-500 line-through">${item.precioNormal.toLocaleString("es-MX")}</div>
-                                <div className="text-[24px] font-semibold text-purple-800">${item.precioOferta.toLocaleString("es-MX")}</div>
+                                <div className="text-[13px] text-red-500 line-through">
+                                    ${item.precioNormal.toLocaleString("es-MX")}
+                                </div>
+                                <div className="text-[24px] font-semibold text-purple-800">
+                                    ${item.precioOferta.toLocaleString("es-MX")}
+                                </div>
+                            </div>
+                            <div>
+                                <div className="text-[10px] font-medium text-gray-600 leading-tight">
+                                    Valida hasta {item.hasta}
+                                </div>
                             </div>
                         </div>
                     ))}
@@ -78,71 +167,79 @@ function OffersBanner({ ofertas }: { ofertas: OfertaBanner[] }) {
 }
 
 function BannerChecker() {
-
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
     const [getData, { isLoading }] = useGetWithFiltersGeneralInIntelisisMutation();
     const [ofertasBanner, setOfertasBanner] = useState<OfertaBanner[]>([]);
+    const mountedRef = useRef(false);
+
     const buildSearchQuery = useCallback((lista: any) => {
-        return `art INNER JOIN ListaPreciosDUnidad AS lpu ON art.Articulo = lpu.Articulo AND lpu.Lista = '${lista.id}' AND lpu.Precio > 0 LEFT JOIN CB AS cb ON cb.Cuenta = art.Articulo LEFT JOIN (SELECT ofrd.Articulo, ofrd.Unidad, ofrd.Precio AS OfertaPrecio, ofrd.Porcentaje, ofr.FechaA AS OfertaFechaHasta FROM OfertaD ofrd INNER JOIN Oferta ofr ON ofr.ID = ofrd.ID AND ofr.FechaD < GETDATE() AND ofr.FechaA > GETDATE() AND ofr.Estatus = 'VIGENTE' ) AS ofr ON ofr.Articulo = art.Articulo AND ofr.Unidad = art.Unidad`;
+        return `art INNER JOIN ListaPreciosDUnidad AS lpu ON art.Articulo = lpu.Articulo AND art.Unidad = lpu.Unidad AND lpu.Lista = '${lista.id}' AND lpu.Precio > 0 INNER JOIN ArtUnidad AS au ON art.Articulo = au.Articulo AND lpu.Unidad = au.Unidad INNER JOIN ArtDisponible AS ad on art.Articulo = ad.Articulo AND ad.Almacen = '${lista.almacen}' AND ad.DispMenosApartado > 0 AND (ad.DispMenosApartado / au.Factor) > 0 INNER JOIN Oferta AS ofr ON ofr.Estatus = 'VIGENTE' AND ofr.FechaD <= GETDATE() AND ofr.FechaA >= GETDATE() INNER JOIN OfertaD AS ofrd ON ofr.ID = ofrd.ID AND ofrd.Articulo = art.Articulo AND ofrd.Unidad = art.Unidad AND ofrd.Precio > 0`;
     }, []);
 
-    // Cargar ofertas para el banner siempre sucursal Liz
     useEffect(() => {
-        const fetchOfertas = async () => {
+        if (!mountedRef.current) {
+            mountedRef.current = true;
+        }
+
+        const fetchData = async () => {
             try {
                 const result = await getData({
                     table: buildSearchQuery(sucursales[2]),
-                    pageSize: 1000,
-                    page: Page,
+                    pageSize: 10,
+                    page,
                     filtros: {
-                        Filtros: [
-                            { key: "ofr.OfertaPrecio", Operator: "is not null", Value: "" }
-                        ],
                         Selects: [
                             { key: "art.Descripcion1" },
                             { key: "lpu.Unidad" },
                             { key: "lpu.Precio" },
-                            { key: "ofr.OfertaPrecio", alias: "ofertaPrecio" },
-                            { key: "ofr.Porcentaje", alias: "porcentaje" },
-                            { key: "ofr.OfertaFechaHasta", alias: "ofertaFechaHasta" },
+                            { key: "ofrd.Precio", alias: "ofertaPrecio" },
+                            { key: "ofrd.Porcentaje", alias: "porcentaje" },
+                            { key: "ofr.fechaa", alias: "ofertaFechaHasta" },
                         ],
                         Order: [{ Key: "Descripcion1", Direction: "ASC" }],
                     },
                     signal: undefined,
                 });
+
                 if ("data" in result && result.data?.data) {
-                    const mapped: OfertaBanner[] = result.data.data
-                        .filter((item: any, _: number, arr: any[]) =>
-                            item.ofertaPrecio &&
-                            !item.Descripcion1?.toLowerCase().includes("caja") &&
-                            !["CAJ", "CAJA", "CJ",].includes(item.Unidad?.toUpperCase()) &&
-                            arr.findIndex((x: any) => x.Descripcion1 === item.Descripcion1) === arr.indexOf(item)
-                        )
-                        .map((item: any) => ({
-                            nombre: item.Descripcion1
-                                ? item.Descripcion1.toLowerCase().split(" ").map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ")
-                                : "Sin nombre",
-                            unidad: item.Unidad || "PZA",
-                            precioNormal: item.Precio || 0,
-                            precioOferta: item.porcentaje
-                                ? item.Precio - (item.porcentaje / 100) * item.ofertaPrecio
-                                : item.ofertaPrecio,
-                            hasta: item.ofertaFechaHasta
-                                ? new Date(item.ofertaFechaHasta).toLocaleDateString("es-MX")
-                                : undefined,
-                        }));
-                    setOfertasBanner(mapped);
+                    const serverTotalPages = result.data.totalPages ?? 1;
+                    setTotalPages(serverTotalPages);
+
+                    const mapped: OfertaBanner[] = result.data.data.map((item: any) => ({
+                        nombre: item.Descripcion1 || "Sin nombre",
+                        unidad: item.Unidad || "PZA",
+                        precioNormal: item.Precio || 0,
+                        precioOferta: item.porcentaje
+                            ? item.Precio - (item.porcentaje / 100) * item.ofertaPrecio
+                            : item.ofertaPrecio,
+                        hasta: item.ofertaFechaHasta
+                            ? new Date(item.ofertaFechaHasta).toLocaleDateString("es-MX")
+                            : undefined,
+                    }));
+
+                    setOfertasBanner((prev) => [...prev, ...mapped]);
                 }
             } catch (e) {
                 console.error("Error cargando ofertas para banner:", e);
             }
         };
-        fetchOfertas();
-    }, [getData, buildSearchQuery]);
+        fetchData();
+    }, [page]); // Se ejecuta solo cuando page cambia
+
     return (
         <div className="mx-auto inset-0 z-20">
             <div className="relative flex max-h-3/4 flex-col justify-start items-center">
                 <div className="bg-background w-full sticky">
-                    <div className="relative space-y-2"><OffersBanner ofertas={ofertasBanner} /></div>
+                    <div className="relative space-y-2">
+                        <OffersBanner
+                            page={page}
+                            totalPages={totalPages}
+                            setPage={setPage}
+                            ofertas={ofertasBanner}
+                            isLoading={isLoading}
+                        />
+                    </div>
                 </div>
             </div>
         </div>

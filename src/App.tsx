@@ -2,8 +2,7 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import { Redirect, Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { useAppSelector } from './hooks/selector';
-
-import { getLocalStorageItem } from './utils/functions/local-storage';
+import { clearLocalStorage, getLocalStorageItem } from './utils/functions/local-storage';
 import { RootState } from './hooks/store';
 
 import Layout from './pages/Layout';
@@ -43,7 +42,7 @@ const App: React.FC = () => {
 
   const checkRedirect = useCallback(() => {
     const currentPath = location.pathname;
-
+    clearLocalStorage();
     if (currentBranch && currentPath === '/') {
       // Usuario autenticado: redirigir desde raíz a dashboard');
       history.replace('/layout');
