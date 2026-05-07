@@ -1,7 +1,6 @@
 import { Producto } from "@/utils/types/page";
 import { motion } from "framer-motion";
 import ModalProd from "./modal-product";
-import { Barcode, Hash, Heart, ReceiptText } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { getLocalStorageItem, setLocalStorageItem } from "@/utils/functions/local-storage";
 import { cn } from "@/utils/functions/cn";

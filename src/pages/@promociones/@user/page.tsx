@@ -120,6 +120,7 @@ const useOfertas = (categoria: string, listaPrecios: string) => {
                         { key: "ofrd.Porcentaje" },
                         { key: "au.Unidad", alias: "UnidadFactor" },
                         { key: "au.Factor" },
+                        { key: "ofr.fechaa", alias: "ofertaFechaHasta" },
                     ],
                     Agregaciones: [
                         { Key: "ad.DispMenosApartado", Operation: "SUM", Alias: "Cantidad" },
