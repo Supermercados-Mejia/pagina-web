@@ -121,15 +121,12 @@ export const api = createApi({
         }),
         getMasivo: builder.mutation({
             query: ({ table, page, pageSize, filtros, signal }) => ({
-                url: `v2/masivo/consultar`,
+                url: `/v1/consultar`,
                 method: "POST",
-
                 params: {
-                    page,
-                    pageSize,
-                    table, // tabla a consultar
+                    fromClause: table, // tabla a consultar
                 },
-                body: filtros,
+                body: { ...filtros, page, pageSize }, // Enviar filtros en el body
                 signal,
             }),
             transformErrorResponse: (response: any) => ({
