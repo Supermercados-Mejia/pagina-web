@@ -91,8 +91,8 @@ function PriceChecker() {
     };
 
     // Construcción de la consulta similar a la de page.tsx
-    const buildSearchQuery = useCallback((lista: any) => {
-        return `art INNER JOIN ListaPreciosDUnidad AS lpu ON art.Articulo = lpu.Articulo AND lpu.Lista = '${lista.id}' AND lpu.Precio > 0 LEFT JOIN CB AS cb ON cb.Cuenta = art.Articulo LEFT JOIN (SELECT ofrd.Articulo, ofrd.Unidad, ofrd.Precio AS OfertaPrecio, ofrd.Porcentaje, ofr.FechaA AS OfertaFechaHasta FROM OfertaD ofrd INNER JOIN Oferta ofr ON ofr.ID = ofrd.ID AND ofr.FechaD < GETDATE() AND ofr.FechaA > GETDATE() AND ofr.Estatus = 'VIGENTE' ) AS ofr ON ofr.Articulo = art.Articulo AND ofr.Unidad = art.Unidad`;
+    const buildSearchQuery = useCallback((lista: any, codigo: string) => {
+        return `CB AS cb INNER JOIN art ON art.Articulo = cb.Cuenta INNER JOIN ListaPreciosDUnidad AS lpu ON art.Articulo = lpu.Articulo AND lpu.Lista = '${lista.id}' AND lpu.Precio > 0 AND lpu.unidad = cb.Unidad LEFT JOIN Oferta AS ofr On ofr.Estatus = 'VIGENTE' AND ofr.Articulo = art.Articulo AND ofr.FechaD < GETDATE() AND ofr.FechaA > GETDATE()  LEFT JOIN OfertaD AS ofrd On ofrd.id = ofr.ID AND ofrd.Articulo = art.Articulo AND ofrd.Unidad = cb.Unidad WHERE CB.Codigo = '${codigo}'`;
     }, []);
 
     // Efecto para debounce del input
@@ -117,23 +117,20 @@ function PriceChecker() {
         const fetchProducts = async () => {
             try {
                 const result = await getData({
-                    table: buildSearchQuery(selectedSucursal),
+                    table: buildSearchQuery(selectedSucursal, debouncedInput),
                     pageSize: 10,
                     page: 1,
                     filtros: {
-                        Filtros: [
-                            { key: "cb.Codigo", Operator: "like", Value: `${debouncedInput}` }
-                        ],
                         Selects: [
                             { key: "cb.Codigo" },
                             { key: "art.Descripcion1" },
                             { key: "lpu.Unidad" },
                             { key: "lpu.Precio"},
-                            { key: "ofr.OfertaPrecio", alias: "ofertaPrecio" },
-                            { key: "ofr.Porcentaje", alias: "porcentaje" },
-                            { key: "ofr.OfertaFechaHasta", alias: "ofertaFechaHasta" },
+                            { key: "ofrd.precio", alias: "ofertaPrecio" },
+                            { key: "ofrd.porcentaje", alias: "porcentaje" },
+                            { key: "ofr.FechaA", alias: "ofertaFechaHasta" },
                        ],
-                        Order: [{ Key: "Descripcion1", Direction: "ASC" }],
+                        /* Order: [{ Key: "Descripcion1", Direction: "ASC" }], */
                     },
                     signal: undefined,
                 });
