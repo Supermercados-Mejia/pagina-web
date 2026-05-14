@@ -8,13 +8,6 @@ type Sucursal = {
     sucursal: string;
 };
 
-const sucursales: Sucursal[] = [
-    { id: "(Precio Lista)", nombre: "Mayoreo", almacen: "ALMMAYO", sucursal: "4" },
-    { id: "(Precio 4)", nombre: "Palmas", almacen: "ALMPALM", sucursal: "3" },
-    { id: "(Precio 2)", nombre: "Liz", almacen: "ALMVGPE", sucursal: "1" },
-    { id: "(Precio 3)", nombre: "Testerazo", almacen: "ALMTEST", sucursal: "2" },
-];
-
 type OfertaBanner = {
     nombre: string;
     unidad: string;
@@ -46,8 +39,8 @@ function OffersBanner({
     const pageRef = useRef(page);
     const totalPagesRef = useRef(totalPages);
     const speed = 2;
-    const itemWidth = 276; // 260px + gap de 16px
-    // Reflejar cambios de estado en refs sin reiniciar la animación
+    const itemWidth = 276;
+
     useEffect(() => {
         pageRef.current = page;
     }, [page]);
@@ -55,7 +48,7 @@ function OffersBanner({
     useEffect(() => {
         totalPagesRef.current = totalPages;
     }, [totalPages]);
-    // Medir el ancho real del contenedor
+
     useEffect(() => {
         const container = containerRef.current;
         if (!container) return;
@@ -67,7 +60,7 @@ function OffersBanner({
         observer.observe(container);
         return () => observer.disconnect();
     }, []);
-    // Liberar bloqueo de petición cuando los datos cambien
+
     useEffect(() => {
         fetchingRef.current = false;
     }, [ofertas.length]);
@@ -80,18 +73,16 @@ function OffersBanner({
         }
 
         if (!paused) {
-            const currentTotalWidth = ofertas.length * itemWidth; // ancho del conjunto real de datos
+            const currentTotalWidth = ofertas.length * itemWidth;
             posRef.current += speed;
 
-            // --- REINICIO CIRCULAR SUAVE ---
             if (posRef.current >= currentTotalWidth) {
                 posRef.current -= currentTotalWidth;
             }
 
-            const realPos = posRef.current; // posición relativa dentro de los datos sin duplicar
+            const realPos = posRef.current;
             const containerWidth = containerWidthRef.current;
 
-            // Cargar siguiente página si nos acercamos al final y aún hay datos
             if (
                 containerWidth > 0 &&
                 pageRef.current < totalPagesRef.current &&
@@ -117,7 +108,7 @@ function OffersBanner({
     }, [animate]);
 
     if (ofertas.length === 0) return null;
-    // Renderizar los elementos duplicados para crear el efecto infinito
+
     const doubledItems = [...ofertas, ...ofertas];
 
     return (
@@ -166,26 +157,30 @@ function OffersBanner({
     );
 }
 
-function BannerChecker() {
+// El componente ahora recibe la sucursal seleccionada como prop
+function BannerChecker({ selectedSucursal }: { selectedSucursal: Sucursal }) {
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [getData, { isLoading }] = useGetWithFiltersGeneralInIntelisisMutation();
     const [ofertasBanner, setOfertasBanner] = useState<OfertaBanner[]>([]);
-    const mountedRef = useRef(false);
 
-    const buildSearchQuery = useCallback((lista: any) => {
+    const buildSearchQuery = useCallback((lista: Sucursal) => {
         return `art INNER JOIN ListaPreciosDUnidad AS lpu ON art.Articulo = lpu.Articulo AND art.Unidad = lpu.Unidad AND lpu.Lista = '${lista.id}' AND lpu.Precio > 0 INNER JOIN ArtUnidad AS au ON art.Articulo = au.Articulo AND lpu.Unidad = au.Unidad INNER JOIN ArtDisponible AS ad on art.Articulo = ad.Articulo AND ad.Almacen = '${lista.almacen}' AND ad.DispMenosApartado > 0 AND (ad.DispMenosApartado / au.Factor) > 0 INNER JOIN Oferta AS ofr ON ofr.Estatus = 'VIGENTE' AND ofr.FechaD <= GETDATE() AND ofr.FechaA >= GETDATE() INNER JOIN OfertaD AS ofrd ON ofr.ID = ofrd.ID AND ofrd.Articulo = art.Articulo AND ofrd.Unidad = art.Unidad AND ofrd.Precio > 0`;
     }, []);
 
+    // Cuando cambia la sucursal, reiniciar todo y volver a la página 1
     useEffect(() => {
-        if (!mountedRef.current) {
-            mountedRef.current = true;
-        }
+        setOfertasBanner([]);
+        setPage(1);
+        setTotalPages(1);
+    }, [selectedSucursal]);
 
+    // Cargar datos cuando cambia la página o la sucursal
+    useEffect(() => {
         const fetchData = async () => {
             try {
                 const result = await getData({
-                    table: buildSearchQuery(sucursales[2]),
+                    table: buildSearchQuery(selectedSucursal),
                     pageSize: 10,
                     page,
                     filtros: {
@@ -218,14 +213,16 @@ function BannerChecker() {
                             : undefined,
                     }));
 
-                    setOfertasBanner((prev) => [...prev, ...mapped]);
+                    // Si es página 1 (recién cambió la sucursal), reemplazar; si no, acumular
+                    setOfertasBanner((prev) => page === 1 ? mapped : [...prev, ...mapped]);
                 }
             } catch (e) {
                 console.error("Error cargando ofertas para banner:", e);
             }
         };
+
         fetchData();
-    }, [page]); // Se ejecuta solo cuando page cambia
+    }, [page, selectedSucursal]);
 
     return (
         <div className="mx-auto inset-0 z-20">

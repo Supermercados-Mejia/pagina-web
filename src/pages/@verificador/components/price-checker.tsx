@@ -62,7 +62,8 @@ const handleFocusLoss = (ref: React.RefObject<HTMLInputElement>) => {
 const COOLDOWN_TIME = 5000;
 const DEBOUNCE_TIME = 500;
 
-function PriceChecker() {
+// ← ÚNICO CAMBIO: prop opcional para notificar al padre qué sucursal se eligió
+function PriceChecker({ onSucursalChange }: { onSucursalChange?: (s: Sucursal) => void }) {
     const inputRef = useRef<HTMLInputElement>(null);
     const [displayData, setDisplayData] = useState<Product[]>([]);
     const [inputValue, setInputValue] = useState("");
@@ -73,7 +74,6 @@ function PriceChecker() {
     const timeoutRef = useRef<number>(null);
     const inputValueRef = useRef<number>(null);
 
-    // Mutación para obtener datos
     const [getData, { isLoading }] = useGetWithFiltersGeneralInIntelisisMutation();
     const [fetchedItems, setFetchedItems] = useState<any[]>([]);
 
@@ -90,12 +90,10 @@ function PriceChecker() {
         timeoutRef.current = setTimeout(resetStates, COOLDOWN_TIME);
     };
 
-    // Construcción de la consulta similar a la de page.tsx
     const buildSearchQuery = useCallback((lista: any, codigo: string) => {
         return `CB AS cb INNER JOIN art ON art.Articulo = cb.Cuenta INNER JOIN ListaPreciosDUnidad AS lpu ON art.Articulo = lpu.Articulo AND lpu.Lista = '${lista.id}' AND lpu.Precio > 0 AND lpu.unidad = cb.Unidad LEFT JOIN Oferta AS ofr On ofr.Estatus = 'VIGENTE' AND ofr.Articulo = art.Articulo AND ofr.FechaD < GETDATE() AND ofr.FechaA > GETDATE()  LEFT JOIN OfertaD AS ofrd On ofrd.id = ofr.ID AND ofrd.Articulo = art.Articulo AND ofrd.Unidad = cb.Unidad WHERE CB.Codigo = '${codigo}'`;
     }, []);
 
-    // Efecto para debounce del input
     useEffect(() => {
         inputValueRef.current = setTimeout(() => {
             setDebouncedInput(inputValue);
@@ -106,7 +104,6 @@ function PriceChecker() {
         };
     }, [inputValue]);
 
-    // Efecto para realizar la búsqueda cuando cambia el input debounced o la sucursal
     useEffect(() => {
         if (debouncedInput.length < 3) {
             setFetchedItems([]);
@@ -125,12 +122,11 @@ function PriceChecker() {
                             { key: "cb.Codigo" },
                             { key: "art.Descripcion1" },
                             { key: "lpu.Unidad" },
-                            { key: "lpu.Precio"},
+                            { key: "lpu.Precio" },
                             { key: "ofrd.precio", alias: "ofertaPrecio" },
                             { key: "ofrd.porcentaje", alias: "porcentaje" },
                             { key: "ofr.FechaA", alias: "ofertaFechaHasta" },
-                       ],
-                        /* Order: [{ Key: "Descripcion1", Direction: "ASC" }], */
+                        ],
                     },
                     signal: undefined,
                 });
@@ -150,10 +146,8 @@ function PriceChecker() {
         resetCooldownTimer();
     }, [debouncedInput, selectedSucursal, getData, buildSearchQuery]);
 
-    // Actualizar displayData cuando se obtienen nuevos items
     useEffect(() => {
         if (fetchedItems.length > 0) {
-            // Tomamos el último elemento (como en la implementación original)
             const lastItem = fetchedItems[fetchedItems.length - 1];
             const producto: Product = {
                 id: lastItem.Codigo,
@@ -177,7 +171,6 @@ function PriceChecker() {
         }
     }, [fetchedItems, debouncedInput, isLoading]);
 
-    // Barra de progreso
     useEffect(() => {
         const interval = setInterval(() => {
             setProgress(prev => prev >= 1 ? 1 : prev + 1 / 100);
@@ -192,7 +185,10 @@ function PriceChecker() {
     };
 
     const handleSucursalChange = (e: CustomEvent) => {
-        setSelectedSucursal(e.detail.value);
+        const nueva = e.detail.value;
+        setSelectedSucursal(nueva);
+        // ← ÚNICO CAMBIO: avisar al padre la sucursal nueva
+        onSucursalChange?.(nueva);
         resetCooldownTimer();
         inputRef ?? handleFocusLoss(inputRef);
     };
