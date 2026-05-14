@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { PageProps } from "@/utils/types/page";
 import PriceChecker from "../components/price-checker";
 import { IonBackButton, IonContent, IonHeader, IonToolbar } from "@ionic/react";
@@ -6,7 +7,12 @@ import { IconLiz } from "@/template/icon-liz";
 import { ScanBarcode } from "lucide-react";
 import BannerChecker from "../components/banner-ofer";
 
+const DEFAULT_SUCURSAL = { id: "(Precio 2)", nombre: "Valle de Guadalupe Liz", almacen: "ALMVGPE", sucursal: "1" };
+
 export default function VerificadorUser({ onScroll }: PageProps) {
+    // El único estado: la sucursal que el verificador le avisa al banner
+    const [sucursalBanner, setSucursalBanner] = useState(DEFAULT_SUCURSAL);
+
     return (
         <IonContent
             fullscreen
@@ -15,10 +21,11 @@ export default function VerificadorUser({ onScroll }: PageProps) {
                 const isScrolled = e.detail.scrollTop > 20;
                 onScroll?.(isScrolled);
             }}
-        ><IonHeader
-            collapse="condense"
-            className="custom-toolbar-clear h-fit absolute -top-0"
         >
+            <IonHeader
+                collapse="condense"
+                className="custom-toolbar-clear h-fit absolute -top-0"
+            >
                 <IonToolbar>
                     <a className="cursor-pointer" href="/">
                         <IconLiz fill={onScroll ? "#FFF" : "#7927F5"} width={55} />
@@ -29,9 +36,13 @@ export default function VerificadorUser({ onScroll }: PageProps) {
                 <IonBackButton color={"tertiary"} text={"Regresar"} defaultHref="/" />
             </section>
             <main className="w-full min-h-[75vh] px-4 sm:px-6 lg:px-8 py-7">
-                <div ><BannerChecker /></div>
+                {/* Banner recibe la sucursal que el verificador reporta */}
+                <div>
+                    <BannerChecker selectedSucursal={sucursalBanner as any} />
+                </div>
+                {/* Verificador avisa al padre cuando el usuario cambia de sucursal */}
                 <div className="max-w-2xl mx-auto mb-8">
-                    <PriceChecker />
+                    <PriceChecker onSucursalChange={setSucursalBanner as any} />
                 </div>
                 <header className="text-center mb-8">
                     <div className="text-center py-10">
@@ -55,5 +66,5 @@ export default function VerificadorUser({ onScroll }: PageProps) {
             </p>
             <Footer />
         </IonContent>
-    )
+    );
 }
