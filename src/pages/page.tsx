@@ -270,14 +270,14 @@ const Page: React.FC<PageProps> = ({ onScroll }: PageProps) => {
                     </BentoGrid>
                 </section>
             </div>
-
-            <h2 className="text-center font-bold text-">Marcas que nos acompañan</h2>
-            <div className="flex animate-infinite-scroll mb-5">
-                {duplicatedItems.map((data, key) => (
-                    <OffertCard key={key} avatarUrl={data.link} />
-                ))}
-            </div>
-
+            <section className="py-12">
+                <h2 className="text-center font-bold text-">Marcas que nos acompañan</h2>
+                <div className="flex animate-infinite-scroll">
+                    {duplicatedItems.map((data, key) => (
+                        <OffertCard key={key} avatarUrl={data.link} />
+                    ))}
+                </div>
+            </section>
             <Footer />
         </IonContent >
     )
