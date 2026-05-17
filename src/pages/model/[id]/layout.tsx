@@ -10,7 +10,7 @@ const LayoutModelId: React.FC = () => {
         <>
             <AppMenu />
             <IonPage id="main-content">
-                <Header title="Liz" showMenuButton showBackButton defaultBack="/model" />
+                 <Header showMenuButton showBackButton defaultBack="/model" />
                 <ModelID />
             </IonPage>
         </>
