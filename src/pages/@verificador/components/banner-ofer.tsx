@@ -316,7 +316,7 @@ function BannerChecker({
     return (
         <div className="mx-auto inset-0 z-20">
             <div className="relative flex max-h-3/4 flex-col justify-start items-center">
-                <div className="bg-background w-full sticky">
+                <div className="bg-background w-full sticky" >
                     <div className="relative space-y-2">
                         <OffersBanner
                             page={page}
