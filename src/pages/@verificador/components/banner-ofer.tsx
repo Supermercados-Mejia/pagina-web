@@ -152,7 +152,7 @@ function OffersBanner({
                     {doubledItems.map((item, idx) => (
                         <div
                             key={idx}
-                            className="flex flex-col justify-between min-w-[260px] max-w-[260px] bg-purple-50 border border-purple-400 rounded-xl px-4 py-3 gap-1 select-none"
+                            className="flex flex-col justify-between min-w-[260px] max-w-[260px] bg-pink-50 border border-purple-400 rounded-xl px-4 py-3 gap-1 select-none"
                         >
                             <span className="inline-block text-[10px] font-medium px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 w-fit">
                                 OFERTA
