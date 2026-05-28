@@ -102,7 +102,6 @@ function OffersBanner({
                     !fetchingRef.current
                 ) {
                     fetchingRef.current = true;
-
                     setPage((prev) => prev + 1);
                 }
 
@@ -112,12 +111,10 @@ function OffersBanner({
                     !refreshedRef.current
                 ) {
                     refreshedRef.current = true;
-
                     setTimeout(() => {
                         reloadOffers();
-
                         refreshedRef.current = false;
-                    }, 30000);
+                    });
                 }
             }
 
@@ -155,7 +152,7 @@ function OffersBanner({
                     {doubledItems.map((item, idx) => (
                         <div
                             key={idx}
-                            className="flex flex-col justify-between min-w-[260px] max-w-[260px] bg-purple-50 border border-purple-400 rounded-xl px-4 py-3 gap-1 select-none"
+                            className="flex flex-col justify-between min-w-[260px] max-w-[260px] bg-pink-50 border border-purple-400 rounded-xl px-4 py-3 gap-1 select-none"
                         >
                             <span className="inline-block text-[10px] font-medium px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 w-fit">
                                 OFERTA
@@ -171,16 +168,13 @@ function OffersBanner({
 
                             <div>
                                 <div className="text-[13px] text-red-500 line-through">
-                                    $
-                                    {item.precioNormal.toLocaleString("es-MX")}
+                                    $ {item.precioNormal.toLocaleString("es-MX")}
                                 </div>
 
                                 <div className="text-[24px] font-semibold text-purple-800">
-                                    $
-                                    {item.precioOferta.toLocaleString("es-MX")}
+                                    ${item.precioOferta.toLocaleString("es-MX")}
                                 </div>
                             </div>
-
                             <div>
                                 <div className="text-[10px] font-medium text-gray-600 leading-tight">
                                     Valida hasta {item.hasta}
@@ -230,11 +224,8 @@ function BannerChecker({
             try {
                 const result = await getData({
                     table: buildSearchQuery(selectedSucursal),
-
                     pageSize: 10,
-
                     page,
-
                     filtros: {
                         Selects: [
                             { key: "art.Descripcion1" },
