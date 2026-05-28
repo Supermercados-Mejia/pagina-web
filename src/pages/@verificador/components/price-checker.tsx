@@ -139,7 +139,10 @@ function PriceChecker({ onSucursalChange }: { onSucursalChange?: (s: Sucursal) =
             } catch (error) {
                 console.error("Error fetching products:", error);
                 setFetchedItems([]);
+            } finally {
+                document.getElementById("price-checker-input")?.focus();
             }
+
         };
 
         fetchProducts();
@@ -225,6 +228,7 @@ function PriceChecker({ onSucursalChange }: { onSucursalChange?: (s: Sucursal) =
 
                         <div className="relative">
                             <Input
+                                id="price-checker-input"
                                 ref={inputRef}
                                 type="text"
                                 placeholder="Escanear código o buscar..."
