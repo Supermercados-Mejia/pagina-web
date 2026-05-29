@@ -71,6 +71,7 @@ function PriceChecker({ onSucursalChange }: { onSucursalChange?: (s: Sucursal) =
     const [selectedSucursal, setSelectedSucursal] = useState(sucursales[2]);
     const [productNotFound, setProductNotFound] = useState(false);
     const [getProgress, setProgress] = useState(0);
+    const [disableInput, setDisableInput] = useState(false);
     const timeoutRef = useRef<number>(null);
     const inputValueRef = useRef<number>(null);
 
@@ -88,6 +89,7 @@ function PriceChecker({ onSucursalChange }: { onSucursalChange?: (s: Sucursal) =
     const resetCooldownTimer = () => {
         if (timeoutRef.current) clearTimeout(timeoutRef.current);
         timeoutRef.current = setTimeout(resetStates, COOLDOWN_TIME);
+        setTimeout(() => setDisableInput(false), COOLDOWN_TIME);
     };
 
     const buildSearchQuery = useCallback((lista: any, codigo: string) => {
@@ -113,6 +115,7 @@ function PriceChecker({ onSucursalChange }: { onSucursalChange?: (s: Sucursal) =
 
         const fetchProducts = async () => {
             try {
+                setDisableInput(true);
                 const result = await getData({
                     table: buildSearchQuery(selectedSucursal, debouncedInput),
                     pageSize: 10,
@@ -140,7 +143,11 @@ function PriceChecker({ onSucursalChange }: { onSucursalChange?: (s: Sucursal) =
                 console.error("Error fetching products:", error);
                 setFetchedItems([]);
             } finally {
-                document.getElementById("price-checker-input")?.focus();
+
+                setTimeout(() => {
+                    document.getElementById("price-checker-input")?.focus();
+                }, COOLDOWN_TIME + 500);
+
             }
 
         };
@@ -236,6 +243,7 @@ function PriceChecker({ onSucursalChange }: { onSucursalChange?: (s: Sucursal) =
                                 onChange={handleInputChange}
                                 onKeyDown={handleKeyDown}
                                 autoFocus
+                                disabled={disableInput}
                                 autoComplete="off"
                                 spellCheck="false"
                                 className="pl-3 pr-9 text-sm rounded-lg bg-white font-medium text-center"
