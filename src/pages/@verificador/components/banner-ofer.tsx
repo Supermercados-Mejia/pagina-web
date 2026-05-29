@@ -102,7 +102,6 @@ function OffersBanner({
                     !fetchingRef.current
                 ) {
                     fetchingRef.current = true;
-
                     setPage((prev) => prev + 1);
                 }
 
@@ -112,12 +111,10 @@ function OffersBanner({
                     !refreshedRef.current
                 ) {
                     refreshedRef.current = true;
-
                     setTimeout(() => {
                         reloadOffers();
-
                         refreshedRef.current = false;
-                    }, 30000);
+                    });
                 }
             }
 
@@ -171,16 +168,13 @@ function OffersBanner({
 
                             <div>
                                 <div className="text-[13px] text-red-500 line-through">
-                                    $
-                                    {item.precioNormal.toLocaleString("es-MX")}
+                                    $ {item.precioNormal.toLocaleString("es-MX")}
                                 </div>
 
                                 <div className="text-[24px] font-semibold text-purple-800">
-                                    $
-                                    {item.precioOferta.toLocaleString("es-MX")}
+                                    ${item.precioOferta.toLocaleString("es-MX")}
                                 </div>
                             </div>
-
                             <div>
                                 <div className="text-[10px] font-medium text-gray-600 leading-tight">
                                     Valida hasta {item.hasta}
@@ -230,11 +224,8 @@ function BannerChecker({
             try {
                 const result = await getData({
                     table: buildSearchQuery(selectedSucursal),
-
                     pageSize: 10,
-
                     page,
-
                     filtros: {
                         Selects: [
                             { key: "art.Descripcion1" },
@@ -316,6 +307,8 @@ function BannerChecker({
                     "Error cargando ofertas para banner:",
                     e
                 );
+            } finally {
+                document.getElementById("price-checker-input")?.focus();
             }
         };
 
@@ -325,7 +318,7 @@ function BannerChecker({
     return (
         <div className="mx-auto inset-0 z-20">
             <div className="relative flex max-h-3/4 flex-col justify-start items-center">
-                <div className="bg-background w-full sticky">
+                <div className="bg-background w-full sticky" >
                     <div className="relative space-y-2">
                         <OffersBanner
                             page={page}
