@@ -59,8 +59,8 @@ const handleFocusLoss = (ref: React.RefObject<HTMLInputElement>) => {
     }
 };
 
-const COOLDOWN_TIME = 5000;
-const DEBOUNCE_TIME = 500;
+const COOLDOWN_TIME = 3000;
+const DEBOUNCE_TIME = 300;
 
 // ← ÚNICO CAMBIO: prop opcional para notificar al padre qué sucursal se eligió
 function PriceChecker({ onSucursalChange }: { onSucursalChange?: (s: Sucursal) => void }) {
@@ -146,7 +146,7 @@ function PriceChecker({ onSucursalChange }: { onSucursalChange?: (s: Sucursal) =
 
                 setTimeout(() => {
                     document.getElementById("price-checker-input")?.focus();
-                }, COOLDOWN_TIME + 500);
+                }, COOLDOWN_TIME + 300);
 
             }
 
@@ -184,7 +184,7 @@ function PriceChecker({ onSucursalChange }: { onSucursalChange?: (s: Sucursal) =
     useEffect(() => {
         const interval = setInterval(() => {
             setProgress(prev => prev >= 1 ? 1 : prev + 1 / 100);
-        }, 50);
+        }, 30);
         return () => { clearInterval(interval); setProgress(0); };
     }, [displayData]);
 
